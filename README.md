@@ -1,6 +1,6 @@
 # Home Automation Web Application
 
-This project was originally based on angular-seed project [https://github.com/angular/angular-seed]. Later on a maven webapp was created and the main contents of the original angular-seed project moved to match the maven structure and avoid using bower and all other node.js specific packages. The main aim of this webapp is to:
+This project was originally based on angular-seed project https://github.com/angular/angular-seed. Later on a maven webapp was created and the main contents of the original angular-seed project moved to match the maven structure and avoid using bower and all other node.js specific packages. The main aim of this webapp is to:
 
 * Learn node.js and angular js in particular
 * Play with Rapsberry Pi at home and control it via P4J
