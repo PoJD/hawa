@@ -1,0 +1,18 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+.wrapper {
+	height: 100%;
+	padding-top: 0;
+	padding-bottom: 80px;
+}
+
+.top {
+	height: 50px;
+}
+.full {
+	min-height: 100%;
+}

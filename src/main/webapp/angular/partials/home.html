@@ -1,0 +1,24 @@
+<div class="row full">
+	<div class="col-md-9">All rooms go here</div>
+	<div class="col-md-3">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Home Automation <span app-version></span>
+			</div>
+			<div class="panel-body">
+				<div class="row" ng-repeat="vmProperty in vmProperties">
+					<div class="col-md-3">
+						<span class="label label-default">{{vmProperty.name}}</span>
+					</div>
+					<div class="col-md-9">
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" role="progressbar"
+								aria-valuenow="{{vmProperty.currentValue}}" aria-valuemin="0" aria-valuemax="{{vmProperty.maxValue}}"
+								style="min-width: 20%; width:{{100 * (vmProperty.currentValue/vmProperty.maxValue)}}%">{{vmProperty.textValue}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

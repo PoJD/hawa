@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="homeAutomation" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="homeAutomation" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="homeAutomation" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="homeAutomation" class="no-js">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Home Automation</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="angular/builtin/css/normalize.css">
+<link rel="stylesheet" href="angular/builtin/css/main.css">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" media="screen">
+<link rel="stylesheet" href="css/app.css">
+<script src="angular/builtin/js/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+	<div class="wrapper container-fluid">
+		<div class="top">
+			<ul class="nav nav-tabs">
+				<li><a href="#/home">Home</a></li>
+				<li><a href="#/system">System</a></li>
+			</ul>
+		</div>
+		<!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+		<div class="full" ng-view></div>
+	</div>
+	<!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+	<script src="jquery/js/jquery-2.1.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="angular/builtin/js/angular.js"></script>
+	<script src="angular/builtin/js/angular-route.js"></script>
+    <script src="angular/builtin/js/angular-resource.js"></script>	
+	<script src="angular/js/app.js"></script>
+	<script src="angular/js/services.js"></script>
+	<script src="angular/js/controllers.js"></script>
+	<script src="angular/js/filters.js"></script>
+	<script src="angular/js/directives.js"></script>
+</body>
+</html>
