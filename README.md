@@ -10,6 +10,7 @@ This project was originally based on angular-seed project https://github.com/ang
 ## Technologies
 
 * J2EE
+* Spring
 * P4J
 * Maven
 * Restfull WS in Java (Jersey and Jackson for JSON)

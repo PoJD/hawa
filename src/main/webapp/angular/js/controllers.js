@@ -4,7 +4,7 @@
 
 angular.module('homeAutomation.controllers', [])
 
-	.controller('HomeController', [ '$scope', '$interval', 'vmState', function($scope, $interval, vmState) {
+	.controller('HomeController', [ '$scope', '$interval', 'systemState', function($scope, $interval, systemState) {
 			$scope.orderProp = 'name';
 
 			var updates;
@@ -14,7 +14,7 @@ angular.module('homeAutomation.controllers', [])
 
 				updates = $interval(function() {
 					$scope.update();
-				}, 5000);
+				}, 60000);
 			};
 
 			$scope.stopUpdates = function() {
@@ -25,7 +25,7 @@ angular.module('homeAutomation.controllers', [])
 			};
 
 			$scope.update = function() {
-				$scope.vmProperties = vmState.query();
+				$scope.allProperties = systemState.query();
 			};
 
 			$scope.$on('$destroy', function() {
