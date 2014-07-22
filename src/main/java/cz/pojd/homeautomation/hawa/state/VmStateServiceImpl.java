@@ -15,7 +15,7 @@ public class VmStateServiceImpl extends StateServiceBase implements VmStateServi
 		.name(HEAP)
 		.percentage((int)(100 * (used / (double)total)))
 		.criticalPercentage(90)
-		.textValue(longs2RangeMB(used, total))
+		.textValue(longs2Range(used, total))
 		.build();
     }
 

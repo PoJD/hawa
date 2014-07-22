@@ -87,7 +87,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	double total = range.get(1);
 	double used = total - free;
 	int percentage = (int) (total > 0 ? (100 * used / total) : 0);
-	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90).textValue(doubles2RangeMB(used, total)).build();
+	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90).textValue(doubles2Range(used, total)).build();
     }
 
     private List<Double> runSystemCommand(String... command) {

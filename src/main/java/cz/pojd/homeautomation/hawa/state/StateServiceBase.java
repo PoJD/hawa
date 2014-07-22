@@ -8,17 +8,28 @@ package cz.pojd.homeautomation.hawa.state;
  */
 public abstract class StateServiceBase {
 
-    private static final long MB = 1024l * 1024l;
+    private static final long KB = 1024l;
+    private static final long MB = KB * KB;
 
-    protected String doubles2RangeMB(double size1, double size2) {
-	return longs2RangeMB((long)size1, (long)size2);
+    protected String doubles2Range(double size1, double size2) {
+	return longs2Range((long) size1, (long) size2);
     }
 
-    protected String longs2RangeMB(long size1, long size2) {
+    protected String longs2Range(long size1, long size2) {
 	return long2String(size1) + "/" + long2String(size2);
     }
 
+    /**
+     * Transforms the in passed long (expected in raw bytes) into some human readable form. Currently works with MB and GB only.
+     * @param size size to transform
+     * @return human readable form
+     */
     protected String long2String(long size) {
-	return (size / MB) + "MB";
+	long sizeMB = (size / MB);
+	if (sizeMB > KB) {
+	    return (sizeMB / KB) + "G";
+	} else {
+	    return sizeMB + "M";
+	}
     }
 }
