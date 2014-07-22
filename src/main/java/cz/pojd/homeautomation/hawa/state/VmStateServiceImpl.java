@@ -2,11 +2,9 @@ package cz.pojd.homeautomation.hawa.state;
 
 import cz.pojd.homeautomation.hawa.state.PropertyValue.Type;
 
-public class VmStateServiceImpl implements VmStateService {
+public class VmStateServiceImpl extends StateServiceBase implements VmStateService {
     private static final String PROCESSOR = "processor";
     private static final String HEAP = "heap";
-
-    private static final long MB = 1024l * 1024l;
 
     @Override
     public PropertyValue getHeap() {
@@ -17,7 +15,7 @@ public class VmStateServiceImpl implements VmStateService {
 		.name(HEAP)
 		.percentage((int)(100 * (used / (double)total)))
 		.criticalPercentage(90)
-		.textValue(longtoStringInMB(used) + " / " + longtoStringInMB(total))
+		.textValue(longs2RangeMB(used, total))
 		.build();
     }
 
@@ -31,9 +29,5 @@ public class VmStateServiceImpl implements VmStateService {
 		.criticalPercentage(110) // we don't want this value to turn red anytime
 		.textValue(processorsCount + " " + PROCESSOR + (processorsCount>1 ? "s" : ""))
 		.build();
-    }
-
-    private String longtoStringInMB(long size) {
-	return (size / MB) + "MB";
     }
 }

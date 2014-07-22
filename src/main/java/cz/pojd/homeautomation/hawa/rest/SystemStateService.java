@@ -43,20 +43,18 @@ public class SystemStateService {
 	saveAdd(result, osStateService.getCpu());
 	saveAdd(result, osStateService.getRam());
 	saveAdd(result, osStateService.getSwap());
-	saveAdd(result, osStateService.getFileSystems());
+	for (PropertyValue value : osStateService.getFileSystems()) {
+	    saveAdd(result, value);
+	}
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("List of properties: " + result);
 	}
 	return result;
     }
 
-    private void saveAdd(List<PropertyValue> result, PropertyValue... values) {
-	if (values != null) {
-	    for (PropertyValue value : values) {
-		if (value != null) {
-		    result.add(value);
-		}
-	    }
+    private void saveAdd(List<PropertyValue> result, PropertyValue value) {
+	if (value != null) {
+	    result.add(value);
 	}
     }
 }

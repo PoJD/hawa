@@ -14,7 +14,7 @@ public interface OsStateService {
      * Detects all the configured file systems and read their state (usage mostly)
      * @return list of file system states
      */
-    PropertyValue[] getFileSystems();
+    Iterable<PropertyValue> getFileSystems();
     
     /**
      * Detects current RAM utilization
