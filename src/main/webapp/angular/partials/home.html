@@ -13,8 +13,8 @@
 					<div class="col-md-9">
 						<div class="progress">
 							<div class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}" role="progressbar"
-								aria-valuenow="{{property.percentage}}" aria-valuemin="0" aria-valuemax="100"
-								style="min-width: 30%; width:{{property.percentage}}%">{{property.textValue}}</div>
+								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}" aria-valuemin="0" aria-valuemax="100"
+								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
 						</div>
 					</div>
 				</div>
@@ -31,8 +31,8 @@
 					<div class="col-md-9">
 						<div class="progress">
 							<div class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}" role="progressbar"
-								aria-valuenow="{{property.percentage}}" aria-valuemin="0" aria-valuemax="100"
-								style="min-width: 30%; width:{{property.percentage}}%">{{property.textValue}}</div>
+								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}" aria-valuemin="0" aria-valuemax="100"
+								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
 						</div>
 					</div>
 				</div>

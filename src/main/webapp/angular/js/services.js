@@ -4,7 +4,7 @@
 
 var services = angular.module('homeAutomation.services', ['ngResource']);
 
-services.value('version', '0.1');
+services.value('version', '%VERSION%');
 
 services.factory('systemState', ['$resource', function($resource) {
 	return $resource('rest/systemstate', {}, {
