@@ -3,6 +3,7 @@ package cz.pojd.homeautomation.hawa.state;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -46,12 +47,18 @@ public class OsStateServiceImplTestCase {
 	    public Process exec(String[] str) {
 		return process;
 	    }
+	    
+	    @Mock
+	    public int availableProcessors() {
+		return 1;
+	    }
 	};
 	new NonStrictExpectations() {
 	    {
 		new BufferedReader(withInstanceOf(InputStreamReader.class));
 		result = bufferedReader;
-	    }};
+	    }
+	};
     }
 
     @Test
@@ -81,7 +88,6 @@ public class OsStateServiceImplTestCase {
 	assertEquals("2M/2M", value.getTextValue());
 	assertEquals(Type.os, value.getType());
     }
-    
 
     @Test
     public void testGetFileSystemsError() throws IOException, InterruptedException {
@@ -97,7 +103,6 @@ public class OsStateServiceImplTestCase {
 	assertNotNull(result);
 	assertFalse(result.iterator().hasNext());
     }
-    
 
     @Test
     public void testGetFileSystemsErrorAndOK() throws IOException, InterruptedException {
@@ -117,19 +122,94 @@ public class OsStateServiceImplTestCase {
 	PropertyValue value = it.next();
 	assertEquals("/dev/sdb", value.getName());
     }
-    // @Test
-    // public void testGetRam() {
-    // fail("Not yet implemented");
-    // }
-    //
-    // @Test
-    // public void testGetSwap() {
-    // fail("Not yet implemented");
-    // }
-    //
-    // @Test
-    // public void testGetCpu() {
-    // fail("Not yet implemented");
-    // }
 
+    @Test
+    public void testGetRamOK() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns(null, "1048576", "2097152", null);
+	    }
+	};
+
+	PropertyValue result = service.getRam();
+	assertNotNull(result);
+	assertEquals(50, result.getPercentage());
+	assertTrue(result.getName().contains("RAM"));
+	assertEquals("1M/2M", result.getTextValue());
+	assertEquals(Type.os, result.getType());
+    }
+    
+    @Test
+    public void testGetRamError() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns("Some error ocurred", null, "Another error ocurred", null);
+	    }
+	};
+
+	PropertyValue result = service.getRam();
+	assertNull(result);
+    }
+
+    @Test
+    public void testGetSwapOK() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns(null, "1048576", "2097152", null);
+	    }
+	};
+
+	PropertyValue result = service.getSwap();
+	assertNotNull(result);
+	assertEquals(50, result.getPercentage());
+	assertTrue(result.getName().contains("Swap"));
+	assertEquals("1M/2M", result.getTextValue());
+	assertEquals(Type.os, result.getType());
+    }
+    
+    @Test
+    public void testGetSwapError() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns("Some error ocurred", null, "Another error ocurred", null);
+	    }
+	};
+
+	PropertyValue result = service.getSwap();
+	assertNull(result);
+    }
+
+    @Test
+    public void testGetCpuOK() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns(null, "0.15", null);
+	    }
+	};
+
+	PropertyValue result = service.getCpu();
+	assertNotNull(result);
+	assertEquals(15, result.getPercentage());
+	assertTrue(result.getName().contains("CPU"));
+	assertEquals("15.00%", result.getTextValue());
+	assertEquals(Type.os, result.getType());
+    }
+
+    @Test
+    public void testGetCpuError() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns("Some error ocurred", null, null);
+	    }
+	};
+
+	PropertyValue result = service.getCpu();
+	assertNull(result);
+    }
 }
