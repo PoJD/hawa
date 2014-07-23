@@ -5,17 +5,9 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-	<bean class="cz.pojd.homeautomation.hawa.state.OsStateServiceImpl">
-		<constructor-arg name="fileSystems">
-			<list>
-				<value>/</value>
-				<value>/boot</value>
-				<value>/var/log</value>
-				<value>/tmp</value>
-			</list>
-		</constructor-arg>
-	</bean>
-	<bean class="cz.pojd.homeautomation.hawa.state.VmStateServiceImpl" />
-
+	
+	<!-- Jersey forces us to use XML, so we do a little trick to go back to annotation based config -->
+    <context:annotation-config/>
+	<bean name="config" class="cz.pojd.homeautomation.hawa.spring.HawaConfig" />
+	
 </beans>

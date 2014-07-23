@@ -1,14 +1,22 @@
 package cz.pojd.homeautomation.hawa.state;
 
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
 import cz.pojd.homeautomation.hawa.state.PropertyValue.Type;
 
+@Service
 public class VmStateServiceImpl extends StateServiceBase implements VmStateService {
     private static final String PROCESSOR = "processor";
     private static final String HEAP = "heap";
 
+    @Inject
+    private Runtime runtime;
+
     @Override
     public PropertyValue getHeap() {
-	long total = Runtime.getRuntime().totalMemory();
+	long total = runtime.totalMemory();
 	long used = total - Runtime.getRuntime().freeMemory();
 	return PropertyValue.newBuilder()
 		.type(Type.jvm)
@@ -21,7 +29,7 @@ public class VmStateServiceImpl extends StateServiceBase implements VmStateServi
 
     @Override
     public PropertyValue getProcessors() {
-	int processorsCount = Runtime.getRuntime().availableProcessors();
+	int processorsCount = runtime.availableProcessors();
 	return PropertyValue.newBuilder()
 		.type(Type.jvm)
 		.name(PROCESSOR)

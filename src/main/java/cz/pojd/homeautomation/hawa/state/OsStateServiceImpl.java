@@ -11,12 +11,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import cz.pojd.homeautomation.hawa.state.PropertyValue.Type;
 
+@Service
 public class OsStateServiceImpl extends StateServiceBase implements OsStateService {
 
     private static final Log LOG = LogFactory.getLog(OsStateServiceImpl.class);
@@ -34,17 +39,33 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String[] FILESYSTEM_COMMAND = new String[] { "/bin/sh", "-c", "df FS --block-size=1 --output=avail | tail -1 && df FS --block-size=1 --output=size | tail -1" };
     private static final Pattern pattern = Pattern.compile("FS");
 
-    private final List<String> fileSystems;
+    @Inject
+    @Value("#{fileSystems}")
+    private List<String> fileSystemsNames;
 
-    public OsStateServiceImpl(List<String> fileSystems) {
-	this.fileSystems = fileSystems;
-	LOG.info("About to check file systems: " + fileSystems);
+    @Inject
+    private Runtime runtime;
+
+    public Runtime getRuntime() {
+	return runtime;
+    }
+
+    public void setRuntime(Runtime runtime) {
+	this.runtime = runtime;
+    }
+
+    public List<String> getFileSystemsNames() {
+	return fileSystemsNames;
+    }
+
+    public void setFileSystemsNames(List<String> fileSystemsNames) {
+	this.fileSystemsNames = fileSystemsNames;
     }
 
     @Override
     public Iterable<PropertyValue> getFileSystems() {
 	List<PropertyValue> result = new ArrayList<>();
-	for (String fileSystem : fileSystems) {
+	for (String fileSystem : getFileSystemsNames()) {
 	    Matcher matcher = pattern.matcher(FILESYSTEM_COMMAND[2]);
 	    String command = matcher.replaceAll(fileSystem);
 	    PropertyValue value = getRangeValue(fileSystem, new String[] { FILESYSTEM_COMMAND[0], FILESYSTEM_COMMAND[1], command });
@@ -73,7 +94,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	}
 
 	DecimalFormat format = new DecimalFormat("0.00");
-	double percentage = 100 * currentLoad.get(0) / (double) Runtime.getRuntime().availableProcessors();
+	double percentage = 100 * currentLoad.get(0) / (double) runtime.availableProcessors();
 	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80).textValue(format.format(percentage) + "%").build();
     }
 
@@ -94,7 +115,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	List<Double> output = new ArrayList<>();
 	String commaSeparatedCommand = StringUtils.arrayToCommaDelimitedString(command);
 	try {
-	    Process process = Runtime.getRuntime().exec(command);
+	    Process process = runtime.exec(command);
 	    process.waitFor();
 	    // since we are pipelining more commands, they always return 0 even if some of them failed. So need to check the error stream to detect the result
 	    Collection<String> error = getOutput(process.getErrorStream());
