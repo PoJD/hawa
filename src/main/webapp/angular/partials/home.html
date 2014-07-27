@@ -1,19 +1,35 @@
 <div class="row full">
-	<div class="col-md-9">All rooms go here</div>
+	<div class="col-md-9">
+		<div class="col-md-3" ng-repeat="room in rooms">
+			<div class="panel panel-primary">
+				<div class="panel-heading">{{room.name}}</div>
+				<div class="panel-body">
+					<div class="col-md-10">
+						<canvas id="gauge{{$index}}" canv-gauge value="room.temperature"></canvas>
+					</div>
+					<div class="col-md-2 buttonsPanel">But1<br/>But2</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="col-md-3">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				Home Automation <span app-version></span>
 			</div>
 			<div class="panel-body">
-				<div class="row" ng-repeat="property in allProperties | filter: { type: 'jvm' }">
+				<div class="row"
+					ng-repeat="property in systemProperties | filter: { type: 'jvm' }">
 					<div class="col-md-3">
 						<span class="label label-default">{{property.name}}</span>
 					</div>
 					<div class="col-md-9">
 						<div class="progress">
-							<div class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}" role="progressbar"
-								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}" aria-valuemin="0" aria-valuemax="100"
+							<div
+								class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}"
+								role="progressbar"
+								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}"
+								aria-valuemin="0" aria-valuemax="100"
 								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
 						</div>
 					</div>
@@ -24,14 +40,18 @@
 		<div class="panel panel-info">
 			<div class="panel-heading">Operating System</div>
 			<div class="panel-body">
-				<div class="row" ng-repeat="property in allProperties | filter: { type: 'os' }">
+				<div class="row"
+					ng-repeat="property in systemProperties | filter: { type: 'os' }">
 					<div class="col-md-3">
 						<span class="label label-default">{{property.name}}</span>
 					</div>
 					<div class="col-md-9">
 						<div class="progress">
-							<div class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}" role="progressbar"
-								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}" aria-valuemin="0" aria-valuemax="100"
+							<div
+								class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}"
+								role="progressbar"
+								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}"
+								aria-valuemin="0" aria-valuemax="100"
 								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
 						</div>
 					</div>

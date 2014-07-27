@@ -16,3 +16,7 @@ html, body {
 .full {
 	min-height: 100%;
 }
+
+.buttonsPanel {
+	padding: 0 5px 0 0;
+}

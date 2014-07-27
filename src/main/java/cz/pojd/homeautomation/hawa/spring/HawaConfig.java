@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import cz.pojd.homeautomation.hawa.rest.rooms.MockRoomsDAO;
+import cz.pojd.homeautomation.hawa.rest.rooms.RoomsDAO;
+
 /**
  * Main configuration for spring
  * 
@@ -14,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @since Jul 23, 2014 2:34:22 AM
  */
 @Configuration
-@ComponentScan("cz.pojd.homeautomation.hawa.state")
+@ComponentScan("cz.pojd.homeautomation.hawa.rest")
 public class HawaConfig {
 
     @Bean
@@ -30,5 +33,10 @@ public class HawaConfig {
 	fileSystems.add("/var/log");
 	fileSystems.add("/tmp");
 	return fileSystems;
+    }
+    
+    @Bean
+    public RoomsDAO roomsDAO() {
+	return new MockRoomsDAO();
     }
 }

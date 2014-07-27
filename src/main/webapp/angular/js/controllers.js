@@ -4,38 +4,40 @@
 
 angular.module('homeAutomation.controllers', [])
 
-	.controller('HomeController', [ '$scope', '$interval', 'systemState', function($scope, $interval, systemState) {
-			$scope.orderProp = 'name';
+.controller(
+		'HomeController',
+		[ '$scope', '$interval', 'systemState', 'rooms',
+				function($scope, $interval, systemState, rooms) {
+					var updates;
+					$scope.autoUpdate = function() {
+						if (angular.isDefined(updates))
+							return;
 
-			var updates;
-			$scope.autoUpdate = function() {
-				if (angular.isDefined(updates))
-					return;
+						updates = $interval(function() {
+							$scope.update();
+						}, 60000);
+					};
 
-				updates = $interval(function() {
+					$scope.stopUpdates = function() {
+						if (angular.isDefined(updates)) {
+							$interval.cancel(updates);
+							updates = undefined;
+						}
+					};
+
+					$scope.update = function() {
+						$scope.systemProperties = systemState.query();
+						$scope.rooms = rooms.query();
+					};
+
+					$scope.$on('$destroy', function() {
+						$scope.stopUpdates();
+					});
+
 					$scope.update();
-				}, 60000);
-			};
+					$scope.autoUpdate();
+				} ])
 
-			$scope.stopUpdates = function() {
-				if (angular.isDefined(updates)) {
-					$interval.cancel(updates);
-					updates = undefined;
-				}
-			};
-
-			$scope.update = function() {
-				$scope.allProperties = systemState.query();
-			};
-
-			$scope.$on('$destroy', function() {
-				$scope.stopUpdates();
-			});
-			
-			$scope.update();
-			$scope.autoUpdate();
-		} ])
-		
-	.controller('SystemController', [ '$scope', function($scope) {
+.controller('SystemController', [ '$scope', function($scope) {
 
 } ]);

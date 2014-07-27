@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.state;
+package cz.pojd.homeautomation.hawa.rest.state;
 
 /**
  * PropertyValue is a wrapper for a particular property value to be determined

@@ -12,9 +12,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.state.OsStateService;
-import cz.pojd.homeautomation.hawa.state.PropertyValue;
-import cz.pojd.homeautomation.hawa.state.VmStateService;
+import cz.pojd.homeautomation.hawa.rest.state.OsStateService;
+import cz.pojd.homeautomation.hawa.rest.state.PropertyValue;
+import cz.pojd.homeautomation.hawa.rest.state.VmStateService;
 
 /**
  * SystemStateService is a Restful web service providing information about the

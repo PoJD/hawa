@@ -21,7 +21,9 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
-import cz.pojd.homeautomation.hawa.state.PropertyValue.Type;
+import cz.pojd.homeautomation.hawa.rest.state.OsStateServiceImpl;
+import cz.pojd.homeautomation.hawa.rest.state.PropertyValue;
+import cz.pojd.homeautomation.hawa.rest.state.PropertyValue.Type;
 
 public class OsStateServiceImplTestCase {
 

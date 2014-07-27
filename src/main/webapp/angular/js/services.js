@@ -14,3 +14,12 @@ services.factory('systemState', ['$resource', function($resource) {
 		}
 	});
 } ]);
+
+services.factory('rooms', ['$resource', function($resource) {
+	return $resource('rest/rooms', {}, {
+		query : {
+			method : 'GET',
+			isArray : true
+		}
+	});
+} ]);

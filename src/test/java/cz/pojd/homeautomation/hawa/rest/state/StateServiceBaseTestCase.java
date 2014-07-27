@@ -1,9 +1,11 @@
-package cz.pojd.homeautomation.hawa.state;
+package cz.pojd.homeautomation.hawa.rest.state;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import cz.pojd.homeautomation.hawa.rest.state.StateServiceBase;
 
 public class StateServiceBaseTestCase {
 

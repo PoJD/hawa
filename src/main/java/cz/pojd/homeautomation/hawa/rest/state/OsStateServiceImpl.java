@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.state;
+package cz.pojd.homeautomation.hawa.rest.state;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import cz.pojd.homeautomation.hawa.state.PropertyValue.Type;
+import cz.pojd.homeautomation.hawa.rest.state.PropertyValue.Type;
 
 @Service
 public class OsStateServiceImpl extends StateServiceBase implements OsStateService {
