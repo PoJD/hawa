@@ -34,6 +34,12 @@ angular.module('homeAutomation.controllers', [])
 						$scope.stopUpdates();
 					});
 
+					$scope.switched = function($scope, $index) {
+						// avoid Jersey throwing errors about unknown fields (this field will be set by Angular after first save and fetch from server)
+						$scope.rooms[$index].$resolved = undefined;
+						$scope.rooms[$index].$save();
+					};
+
 					$scope.update();
 					$scope.autoUpdate();
 				} ])

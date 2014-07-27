@@ -20,12 +20,18 @@ public class MockRoomsDAO implements RoomsDAO {
 	Room r1 = new Room();
 	r1.setName("Bedroom");
 	r1.setTemperature(new BigDecimal(-10 + r.nextInt(50)));
+	r1.setAutoLights(false);
 	Room r2 = new Room();
 	r2.setName("Kitchen");
 	r2.setTemperature(new BigDecimal(-10 + r.nextInt(50)));
+	r2.setAutoLights(true);
 
 	result.add(r1);
 	result.add(r2);
 	return result;
+    }
+
+    @Override
+    public void save(Room room) {
     }
 }

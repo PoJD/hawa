@@ -12,6 +12,7 @@ public class Room {
 
     private String name;
     private BigDecimal temperature;
+    private boolean autoLights;
 
     public String getName() {
 	return name;
@@ -29,8 +30,16 @@ public class Room {
 	this.temperature = temperature;
     }
 
+    public boolean isAutoLights() {
+	return autoLights;
+    }
+
+    public void setAutoLights(boolean autoLights) {
+	this.autoLights = autoLights;
+    }
+
     @Override
     public String toString() {
-	return "Room [name=" + name + ", temperature=" + temperature + "]";
+	return "Room [name=" + name + ", temperature=" + temperature + ", autoLights=" + autoLights + "]";
     }
 }

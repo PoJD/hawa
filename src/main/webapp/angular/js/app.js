@@ -5,6 +5,7 @@
 angular.module('homeAutomation', [
   'ngRoute',
   'angular-canv-gauge',
+  'toggle-switch',
   'homeAutomation.filters',
   'homeAutomation.services',
   'homeAutomation.directives',

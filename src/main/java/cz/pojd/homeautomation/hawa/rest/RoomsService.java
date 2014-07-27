@@ -3,7 +3,9 @@ package cz.pojd.homeautomation.hawa.rest;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.homeautomation.hawa.rest.rooms.Room;
 import cz.pojd.homeautomation.hawa.rest.rooms.RoomsDAO;
+import cz.pojd.homeautomation.hawa.rest.rooms.RoomsDAOException;
 
 @Path("/rooms")
 public class RoomsService {
@@ -31,5 +34,17 @@ public class RoomsService {
 	}
 
 	return result;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void saveRoom(Room room) {
+	LOG.info("About to save room: " + room);
+	try {
+	    roomsDAO.save(room);
+	} catch (RoomsDAOException e) {
+	    LOG.error("Unable to save the room: ", e);
+	    throw e;
+	}
     }
 }

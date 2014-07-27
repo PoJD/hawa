@@ -15,4 +15,11 @@ public interface RoomsDAO {
      * @return list of all rooms
      */
     List<Room> getAll();
+    
+    /**
+     * Save the room
+     * @param room room to save
+     * @return true if the save was successful
+     */
+    void save(Room room);
 }

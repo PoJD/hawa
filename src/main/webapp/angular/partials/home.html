@@ -2,12 +2,17 @@
 	<div class="col-md-9">
 		<div class="col-md-3" ng-repeat="room in rooms">
 			<div class="panel panel-primary">
-				<div class="panel-heading">{{room.name}}<span class="glyphicon glyphicon-time right"></div>
+				<div class="panel-heading">
+					{{room.name}}<span class="glyphicon glyphicon-time right">
+				</div>
 				<div class="panel-body">
 					<div class="col-md-10">
 						<canvas id="gauge{{$index}}" canv-gauge value="room.temperature"></canvas>
 					</div>
-					<div class="col-md-2 buttonsPanel">But1<br/>But2</div>
+					<div class="col-md-2 buttonsPanel">
+						<toggle-switch model="room.autoLights" on-label="1" off-label="0" ng-click="switched(this, $index)">
+						</toggle-switch>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -15,7 +20,8 @@
 	<div class="col-md-3">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				Home Automation <span app-version></span><span class="glyphicon glyphicon-heart right"></span>
+				Home Automation <span app-version></span><span
+					class="glyphicon glyphicon-heart right"></span>
 			</div>
 			<div class="panel-body">
 				<div class="row"
@@ -38,7 +44,9 @@
 		</div>
 
 		<div class="panel panel-info">
-			<div class="panel-heading">Operating System<span class="glyphicon glyphicon-hdd right"></span></div>
+			<div class="panel-heading">
+				Operating System<span class="glyphicon glyphicon-hdd right"></span>
+			</div>
 			<div class="panel-body">
 				<div class="row"
 					ng-repeat="property in systemProperties | filter: { type: 'os' }">

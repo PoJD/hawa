@@ -15,3 +15,7 @@ This project was originally based on angular-seed project https://github.com/ang
 * Maven
 * Restfull WS in Java (Jersey and Jackson for JSON)
 * Angular JS
+** Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
+** Angular Canv Gauge: https://github.com/Mikhus/canv-gauge
+* Twitter Bootstrap
+* JUnit, JMockit
