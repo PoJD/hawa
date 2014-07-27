@@ -17,6 +17,10 @@ html, body {
 	min-height: 100%;
 }
 
+.right {
+	float: right;
+}
+
 .buttonsPanel {
 	padding: 0 5px 0 0;
 }
