@@ -6,10 +6,8 @@
 	<version>1.0-SNAPSHOT</version>
   </parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.pojd.homeautomation</groupId>
 	<artifactId>hawa</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
 	<name>Home Automation Web Application</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
