@@ -26,7 +26,7 @@ This project was originally based on angular-seed project https://github.com/ang
 * cd hawa
 * mvn clean install
 * start Eclipse
-* Import -> Existing Maven project
-* Right click -> Configure -> Convert to AngularJS project
-* Right click -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
-* Deploy on a local server and enjoy!
+* Import -> Existing Maven project (both rpi and hawa)
+* Right click on hawa -> Configure -> Convert to AngularJS project
+* Right click on hawa -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
+* Deploy hawa on a local server and enjoy!
