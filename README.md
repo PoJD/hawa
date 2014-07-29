@@ -15,7 +15,18 @@ This project was originally based on angular-seed project https://github.com/ang
 * Maven
 * Restfull WS in Java (Jersey and Jackson for JSON)
 * Angular JS
-** Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
-** Angular Canv Gauge: https://github.com/Mikhus/canv-gauge
+* * Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
+* * Angular Canv Gauge: https://github.com/Mikhus/canv-gauge
 * Twitter Bootstrap
 * JUnit, JMockit
+
+## Getting started in Eclipse
+
+* git clone git@github.com:PoJD/hawa.git
+* cd hawa
+* mvn clean install
+* start Eclipse
+* Import -> Existing Maven project
+* Right click -> Configure -> Convert to AngularJS project
+* Right click -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
+* Deploy on a local server and enjoy!

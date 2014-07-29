@@ -1,2 +1,6 @@
 target
 build
+.classpath
+.project
+.settings/
+.tern-project
