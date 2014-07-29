@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.rest.rooms;
+package cz.pojd.rpi.rooms;
 
 public class RoomsDAOException extends RuntimeException {
 

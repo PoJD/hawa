@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.rest.state;
+package cz.pojd.rpi.state;
 
 
 

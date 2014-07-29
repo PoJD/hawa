@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.state;
+package cz.pojd.rpi.state;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,9 +21,8 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
-import cz.pojd.homeautomation.hawa.rest.state.OsStateServiceImpl;
-import cz.pojd.homeautomation.hawa.rest.state.PropertyValue;
-import cz.pojd.homeautomation.hawa.rest.state.PropertyValue.Type;
+import cz.pojd.rpi.state.PropertyValue.Type;
+import cz.pojd.rpi.system.RuntimeExecutorImpl;
 
 public class OsStateServiceImplTestCase {
 
@@ -41,7 +40,9 @@ public class OsStateServiceImplTestCase {
     @Before
     public void setup() {
 	service = new OsStateServiceImpl();
-	service.setRuntime(Runtime.getRuntime());
+	RuntimeExecutorImpl runtimeExecutor = new RuntimeExecutorImpl();
+	runtimeExecutor.setRuntime(Runtime.getRuntime());
+	service.setRuntimeExecutor(runtimeExecutor);
 	service.setFileSystemsNames(fileSystems);
 
 	new MockUp<Runtime>() {
@@ -49,7 +50,7 @@ public class OsStateServiceImplTestCase {
 	    public Process exec(String[] str) {
 		return process;
 	    }
-	    
+
 	    @Mock
 	    public int availableProcessors() {
 		return 1;
@@ -141,7 +142,7 @@ public class OsStateServiceImplTestCase {
 	assertEquals("1M/2M", result.getTextValue());
 	assertEquals(Type.os, result.getType());
     }
-    
+
     @Test
     public void testGetRamError() throws IOException {
 	new NonStrictExpectations() {
@@ -171,7 +172,7 @@ public class OsStateServiceImplTestCase {
 	assertEquals("1M/2M", result.getTextValue());
 	assertEquals(Type.os, result.getType());
     }
-    
+
     @Test
     public void testGetSwapError() throws IOException {
 	new NonStrictExpectations() {

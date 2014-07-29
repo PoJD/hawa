@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa.rest.rooms;
+package cz.pojd.rpi.rooms;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

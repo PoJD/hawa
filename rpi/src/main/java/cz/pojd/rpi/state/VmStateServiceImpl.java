@@ -1,10 +1,10 @@
-package cz.pojd.homeautomation.hawa.rest.state;
+package cz.pojd.rpi.state;
 
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import cz.pojd.homeautomation.hawa.rest.state.PropertyValue.Type;
+import cz.pojd.rpi.state.PropertyValue.Type;
 
 @Service
 public class VmStateServiceImpl extends StateServiceBase implements VmStateService {
