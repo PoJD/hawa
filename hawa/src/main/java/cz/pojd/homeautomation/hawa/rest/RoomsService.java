@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.rooms.Room;
+import cz.pojd.homeautomation.hawa.rooms.RoomState;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOException;
 
@@ -26,9 +26,9 @@ public class RoomsService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Room> getAll() {
+    public List<RoomState> getAll() {
 	LOG.info("Detecting current state of all rooms...");
-	List<Room> result = roomsDAO.getAll();
+	List<RoomState> result = roomsDAO.getAll();
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("List of rooms: " + result);
 	}
@@ -38,7 +38,7 @@ public class RoomsService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void saveRoom(Room room) {
+    public void saveRoom(RoomState room) {
 	LOG.info("About to save room: " + room);
 	try {
 	    roomsDAO.save(room);

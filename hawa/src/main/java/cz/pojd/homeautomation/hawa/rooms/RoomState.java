@@ -1,17 +1,16 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
-import cz.pojd.rpi.sensors.Sensor;
 
 /**
- * A room is a runtime object representing a room.
+ * Simple POJO to hold information about a room
  * 
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
-public class Room {
+public class RoomState {
 
     private String name;
-    private Sensor temperatureSensor;
+    private Double temperature;
     private boolean autoLights;
 
     public String getName() {
@@ -22,12 +21,12 @@ public class Room {
 	this.name = name;
     }
 
-    public Sensor getTemperatureSensor() {
-	return temperatureSensor;
+    public Double getTemperature() {
+	return temperature;
     }
 
-    public void setTemperatureSensor(Sensor temperatureSensor) {
-	this.temperatureSensor = temperatureSensor;
+    public void setTemperature(Double temperature) {
+	this.temperature = temperature;
     }
 
     public boolean isAutoLights() {
@@ -40,6 +39,6 @@ public class Room {
 
     @Override
     public String toString() {
-	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + autoLights + "]";
+	return "RoomState [name=" + name + ", temperature=" + temperature + ", autoLights=" + autoLights + "]";
     }
 }

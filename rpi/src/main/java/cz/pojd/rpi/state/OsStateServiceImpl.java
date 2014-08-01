@@ -1,6 +1,5 @@
 package cz.pojd.rpi.state;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -83,9 +82,8 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	    return null;
 	}
 
-	DecimalFormat format = new DecimalFormat("0.00");
 	double percentage = 100 * currentLoad.get(0) / (double) getRuntimeExecutor().getCpuCount();
-	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80).textValue(format.format(percentage) + "%").build();
+	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80).textValue(String.format("%.2f%%", percentage)).build();
     }
 
     private PropertyValue getRangeValue(String label, String command) {
