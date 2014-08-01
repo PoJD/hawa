@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import cz.pojd.rpi.rooms.MockRoomsDAO;
-import cz.pojd.rpi.rooms.RoomsDAO;
 import cz.pojd.rpi.system.RuntimeExecutor;
 import cz.pojd.rpi.system.RuntimeExecutorImpl;
 
@@ -40,10 +38,5 @@ public class RpiConfig {
 	fileSystems.add("/var/log");
 	fileSystems.add("/tmp");
 	return fileSystems;
-    }
-
-    @Bean
-    public RoomsDAO roomsDAO() {
-	return new MockRoomsDAO();
     }
 }
