@@ -3,8 +3,6 @@ package cz.pojd.homeautomation.hawa.spring;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,9 +22,6 @@ import cz.pojd.rpi.spring.RpiConfig;
 @Import(RpiConfig.class)
 public class HawaConfig {
 
-    @Inject
-    RpiConfig rpiConfig;
-
     @Bean
     public List<RoomSpecification> rooms() {
 	List<RoomSpecification> rooms = new ArrayList<>();
@@ -37,6 +32,6 @@ public class HawaConfig {
 
     @Bean
     public RoomsDAO roomsDAO() {
-	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor());
+	return new RoomsDAOImpl();
     }
 }

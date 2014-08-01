@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import cz.pojd.rpi.sensors.Bmp180BarometricSensor;
+import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 import cz.pojd.rpi.system.RuntimeExecutorImpl;
 
@@ -38,5 +40,20 @@ public class RpiConfig {
 	fileSystems.add("/var/log");
 	fileSystems.add("/tmp");
 	return fileSystems;
+    }
+
+    @Bean 
+    public Sensor barometricSensor() {
+	return new Bmp180BarometricSensor(newRasPI());
+    }
+    
+    /**
+     * Detects whether this is a new RasPI or not (drives further logic in this project)
+     * 
+     * @return true if so, false otherwise
+     */
+    @Bean
+    public boolean newRasPI() {
+	return true;
     }
 }
