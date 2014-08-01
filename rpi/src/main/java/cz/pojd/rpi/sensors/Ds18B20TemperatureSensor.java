@@ -1,5 +1,6 @@
 package cz.pojd.rpi.sensors;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -51,14 +52,15 @@ public class Ds18B20TemperatureSensor implements Sensor {
 
     @Override
     public List<Double> readAll() {
-	return getRuntimeExecutor().execute(command);
+	return Collections.singletonList(read());
     }
 
     @Override
     public Double read() {
-	List<Double> result = readAll();
+	List<Double> result = getRuntimeExecutor().execute(command);
 	if (result.size() == 1) {
-	    return result.get(0);
+	    // the output from command line is 1000 * temperature
+	    return result.get(0)/1000;
 	} else {
 	    return null;
 	}
