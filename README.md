@@ -29,4 +29,12 @@ This project was originally based on angular-seed project https://github.com/ang
 * Import -> Existing Maven project (both rpi and hawa)
 * Right click on hawa -> Configure -> Convert to AngularJS project
 * Right click on hawa -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
+* Edit your maven settings.xml and add a definition of a server, call it TomcatServer and add your username and password you setup in your maven manager app (or change pom.xml accordingly if you use a different container
 * Deploy hawa on a local server and enjoy!
+
+# Raspberry configuration
+
+* Make sure the webapp user (e.g. tomcat) can access /dev/i2c (e.g. setup module loading and group permissions)
+* Make sure i2c and 1_wire groups are autoloaded
+* Make sure your web app is auto started
+* Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)

@@ -69,6 +69,8 @@ public class Bmp180BarometricSensor implements Sensor {
     private I2CDevice bmp180;
     private int mode = BMP180_ULTRAHIGHRES;
 
+    private boolean initiated;
+
     @Inject
     public Bmp180BarometricSensor(@Value("newRasPI") boolean newRasPI) {
 	try {
@@ -81,14 +83,18 @@ public class Bmp180BarometricSensor implements Sensor {
 	    bmp180 = bus.getDevice(BMP180_ADDRESS);
 	    if (LOG.isInfoEnabled())
 		LOG.info("Connected to I2C Device. OK.");
+
+	    initiated = true;
 	} catch (Exception e) {
 	    LOG.error("Error connecting to the device via I2C", e);
 	}
-
-	try {
-	    readCalibrationData();
-	} catch (Exception e) {
-	    LOG.error("Error reading calibration data from the device", e);
+	
+	if (initiated) {
+	    try {
+		readCalibrationData();
+	    } catch (Exception e) {
+		LOG.error("Error reading calibration data from the device", e);
+	    }
 	}
     }
 
@@ -178,7 +184,7 @@ public class Bmp180BarometricSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    public int readRawTemp() throws IOException {
+    private int readRawTemp() throws IOException {
 	bmp180.write(BMP180_CONTROL, (byte) BMP180_READTEMPCMD);
 	waitfor(5); // Wait 5ms
 	int raw = readU16(BMP180_TEMPDATA);
@@ -193,7 +199,7 @@ public class Bmp180BarometricSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    public int readRawPressure() throws IOException {
+    private int readRawPressure() throws IOException {
 	bmp180.write(BMP180_CONTROL, (byte) (BMP180_READPRESSURECMD + (mode << 6)));
 	if (mode == BMP180_ULTRALOWPOWER)
 	    waitfor(5);
@@ -218,7 +224,7 @@ public class Bmp180BarometricSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    public double readTemperature() throws IOException {
+    private double readTemperature() throws IOException {
 	int UT = 0;
 	int X1 = 0;
 	int X2 = 0;
@@ -242,7 +248,7 @@ public class Bmp180BarometricSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    public double readPressure() throws IOException {
+    private double readPressure() throws IOException {
 	int UP = 0;
 	int B3 = 0;
 	int B5 = 0;
@@ -316,10 +322,14 @@ public class Bmp180BarometricSensor implements Sensor {
     public List<Double> readAll() {
 	List<Double> result = new ArrayList<>();
 	try {
-	    result.add(readTemperature());
-	    result.add(readPressure());
+	    if (initiated) {
+		result.add(readTemperature());
+		result.add(readPressure());
+	    } else {
+		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
+	    }
 	} catch (IOException e) {
-	    e.printStackTrace();
+	    LOG.error("Unable to read the output of the sensor", e);
 	}
 	return result;
     }
