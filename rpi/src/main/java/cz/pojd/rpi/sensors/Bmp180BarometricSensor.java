@@ -77,7 +77,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
     public Bmp180BarometricSensor(boolean newRasPI, int altitude) {
 	LOG.info("Attempt to start up the barometric sensor. newRasPI=" + newRasPI + ". altitude=" + altitude);
 	this.altitude = altitude;
-	
+
 	try {
 	    // Get i2c bus
 	    bus = I2CFactory.getInstance(newRasPI ? I2CBus.BUS_1 : I2CBus.BUS_0);
@@ -318,13 +318,14 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 
     /**
      * Read pressure as if we were at the sea level and round down to HPa
+     * 
      * @return HPa value at the sea level of the current pressure
      * @throws IOException
      */
     private double readPressureHPaAtSeaLevel() throws IOException {
 	double p = readPressure();
 	// positive altitude / 100 should increase pressure with 1200 - then divide all by 100 to get HPa
-	return (p + 1200.*(altitude/100.))/100.;
+	return (p + 1200. * (altitude / 100.)) / 100.;
     }
 
     private static void waitfor(long howMuch) {
@@ -334,14 +335,14 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	    LOG.error("Interrupted while sleeping...");
 	}
     }
-    
+
     @Override
     public List<Reading> readAll() {
 	List<Reading> result = new ArrayList<>();
 	try {
 	    if (initiated) {
-		result.add(Reading.newBuilder().type(Type.temperature).value(double2String(readTemperature())+"°C").build());
-		result.add(Reading.newBuilder().type(Type.pressure).value(double2String(readPressureHPaAtSeaLevel())+"HPa").build());
+		result.add(Reading.newBuilder().type(Type.temperature).value(double2String(readTemperature()) + "°C").build());
+		result.add(Reading.newBuilder().type(Type.pressure).value(double2String(readPressureHPaAtSeaLevel()) + "HPa").build());
 	    } else {
 		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
 	    }
@@ -360,5 +361,14 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	} else {
 	    return Reading.unknown(Type.temperature);
 	}
+    }
+
+    /**
+     * Detects whether this sensor is properly initiated or not
+     * 
+     * @return true if so, false otherwise
+     */
+    public boolean isInitiated() {
+	return initiated;
     }
 }

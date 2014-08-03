@@ -34,12 +34,14 @@ public class Reading {
 	}
     }
 
+    public static final String UNKNOWN_VALUE = "0";
+
     public static final Builder newBuilder() {
 	return new Builder();
     }
 
     public static final Reading unknown(Type type) {
-	return new Reading(type, "0");
+	return new Reading(type, UNKNOWN_VALUE);
     }
 
     private final Type type;
