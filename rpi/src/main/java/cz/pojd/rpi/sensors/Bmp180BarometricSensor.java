@@ -90,7 +90,8 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 		LOG.info("Connected to I2C Device. OK.");
 
 	    initiated = true;
-	} catch (Exception e) {
+	} catch (Exception | UnsatisfiedLinkError e) {
+	    // UnsatisfiedLinkError is caught here too to be able to start this up on any device, not just RasPi
 	    LOG.error("Error connecting to the device via I2C", e);
 	}
 
@@ -150,7 +151,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
     /**
      * Reads the calibration data from the IC
      */
-    public void readCalibrationData() {
+    private void readCalibrationData() {
 	cal_AC1 = readS16(BMP180_CAL_AC1); // INT16
 	cal_AC2 = readS16(BMP180_CAL_AC2); // INT16
 	cal_AC3 = readS16(BMP180_CAL_AC3); // INT16
