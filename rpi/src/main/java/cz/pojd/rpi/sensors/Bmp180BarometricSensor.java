@@ -255,6 +255,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
      * @throws IOException
      */
     private double readPressure() throws IOException {
+	int UT = 0;
 	int UP = 0;
 	int B3 = 0;
 	int B5 = 0;
@@ -266,7 +267,19 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	int B4 = 0;
 	int B7 = 0;
 
+	UT = readRawTemp();
 	UP = readRawPressure();
+	
+	// True Temperature Calculations
+	X1 = (int) ((UT - cal_AC6) * cal_AC5) >> 15;
+	X2 = (cal_MC << 11) / (X1 + cal_MD);
+	B5 = X1 + X2;
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("X1 = " + X1);
+	    LOG.debug("X2 = " + X2);
+	    LOG.debug("B5 = " + B5);
+	    LOG.debug("True Temperature = " + (((B5 + 8) >> 4) / 10.0) + " C");
+	}
 
 	// Pressure Calculations
 	B6 = B5 - 4000;
@@ -281,6 +294,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	    LOG.debug("X3 = " + X3);
 	    LOG.debug("B3 = " + B3);
 	}
+		    
 	X1 = (cal_AC3 * B6) >> 13;
 	X2 = (cal_B1 * ((B6 * B6) >> 12)) >> 16;
 	X3 = ((X1 + X2) + 2) >> 2;

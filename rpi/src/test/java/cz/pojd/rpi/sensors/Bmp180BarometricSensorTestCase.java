@@ -143,6 +143,6 @@ public class Bmp180BarometricSensorTestCase {
 	Reading second = result.get(1);
 	assertEquals(Type.pressure, second.getType());
 	// this value was just find out from the very first invocation of the test - is used to avoid regression in the algorithm
-	assertEquals("511.62HPa", second.getValue());
+	assertEquals("127.51HPa", second.getValue());
     }
 }
