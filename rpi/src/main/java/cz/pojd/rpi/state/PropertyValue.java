@@ -1,9 +1,8 @@
 package cz.pojd.rpi.state;
 
 /**
- * PropertyValue is a wrapper for a particular property value to be determined
- * by some of the rest services. For example heap size in VM, hard drives usage
- * in the OS, etc.
+ * PropertyValue is a wrapper for a particular property value to be determined by some of the rest services. For example heap size in VM, hard drives
+ * usage in the OS, etc.
  * 
  * @author Lubos Housa
  * @since Jul 21, 2014 12:01:55 AM
@@ -70,6 +69,9 @@ public class PropertyValue {
     private int percentage;
     private int criticalPercentage;
 
+    private PropertyValue() {
+    }
+
     public Type getType() {
 	return type;
     }
@@ -92,6 +94,7 @@ public class PropertyValue {
 
     @Override
     public String toString() {
-	return "PropertyValue [type=" + type + ", name=" + name + ", textValue=" + textValue + ", percentage=" + percentage + ", criticalPercentage=" + criticalPercentage + "]";
+	return "PropertyValue [type=" + type + ", name=" + name + ", textValue=" + textValue + ", percentage=" + percentage + ", criticalPercentage="
+		+ criticalPercentage + "]";
     }
 }

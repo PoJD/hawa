@@ -6,7 +6,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cz.pojd.rpi.sensors.Ds18B20TemperatureSensor;
-import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**
@@ -20,17 +19,12 @@ public class RoomsDAOImpl implements RoomsDAO {
     private final List<Room> rooms;
 
     @Inject
-    public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor, Sensor barometricSensor) {
+    public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor) {
 	rooms = new ArrayList<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    Room room = new Room();
 	    room.setName(roomSpecification.getName());
-	    // TODO temporary to test out barometric sensor
-	    if ("Kitchen".equals(roomSpecification.getName())) {
-		room.setTemperatureSensor(barometricSensor);
-	    } else {
-		room.setTemperatureSensor(new Ds18B20TemperatureSensor(runtimeExecutor, roomSpecification.getTemperatureID()));
-	    }
+	    room.setTemperatureSensor(new Ds18B20TemperatureSensor(runtimeExecutor, roomSpecification.getTemperatureID()));
 	    rooms.add(room);
 	}
     }
@@ -42,7 +36,7 @@ public class RoomsDAOImpl implements RoomsDAO {
 	    RoomState state = new RoomState();
 	    state.setName(room.getName());
 	    state.setAutoLights(room.isAutoLights());
-	    state.setTemperature(room.getTemperatureSensor().read());
+	    state.setTemperature(room.getTemperatureSensor().read().getValue());
 	    result.add(state);
 	}
 	return result;

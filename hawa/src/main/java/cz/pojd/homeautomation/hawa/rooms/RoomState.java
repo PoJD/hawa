@@ -10,7 +10,7 @@ package cz.pojd.homeautomation.hawa.rooms;
 public class RoomState {
 
     private String name;
-    private Double temperature;
+    private String temperature;
     private boolean autoLights;
 
     public String getName() {
@@ -21,11 +21,11 @@ public class RoomState {
 	this.name = name;
     }
 
-    public Double getTemperature() {
+    public String getTemperature() {
 	return temperature;
     }
 
-    public void setTemperature(Double temperature) {
+    public void setTemperature(String temperature) {
 	this.temperature = temperature;
     }
 

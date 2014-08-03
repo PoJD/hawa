@@ -8,11 +8,12 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+
+import cz.pojd.rpi.sensors.Reading.Type;
 
 /**
  * 
@@ -25,7 +26,7 @@ import com.pi4j.io.i2c.I2CFactory;
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */
-public class Bmp180BarometricSensor implements Sensor {
+public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 
     private static final Log LOG = LogFactory.getLog(Bmp180BarometricSensor.class);
 
@@ -70,9 +71,13 @@ public class Bmp180BarometricSensor implements Sensor {
     private int mode = BMP180_ULTRAHIGHRES;
 
     private boolean initiated;
+    private int altitude;
 
     @Inject
-    public Bmp180BarometricSensor(@Value("newRasPI") boolean newRasPI) {
+    public Bmp180BarometricSensor(boolean newRasPI, int altitude) {
+	LOG.info("Attempt to start up the barometric sensor. newRasPI=" + newRasPI + ". altitude=" + altitude);
+	this.altitude = altitude;
+	
 	try {
 	    // Get i2c bus
 	    bus = I2CFactory.getInstance(newRasPI ? I2CBus.BUS_1 : I2CBus.BUS_0);
@@ -88,7 +93,7 @@ public class Bmp180BarometricSensor implements Sensor {
 	} catch (Exception e) {
 	    LOG.error("Error connecting to the device via I2C", e);
 	}
-	
+
 	if (initiated) {
 	    try {
 		readCalibrationData();
@@ -310,6 +315,17 @@ public class Bmp180BarometricSensor implements Sensor {
 	return p;
     }
 
+    /**
+     * Read pressure as if we were at the sea level and round down to HPa
+     * @return HPa value at the sea level of the current pressure
+     * @throws IOException
+     */
+    private double readPressureHPaAtSeaLevel() throws IOException {
+	double p = readPressure();
+	// positive altitude / 100 should increase pressure with 1200 - then divide all by 100 to get HPa
+	return (p + 1200.*(altitude/100.))/100.;
+    }
+
     private static void waitfor(long howMuch) {
 	try {
 	    Thread.sleep(howMuch);
@@ -317,14 +333,14 @@ public class Bmp180BarometricSensor implements Sensor {
 	    LOG.error("Interrupted while sleeping...");
 	}
     }
-
+    
     @Override
-    public List<Double> readAll() {
-	List<Double> result = new ArrayList<>();
+    public List<Reading> readAll() {
+	List<Reading> result = new ArrayList<>();
 	try {
 	    if (initiated) {
-		result.add(readTemperature());
-		result.add(readPressure());
+		result.add(Reading.newBuilder().type(Type.temperature).value(double2String(readTemperature())+"°C").build());
+		result.add(Reading.newBuilder().type(Type.pressure).value(double2String(readPressureHPaAtSeaLevel())+"HPa").build());
 	    } else {
 		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
 	    }
@@ -335,12 +351,13 @@ public class Bmp180BarometricSensor implements Sensor {
     }
 
     @Override
-    public Double read() {
-	List<Double> all = readAll();
+    public Reading read() {
+	// simply return just the temperature if someone wants 1 value only
+	List<Reading> all = readAll();
 	if (all.size() == 2) {
 	    return all.get(0);
 	} else {
-	    return null;
+	    return Reading.unknown(Type.temperature);
 	}
     }
 }

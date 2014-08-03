@@ -6,8 +6,8 @@ angular.module('homeAutomation.controllers', [])
 
 .controller(
 		'HomeController',
-		[ '$scope', '$interval', 'systemState', 'rooms',
-				function($scope, $interval, systemState, rooms) {
+		[ '$scope', '$interval', 'systemState', 'rooms', 'weather',
+				function($scope, $interval, systemState, rooms, weather) {
 					var updates;
 					$scope.autoUpdate = function() {
 						if (angular.isDefined(updates))
@@ -28,6 +28,7 @@ angular.module('homeAutomation.controllers', [])
 					$scope.update = function() {
 						$scope.systemProperties = systemState.query();
 						$scope.rooms = rooms.query();
+						$scope.weatherReadings = weather.query();
 					};
 
 					$scope.$on('$destroy', function() {

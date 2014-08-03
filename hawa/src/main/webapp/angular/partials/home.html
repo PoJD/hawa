@@ -10,14 +10,31 @@
 						<canvas id="gauge{{$index}}" canv-gauge value="room.temperature"></canvas>
 					</div>
 					<div class="col-md-2 buttonsPanel">
-						<toggle-switch model="room.autoLights" on-label="1" off-label="0" ng-click="switched(this, $index)">
-						</toggle-switch>
+						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
+							ng-click="switched(this, $index)"> </toggle-switch>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Weather <span class="glyphicon glyphicon-cloud right"></span>
+			</div>
+			<div class="panel-body">
+				<div class="row"
+					ng-repeat="reading in weatherReadings">
+					<div class="col-md-5">
+						<span class="label label-default">{{reading.type}}</span>
+					</div>
+					<div class="col-md-7">
+						<span class="label label-success">{{reading.value}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				Home Automation <span app-version></span><span

@@ -42,11 +42,11 @@ public class RpiConfig {
 	return fileSystems;
     }
 
-    @Bean 
+    @Bean
     public Sensor barometricSensor() {
-	return new Bmp180BarometricSensor(newRasPI());
+	return new Bmp180BarometricSensor(newRasPI(), altitude());
     }
-    
+
     /**
      * Detects whether this is a new RasPI or not (drives further logic in this project)
      * 
@@ -55,5 +55,15 @@ public class RpiConfig {
     @Bean
     public boolean newRasPI() {
 	return true;
+    }
+
+    /**
+     * Detects the current altitude to adjust the barometric pressure readings or other values dependent on
+     * 
+     * @return current altitude where the sensors attached to RasPI are located
+     */
+    @Bean
+    public int altitude() {
+	return 290;
     }
 }

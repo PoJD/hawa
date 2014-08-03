@@ -23,3 +23,12 @@ services.factory('rooms', ['$resource', function($resource) {
 		}
 	});
 } ]);
+
+services.factory('weather', ['$resource', function($resource) {
+	return $resource('rest/weather', {}, {
+		query : {
+			method : 'GET',
+			isArray : true
+		}
+	});
+} ]);

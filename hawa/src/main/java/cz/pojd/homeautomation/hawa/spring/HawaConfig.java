@@ -26,7 +26,7 @@ public class HawaConfig {
 
     @Inject
     RpiConfig rpiConfig;
-    
+
     @Bean
     public List<RoomSpecification> rooms() {
 	List<RoomSpecification> rooms = new ArrayList<>();
@@ -37,6 +37,6 @@ public class HawaConfig {
 
     @Bean
     public RoomsDAO roomsDAO() {
-	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor(), rpiConfig.barometricSensor());
+	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor());
     }
 }
