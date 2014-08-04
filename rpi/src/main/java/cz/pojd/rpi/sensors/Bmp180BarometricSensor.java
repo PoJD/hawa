@@ -23,6 +23,8 @@ import cz.pojd.rpi.sensors.Reading.Type;
  * 
  * Reads temperature and pressure at sea level in this order.
  * 
+ * Spring managed bean - get via standard injection (is singleton)
+ * 
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */

@@ -11,6 +11,8 @@ import cz.pojd.rpi.system.RuntimeExecutor;
  * DS18B20 Temperature digital sensor connected to the RPi via 1-Wire interface. This class needs to know the ID to access the proper sensor (more can
  * be attached to the same 1-Wire interface).
  * 
+ * Not spring managed bean - get as simple instantiation in your client code
+ * 
  * @author Lubos Housa
  * @since Aug 1, 2014 9:53:10 PM
  */
