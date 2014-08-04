@@ -34,7 +34,7 @@ This project was originally based on angular-seed project https://github.com/ang
 
 # Raspberry configuration
 
-* Make sure the webapp user (e.g. tomcat) can access /dev/i2c (e.g. setup module loading and group permissions)
+* Make sure the webapp user (e.g. tomcat) can access /dev/i2c and /sys/class/gpio (e.g. setup module loading and group permissions or consider running the webapp as root)
 * Make sure i2c and 1_wire groups are autoloaded
 * Make sure your web app is auto started
 * Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)

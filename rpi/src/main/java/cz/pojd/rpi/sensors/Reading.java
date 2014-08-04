@@ -9,7 +9,7 @@ package cz.pojd.rpi.sensors;
 public class Reading {
 
     public enum Type {
-	temperature, pressure
+	temperatureB, temperatureD, pressure, humidity
     }
 
     public static final class Builder {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import cz.pojd.rpi.sensors.Ds18B20TemperatureSensor;
+import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**

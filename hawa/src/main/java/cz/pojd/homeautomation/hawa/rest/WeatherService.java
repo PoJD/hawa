@@ -1,5 +1,6 @@
 package cz.pojd.homeautomation.hawa.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Sensor;
+import cz.pojd.rpi.sensors.Sensors;
 
 /**
  * Weather service detects the current weather conditions
@@ -25,13 +27,18 @@ public class WeatherService {
     private static final Log LOG = LogFactory.getLog(WeatherService.class);
 
     @Inject
-    private Sensor barometricSensor;
+    private Sensors weatherSensors;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Reading> getTemperatureAndPressure() {
+    public List<Reading> getSensorReadings() {
+	List<Reading> result = new ArrayList<>();
 	LOG.info("Detecting current weather conditions...");
-	List<Reading> result = barometricSensor.readAll();
+
+	for (Sensor sensor : weatherSensors.getWeatherSensors()) {
+	    result.addAll(sensor.readAll());
+	}
+
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("List of readings: " + result);
 	}

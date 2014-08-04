@@ -1,10 +1,8 @@
-package cz.pojd.rpi.sensors;
+package cz.pojd.rpi.sensors.i2c;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,7 +11,10 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
+import cz.pojd.rpi.sensors.AbstractSensor;
+import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
+import cz.pojd.rpi.sensors.Sensor;
 
 /**
  * 
@@ -22,9 +23,7 @@ import cz.pojd.rpi.sensors.Reading.Type;
  * bit.
  * 
  * Reads temperature and pressure at sea level in this order.
- * 
- * Spring managed bean - get via standard injection (is singleton)
- * 
+ *  * 
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */
@@ -75,7 +74,6 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
     private boolean initiated;
     private int altitude;
 
-    @Inject
     public Bmp180BarometricSensor(boolean newRasPI, int altitude) {
 	LOG.info("Attempt to start up the barometric sensor. newRasPI=" + newRasPI + ". altitude=" + altitude);
 	this.altitude = altitude;
@@ -344,20 +342,12 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	return (p + 1200. * (altitude / 100.)) / 100.;
     }
 
-    private static void waitfor(long howMuch) {
-	try {
-	    Thread.sleep(howMuch);
-	} catch (InterruptedException e) {
-	    LOG.error("Interrupted while sleeping...");
-	}
-    }
-
     @Override
     public List<Reading> readAll() {
 	List<Reading> result = new ArrayList<>();
 	try {
 	    if (initiated) {
-		result.add(Reading.newBuilder().type(Type.temperature).value(double2String(readTemperature()) + "°C").build());
+		result.add(Reading.newBuilder().type(Type.temperatureB).value(double2String(readTemperature()) + "°C").build());
 		result.add(Reading.newBuilder().type(Type.pressure).value(double2String(readPressureHPaAtSeaLevel()) + "HPa").build());
 	    } else {
 		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
@@ -375,7 +365,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	if (all.size() == 2) {
 	    return all.get(0);
 	} else {
-	    return Reading.unknown(Type.temperature);
+	    return Reading.unknown(Type.temperatureB);
 	}
     }
 

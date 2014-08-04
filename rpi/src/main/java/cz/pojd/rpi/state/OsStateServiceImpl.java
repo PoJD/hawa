@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import cz.pojd.rpi.state.PropertyValue.Type;
@@ -28,8 +28,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String FILESYSTEM_COMMAND = "df FS --block-size=1 --output=avail | tail -1 && df FS --block-size=1 --output=size | tail -1";
     private static final Pattern pattern = Pattern.compile("FS");
 
-    @Inject
-    @Value("#{fileSystems}")
+    @Resource(name = "fileSystems")
     private List<String> fileSystemsNames;
 
     @Inject
@@ -83,7 +82,8 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	}
 
 	double percentage = 100 * currentLoad.get(0) / (double) getRuntimeExecutor().getCpuCount();
-	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80).textValue(String.format("%.2f%%", percentage)).build();
+	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80)
+		.textValue(String.format("%.2f%%", percentage)).build();
     }
 
     private PropertyValue getRangeValue(String label, String command) {
@@ -96,6 +96,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	double total = range.get(1);
 	double used = total - free;
 	int percentage = (int) (total > 0 ? (100 * used / total) : 0);
-	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90).textValue(doubles2Range(used, total)).build();
+	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90)
+		.textValue(doubles2Range(used, total)).build();
     }
 }

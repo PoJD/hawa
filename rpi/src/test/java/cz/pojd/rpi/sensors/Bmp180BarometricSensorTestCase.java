@@ -18,6 +18,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import cz.pojd.rpi.sensors.Reading.Type;
+import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
 
 public class Bmp180BarometricSensorTestCase {
 
@@ -113,7 +114,7 @@ public class Bmp180BarometricSensorTestCase {
 	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0);
 	Reading reading = sensor.read();
 	assertEquals(Reading.UNKNOWN_VALUE, reading.getValue());
-	assertEquals(Type.temperature, reading.getType());
+	assertEquals(Type.temperatureB, reading.getType());
     }
 
     @Test
@@ -136,7 +137,7 @@ public class Bmp180BarometricSensorTestCase {
 	assertEquals(2, result.size());
 
 	Reading first = result.get(0);
-	assertEquals(Type.temperature, first.getType());
+	assertEquals(Type.temperatureB, first.getType());
 	// this value was just find out from the very first invocation of the test - is used to avoid regression in the algorithm
 	assertEquals("12.80°C", first.getValue());
 
