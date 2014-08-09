@@ -10,8 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.Sensors;
@@ -78,18 +76,18 @@ public class RpiConfig {
     public Sensors sensors() {
 	List<Sensor> result = new ArrayList<>();
 	result.add(new Bmp180BarometricSensor(newRasPI(), altitude()));
-	result.add(new Dht22Am2302TemperatureAndHumiditySensor(gpio(), dht22Am2303Pin()));
+	result.add(new Dht22Am2302TemperatureAndHumiditySensor(dht22Am2303Pin()));
 	return new Sensors(result);
     }
 
     /**
      * Detects GPIO pin that the DHT22/AM2302 sensor is connected to
      * 
-     * @return Pin holding the Dht sensor pin
+     * @return Pin holding the Dht sensor pin (following /sys/class naming)
      */
     @Bean
-    public Pin dht22Am2303Pin() {
-	return RaspiPin.GPIO_00;
+    public int dht22Am2303Pin() {
+	return 17;
     }
 
     @Bean
