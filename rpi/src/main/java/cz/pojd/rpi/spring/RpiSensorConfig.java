@@ -23,8 +23,8 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.gpio.GpioImpl;
 import cz.pojd.rpi.sensors.gpio.MockGpio;
 import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
-import cz.pojd.rpi.sensors.triggers.GpioObservableSensor;
-import cz.pojd.rpi.sensors.triggers.ObservableSensor;
+import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
  * Spring configuration holding all sensor settings

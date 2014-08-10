@@ -38,3 +38,10 @@ This project was originally based on angular-seed project https://github.com/ang
 * Make sure i2c and 1_wire groups are autoloaded
 * Make sure your web app is auto started
 * Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)
+
+# Sensors
+
+* Bmp180BarometricSensor (I2C through Pi4J)
+* Ds18B20TemperatureSensor (1-Wire, simple system commands)
+* Dht22Am2302TemperatureAndHumiditySensor (Raw GPIO, JNI call to Adafruit c code using /dev/mem access directly for high frequency polling the sensor)
+* HC-SR501 Adjust IR Pyroelectric Infrared PIR Motion Sensor (GPIO listener through Pi4J)

@@ -1,4 +1,4 @@
-package cz.pojd.rpi.sensors.triggers;
+package cz.pojd.rpi.sensors.observable;
 
 import java.util.Collections;
 import java.util.List;

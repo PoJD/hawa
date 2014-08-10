@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import com.pi4j.io.gpio.PinState;
 
 import cz.pojd.rpi.controls.Control;
-import cz.pojd.rpi.sensors.triggers.ObservableSensor;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
  * Controller for motion sensor changes - listening for those and acting accordingly
