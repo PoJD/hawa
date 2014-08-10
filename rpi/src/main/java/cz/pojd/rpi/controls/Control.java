@@ -16,4 +16,14 @@ public interface Control {
     public void switchOn();
 
     public void switchOff();
+
+    /**
+     * Disable this control
+     */
+    public void disable();
+
+    /**
+     * Enable this control
+     */
+    public void enable();
 }

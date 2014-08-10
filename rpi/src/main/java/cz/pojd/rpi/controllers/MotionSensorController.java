@@ -27,6 +27,12 @@ public class MotionSensorController implements Observer {
 
     private final Map<ObservableSensor, Control> controls;
 
+    /**
+     * Create new instance of MotionSensorController.
+     * 
+     * @param outdoorMotionSensor motion sensor outdoor (cannot be null)
+     * @param outdoorLightControl outdoor light control (cannot be null)
+     */
     @Inject
     public MotionSensorController(ObservableSensor outdoorMotionSensor, Control outdoorLightControl) {
 	outdoorMotionSensor.addObserver(this);

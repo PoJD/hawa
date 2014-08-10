@@ -2,7 +2,6 @@ package cz.pojd.rpi.sensors.observable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
 
 import javax.inject.Inject;
 
@@ -26,7 +25,7 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
  * @author Lubos Housa
  * @since Aug 10, 2014 10:23:44 AM
  */
-public class GpioObservableSensor extends Observable implements ObservableSensor {
+public class GpioObservableSensor extends ObservableSensor {
 
     private static final Log LOG = LogFactory.getLog(GpioObservableSensor.class);
 

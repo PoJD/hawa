@@ -1,5 +1,6 @@
 package cz.pojd.rpi.sensors.observable;
 
+import java.util.Observable;
 import java.util.Observer;
 
 import cz.pojd.rpi.sensors.Sensor;
@@ -11,7 +12,7 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Aug 10, 2014 10:13:47 AM
  */
-public interface ObservableSensor extends Sensor {
+public abstract class ObservableSensor extends Observable implements Sensor {
 
     /**
      * Add new observer to be notified any time this sensor reading is changed. When that heppens, the Observer's update method is invoked with
@@ -20,5 +21,7 @@ public interface ObservableSensor extends Sensor {
      * @param o
      *            observer to observe the changes
      */
-    public void addObserver(Observer o);
+    public final void addObserver(Observer o) {
+	super.addObserver(o);
+    }
 }

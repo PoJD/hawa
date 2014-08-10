@@ -22,51 +22,73 @@ public class GpioControl implements Control {
 
     private final GpioPinDigitalOutput gpioOutputPin;
     private final String name;
+    private final Runnable low, high, toggle;
+
+    private boolean enabled = true;
 
     @Inject
     public GpioControl(Gpio gpio, String name, Pin pin) {
 	LOG.info("Creating GpioControl '" + name + "' connected to pin " + pin);
 	this.gpioOutputPin = gpio.provisionDigitalOutputPin(pin);
 	this.name = name;
+	this.low = new Runnable() {
+	    public void run() {
+		gpioOutputPin.low();
+	    }
+	};
+	this.high = new Runnable() {
+	    public void run() {
+		gpioOutputPin.high();
+	    }
+	};
+	this.toggle = new Runnable() {
+	    public void run() {
+		gpioOutputPin.toggle();
+	    }
+	};
     }
 
     @Override
     public void toggleSwitch() {
-	logDebug("toogle");
-	if (gpioOutputPin != null) {
-	    gpioOutputPin.toggle();
-	} else {
-	    logWarn();
-	}
+	runOperation(toggle, "toggle");
     }
 
     @Override
     public void switchOn() {
-	logDebug("switch on");
-	if (gpioOutputPin != null) {
-	    gpioOutputPin.high();
-	} else {
-	    logWarn();
-	}
+	runOperation(high, "switch on");
     }
 
     @Override
     public void switchOff() {
-	logDebug("switch off");
-	if (gpioOutputPin != null) {
-	    gpioOutputPin.low();
-	} else {
-	    logWarn();
-	}
+	runOperation(low, "switch off");
     }
 
-    private void logDebug(String operation) {
+    @Override
+    public void disable() {
+	enabled = false;
+    }
+
+    @Override
+    public void enable() {
+	enabled = true;
+    }
+
+    private synchronized void runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("GpioControl '" + name + "' operation: " + operation);
+	    LOG.debug("GpioControl '" + name + "' operation: " + operationName);
 	}
-    }
-
-    private void logWarn() {
-	LOG.warn("GpioControl '" + name + "': not attempting to perform any action on the GPIO output since the provisioning did not return any real GPIO output to work with.");
+	if (gpioOutputPin != null) {
+	    if (enabled) {
+		runnable.run();
+	    } else {
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("GpioControl '" + name + "' disabled. Not perfoming action " + operationName);
+		}
+	    }
+	} else {
+	    LOG.warn("GpioControl '"
+		    + name
+		    + "': not attempting to perform any action on the GPIO output since the provisioning did not return any real GPIO output to work with.");
+	}
     }
 }
