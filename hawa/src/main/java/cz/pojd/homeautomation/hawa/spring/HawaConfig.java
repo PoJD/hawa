@@ -25,7 +25,7 @@ import cz.pojd.rpi.spring.RpiConfig;
 public class HawaConfig {
 
     @Inject
-    RpiConfig rpiConfig;
+    private RpiConfig rpiConfig;
 
     @Bean
     public List<RoomSpecification> rooms() {
