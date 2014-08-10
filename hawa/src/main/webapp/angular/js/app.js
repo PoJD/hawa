@@ -4,7 +4,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('homeAutomation', [
   'ngRoute',
-  'angular-canv-gauge',
+  'angular-gauge',
   'toggle-switch',
   'homeAutomation.filters',
   'homeAutomation.services',
