@@ -1,13 +1,14 @@
+'use strict';
+
 angular.module('angular-gauge', []).directive('gauge', function() {
+    var uniqueId = 1;
 	return {
 		restrict : 'A',
 		scope : {
-			value : '='
+			value : '=',
 		},
 		link : function(scope, element, attributes) {
-			var createGauge, onValueChanged, gauge;
-
-			createGauge = function(label, min, max) {
+			var createGauge = function (label, min, max) {
 				var config = {
 					size : 120,
 					label : label,
@@ -29,24 +30,20 @@ angular.module('angular-gauge', []).directive('gauge', function() {
 					from : config.min + range * 0.75,
 					to : config.max
 				} ];
+				
+				element[0].id = "gauge".concat(uniqueId++);
+				return new Gauge(element[0].id, config);
+			};
 
-				var gauge = new Gauge(element[0].id, config);
-				gauge.render();
-
+			var valueChanged = function(value) {
+				gauge.redraw(value);
 				return gauge;
 			};
-
-			onValueChanged = function(value) {
-				if (gauge) {
-					gauge.redraw(value);
-					return gauge;
-				} else {
-					gauge = createGauge();
-					return gauge;
-				}
-			};
-
-			scope.$watch('value', onValueChanged, true);
+			
+			var gauge = createGauge(attributes.label);
+			gauge.render(0);
+						
+			scope.$watch('value', valueChanged);			
 		}
 	};
 });

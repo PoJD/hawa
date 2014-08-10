@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
+import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOImpl;
 import cz.pojd.homeautomation.hawa.rooms.RoomSpecification;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOImpl;
@@ -38,5 +40,10 @@ public class HawaConfig {
     @Bean
     public RoomsDAO roomsDAO() {
 	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor());
+    }
+    
+    @Bean
+    public OutdoorDAO outdoorDAO() {
+	return new OutdoorDAOImpl();
     }
 }

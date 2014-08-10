@@ -24,11 +24,10 @@ services.factory('rooms', ['$resource', function($resource) {
 	});
 } ]);
 
-services.factory('weather', ['$resource', function($resource) {
-	return $resource('rest/weather', {}, {
+services.factory('outdoor', ['$resource', function($resource) {
+	return $resource('rest/outdoor', {}, {
 		query : {
 			method : 'GET',
-			isArray : true
 		}
 	});
 } ]);

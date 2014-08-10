@@ -6,8 +6,8 @@ angular.module('homeAutomation.controllers', [])
 
 .controller(
 		'HomeController',
-		[ '$scope', '$interval', 'systemState', 'rooms', 'weather',
-				function($scope, $interval, systemState, rooms, weather) {
+		[ '$scope', '$interval', 'systemState', 'rooms', 'outdoor',
+				function($scope, $interval, systemState, rooms, outdoor) {
 					var updates;
 					$scope.autoUpdate = function() {
 						if (angular.isDefined(updates))
@@ -28,17 +28,19 @@ angular.module('homeAutomation.controllers', [])
 					$scope.update = function() {
 						$scope.systemProperties = systemState.query();
 						$scope.rooms = rooms.query();
-						$scope.weatherReadings = weather.query();
+						$scope.outdoor = outdoor.query();
 					};
 
 					$scope.$on('$destroy', function() {
 						$scope.stopUpdates();
 					});
 
-					$scope.switched = function($scope, $index) {
-						// avoid Jersey throwing errors about unknown fields (this field will be set by Angular after first save and fetch from server)
-						$scope.rooms[$index].$resolved = undefined;
+					$scope.switchedRooms = function($scope, $index) {
 						$scope.rooms[$index].$save();
+					};
+					
+					$scope.switchedOutdoor = function($scope) {
+						$scope.outdoor.$save();
 					};
 
 					$scope.update();

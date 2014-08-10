@@ -50,12 +50,22 @@ public class RpiSensorConfig {
     }
 
     @Bean
-    public Sensors sensors() {
-	List<Sensor> result = new ArrayList<>();
-	result.add(new Bmp180BarometricSensor(rpiConfig.newRasPI(), altitude()));
+    public Sensor barometricSensor() {
+	return new Bmp180BarometricSensor(rpiConfig.newRasPI(), altitude());
+    }
+
+    @Bean
+    public Sensor temperatureAndHumiditySensor() {
 	// GPIO pin that the DHT22/AM2302 sensor is connected to (following /sys/class naming)
 	// GPIO17 is P0
-	result.add(new Dht22Am2302TemperatureAndHumiditySensor(17));
+	return new Dht22Am2302TemperatureAndHumiditySensor(17);
+    }
+
+    @Bean
+    public Sensors sensors() {
+	List<Sensor> result = new ArrayList<>();
+	result.add(barometricSensor());
+	result.add(temperatureAndHumiditySensor());
 	return new Sensors(result);
     }
 

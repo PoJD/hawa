@@ -9,7 +9,7 @@ package cz.pojd.rpi.sensors;
 public class Reading {
 
     public enum Type {
-	temperatureB, temperatureD, temperatureDht, pressure, humidity, generic
+	temperatureB, temperatureD, pressure, humidity, generic
     }
 
     public static final class Builder {
@@ -44,8 +44,15 @@ public class Reading {
 	return new Reading(type, UNKNOWN_VALUE);
     }
 
-    private final Type type;
-    private final String value;
+    /*
+     * private constructor added for Jackson to be able to create instance from JSON. Fields not final for the same reason.
+     */
+
+    private Type type;
+    private String value;
+
+    private Reading() {
+    }
 
     private Reading(Type type, String value) {
 	this.type = type;

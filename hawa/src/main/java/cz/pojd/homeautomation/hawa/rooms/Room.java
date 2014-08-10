@@ -1,5 +1,7 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -8,11 +10,12 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Room {
 
     private String name;
     private Sensor temperatureSensor;
-    private boolean autoLights;
+    private boolean autoLights = true;
 
     public String getName() {
 	return name;

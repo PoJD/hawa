@@ -28,7 +28,7 @@ function Gauge(placeholderName, configuration)
 		this.config.transitionDuration = configuration.transitionDuration || 500;
 	}
 
-	this.render = function()
+	this.render = function(value)
 	{
 		this.body = d3.select("#" + this.placeholderName)
 							.append("svg:svg")
@@ -168,7 +168,7 @@ function Gauge(placeholderName, configuration)
 									.style("fill", "#000")
 									.style("stroke-width", "0px");
 		
-		this.redraw(this.config.min, 0);
+		this.redraw(value, 0);
 	}
 	
 	this.buildPointerPath = function(value)
@@ -213,7 +213,7 @@ function Gauge(placeholderName, configuration)
 	{
 		var pointerContainer = this.body.select(".pointerContainer");
 		
-		pointerContainer.selectAll("text").text(Math.round(value));
+		pointerContainer.selectAll("text").text(Math.round(100 * value) / 100);
 		
 		var pointer = pointerContainer.selectAll("path");
 		pointer.transition()

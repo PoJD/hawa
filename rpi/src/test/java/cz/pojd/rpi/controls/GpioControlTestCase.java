@@ -1,5 +1,7 @@
 package cz.pojd.rpi.controls;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -65,6 +67,7 @@ public class GpioControlTestCase {
 	};
 	control = new GpioControl(gpio, "testControl", pin);
 	control.toggleSwitch();
+	assertTrue(control.isEnabled());
     }
 
     @Test
@@ -80,6 +83,7 @@ public class GpioControlTestCase {
 	};
 	control = new GpioControl(gpio, "testControl", pin);
 	control.switchOn();
+	assertTrue(control.isEnabled());
     }
 
     @Test
@@ -95,6 +99,7 @@ public class GpioControlTestCase {
 	};
 	control = new GpioControl(gpio, "testControl", pin);
 	control.switchOff();
+	assertTrue(control.isEnabled());
     }
 
     @Test
@@ -117,5 +122,7 @@ public class GpioControlTestCase {
 	control.switchOn();
 	control.switchOff();
 	control.toggleSwitch();
+	
+	assertFalse(control.isEnabled());
     }
 }

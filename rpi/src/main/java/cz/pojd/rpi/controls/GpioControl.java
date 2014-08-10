@@ -91,4 +91,9 @@ public class GpioControl implements Control {
 		    + "': not attempting to perform any action on the GPIO output since the provisioning did not return any real GPIO output to work with.");
 	}
     }
+
+    @Override
+    public boolean isEnabled() {
+	return enabled;
+    }
 }

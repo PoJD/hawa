@@ -26,4 +26,11 @@ public interface Control {
      * Enable this control
      */
     public void enable();
+
+    /**
+     * Detects whether this control is enabled or not
+     * 
+     * @return true if so, false otherwise. Note that by default all sensors are enabled
+     */
+    public boolean isEnabled();
 }

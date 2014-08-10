@@ -7,11 +7,11 @@
 				</div>
 				<div class="panel-body">
 					<div class="col-md-10">
-						<span id="gauge{{$index}}" gauge value="room.temperature"></span>
+						<span gauge value="room.temperature" label="°C"></span>
 					</div>
 					<div class="col-md-2 buttonsPanel">
 						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
-							ng-click="switched(this, $index)"> </toggle-switch>
+							ng-click="switchedRooms(this, $index)"> </toggle-switch>
 					</div>
 				</div>
 			</div>
@@ -20,11 +20,17 @@
 	<div class="col-md-3">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				Weather <span class="glyphicon glyphicon-cloud right"></span>
+				Outdoor <span class="glyphicon glyphicon-cloud right"></span>
 			</div>
 			<div class="panel-body">
+				<div class="row">
+					<div class="buttonsPanel right">
+						<toggle-switch model="outdoor.autoLights" on-label="1" off-label="0"
+							ng-click="switchedOutdoor(this)"> </toggle-switch>
+					</div>					
+				</div>
 				<div class="row"
-					ng-repeat="reading in weatherReadings">
+					ng-repeat="reading in outdoor.sensorReadings">
 					<div class="col-md-5">
 						<span class="label label-default">{{reading.type}}</span>
 					</div>
