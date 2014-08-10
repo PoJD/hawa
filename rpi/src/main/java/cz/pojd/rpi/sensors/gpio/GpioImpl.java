@@ -4,6 +4,10 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinAnalog;
@@ -30,7 +34,9 @@ import com.pi4j.io.gpio.trigger.GpioTrigger;
  * @author Lubos Housa
  * @since Aug 4, 2014 9:11:38 PM
  */
-public class GpioImpl implements Gpio {
+public class GpioImpl implements Gpio, DisposableBean {
+
+    private static final Log LOG = LogFactory.getLog(GpioImpl.class);
 
     private GpioController gpioController;
 
@@ -399,5 +405,15 @@ public class GpioImpl implements Gpio {
     @Override
     public boolean isReal() {
 	return true;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+	LOG.info("Cleaning up in GpioImpl: unexporting all pins");
+	try {
+	    gpioController.unexportAll();
+	} catch (Exception e) {
+	    LOG.warn("Unable to unexport all pins...", e);
+	}
     }
 }

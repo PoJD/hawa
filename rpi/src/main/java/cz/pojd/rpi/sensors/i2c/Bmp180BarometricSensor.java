@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -23,11 +24,13 @@ import cz.pojd.rpi.sensors.Sensor;
  * bit.
  * 
  * Reads temperature and pressure at sea level in this order.
- *  * 
+ * 
+ * TODO extract I2C stuff out
+ * 
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */
-public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
+public class Bmp180BarometricSensor extends AbstractSensor implements Sensor, DisposableBean {
 
     private static final Log LOG = LogFactory.getLog(Bmp180BarometricSensor.class);
 
@@ -269,7 +272,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 
 	UT = readRawTemp();
 	UP = readRawPressure();
-	
+
 	// True Temperature Calculations
 	X1 = (int) ((UT - cal_AC6) * cal_AC5) >> 15;
 	X2 = (cal_MC << 11) / (X1 + cal_MD);
@@ -294,7 +297,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	    LOG.debug("X3 = " + X3);
 	    LOG.debug("B3 = " + B3);
 	}
-		    
+
 	X1 = (cal_AC3 * B6) >> 13;
 	X2 = (cal_B1 * ((B6 * B6) >> 12)) >> 16;
 	X3 = ((X1 + X2) + 2) >> 2;
@@ -376,5 +379,17 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
      */
     public boolean isInitiated() {
 	return initiated;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+	LOG.info("Closing the I2C bus...");
+	try {
+	    if (initiated && bus != null) {
+		bus.close();
+	    }
+	} catch (Exception e) {
+	    LOG.warn("Unable to close the I2C bus...", e);
+	}
     }
 }
