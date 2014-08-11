@@ -1,7 +1,7 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +26,13 @@ public class RoomsDAOImpl implements RoomsDAO {
 
     @Inject
     public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor) {
-	rooms = new HashMap<>();
+	rooms = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    Room room = new Room();
 	    room.setName(roomSpecification.getName());
 	    room.setTemperatureSensor(new Ds18B20TemperatureSensor(runtimeExecutor, roomSpecification.getTemperatureID()));
+	    room.setAutoLights(roomSpecification.getAutolights());
+	    room.setFloor(roomSpecification.getFloor());
 	    rooms.put(room.getName(), room);
 	}
     }
@@ -41,8 +43,9 @@ public class RoomsDAOImpl implements RoomsDAO {
 	for (Room room : rooms.values()) {
 	    RoomState state = new RoomState();
 	    state.setName(room.getName());
-	    state.setAutoLights(room.isAutoLights());
+	    state.setAutoLights(room.getAutoLights());
 	    state.setTemperature(room.getTemperatureSensor().read().getValue());
+	    state.setFloor(room.getFloor());
 	    result.add(state);
 	}
 	return result;
@@ -52,7 +55,8 @@ public class RoomsDAOImpl implements RoomsDAO {
     public synchronized void save(RoomState roomState) {
 	Room room = rooms.get(roomState.getName());
 	if (room != null) {
-	    room.setAutoLights(roomState.isAutoLights());
+	    // the only item that can change is the autolights....
+	    room.setAutoLights(roomState.getAutoLights());
 	} else {
 	    LOG.warn("Unable to find room by name " + roomState.getName() + ". Ignoring the call to save.");
 	}

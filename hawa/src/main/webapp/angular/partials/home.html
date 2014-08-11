@@ -1,6 +1,6 @@
 <div class="row full">
 	<div class="col-md-9">
-		<div class="col-md-3" ng-repeat="room in rooms">
+		<div class="col-md-2" ng-repeat="room in rooms | filter: { floor: 'FIRST' }">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					{{room.name}}<span class="glyphicon glyphicon-time right"></span>
@@ -10,7 +10,26 @@
 						<span gauge value="room.temperature" label="°C"></span>
 					</div>
 					<div class="col-md-2 buttonsPanel">
-						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
+						<toggle-switch ng-show="room.autoLights!=undefined" model="room.autoLights" on-label="1" off-label="0"
+							ng-click="switchedRooms(this, $index)"> </toggle-switch>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="label-default" style="width:100%;height:1px;margin-bottom:20px;">&nbsp;</div>
+		</div>
+		<div class="col-md-2" ng-repeat="room in rooms | filter: { floor: 'BASEMENT' }">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					{{room.name}}<span class="glyphicon glyphicon-time right"></span>
+				</div>
+				<div class="panel-body">
+					<div class="col-md-10">
+						<span gauge value="room.temperature" label="°C"></span>
+					</div>
+					<div class="col-md-2 buttonsPanel">
+						<toggle-switch ng-show="room.autoLights!=undefined" model="room.autoLights" on-label="1" off-label="0"
 							ng-click="switchedRooms(this, $index)"> </toggle-switch>
 					</div>
 				</div>

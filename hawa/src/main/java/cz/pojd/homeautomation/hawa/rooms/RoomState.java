@@ -1,6 +1,5 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
-
 /**
  * Simple POJO to hold information about a room
  * 
@@ -11,7 +10,8 @@ public class RoomState {
 
     private String name;
     private String temperature;
-    private boolean autoLights;
+    private Boolean autoLights;
+    private Floor floor;
 
     public String getName() {
 	return name;
@@ -29,16 +29,24 @@ public class RoomState {
 	this.temperature = temperature;
     }
 
-    public boolean isAutoLights() {
+    public Boolean getAutoLights() {
 	return autoLights;
     }
 
-    public void setAutoLights(boolean autoLights) {
+    public void setAutoLights(Boolean autoLights) {
 	this.autoLights = autoLights;
+    }
+
+    public Floor getFloor() {
+	return floor;
+    }
+
+    public void setFloor(Floor floor) {
+	this.floor = floor;
     }
 
     @Override
     public String toString() {
-	return "RoomState [name=" + name + ", temperature=" + temperature + ", autoLights=" + autoLights + "]";
+	return "RoomState [name=" + name + ", temperature=" + temperature + ", autoLights=" + autoLights + ", floor=" + floor + "]";
     }
 }

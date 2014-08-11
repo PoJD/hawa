@@ -15,7 +15,7 @@ angular.module('homeAutomation.controllers', [])
 
 						updates = $interval(function() {
 							$scope.update();
-						}, 60000);
+						}, 5 * 60 * 1000);
 					};
 
 					$scope.stopUpdates = function() {

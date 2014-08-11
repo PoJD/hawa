@@ -10,7 +10,7 @@ angular.module('angular-gauge', []).directive('gauge', function() {
 		link : function(scope, element, attributes) {
 			var createGauge = function (label, min, max) {
 				var config = {
-					size : 120,
+					size : 100,
 					label : label,
 					min : undefined != min ? min : 0,
 					max : undefined != max ? max : 40,

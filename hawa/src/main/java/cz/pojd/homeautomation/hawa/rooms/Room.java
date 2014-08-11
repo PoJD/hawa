@@ -15,7 +15,8 @@ public class Room {
 
     private String name;
     private Sensor temperatureSensor;
-    private boolean autoLights = true;
+    private Boolean autoLights;
+    private Floor floor;
 
     public String getName() {
 	return name;
@@ -33,16 +34,24 @@ public class Room {
 	this.temperatureSensor = temperatureSensor;
     }
 
-    public boolean isAutoLights() {
+    public Boolean getAutoLights() {
 	return autoLights;
     }
 
-    public void setAutoLights(boolean autoLights) {
+    public void setAutoLights(Boolean autoLights) {
 	this.autoLights = autoLights;
+    }
+
+    public Floor getFloor() {
+	return floor;
+    }
+
+    public void setFloor(Floor floor) {
+	this.floor = floor;
     }
 
     @Override
     public String toString() {
-	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + autoLights + "]";
+	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + autoLights + ", floor=" + floor + "]";
     }
 }

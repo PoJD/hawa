@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOImpl;
+import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.RoomSpecification;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOImpl;
@@ -32,8 +33,23 @@ public class HawaConfig {
     @Bean
     public List<RoomSpecification> rooms() {
 	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(new RoomSpecification("Bedroom", "28-0000060a84d1"));
-	rooms.add(new RoomSpecification("Kitchen", "28-0000060a84d1"));
+	rooms.add(RoomSpecification.newBuilder().name("Hall down").temperatureID("28-0000060a84d1").autolights(true).build());
+	rooms.add(RoomSpecification.newBuilder().name("Kitchen").temperatureID("28-0000060a84d1").build());
+	rooms.add(RoomSpecification.newBuilder().name("Living room").temperatureID("28-0000060a84d1").build());
+	rooms.add(RoomSpecification.newBuilder().name("Bathroom down").temperatureID("28-0000060a84d1").build());
+	rooms.add(RoomSpecification.newBuilder().name("WC down").temperatureID("28-0000060a84d1").build());
+	rooms.add(RoomSpecification.newBuilder().name("Down room").temperatureID("28-0000060a84d1").build());
+	rooms.add(RoomSpecification.newBuilder().name("Hall up").temperatureID("28-0000060a84d1").autolights(true).floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Bedroom").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Child room 1").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Child room 2").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Child room 3").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Child room 4").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Bathroom bed").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("WC bed").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Bathroom up").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("WC up").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Laundry room").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
 	return rooms;
     }
 
