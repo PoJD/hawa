@@ -65,6 +65,7 @@ public class GpioControl implements Control {
 
     @Override
     public void disable() {
+	switchOff();	
 	enabled = false;
     }
 

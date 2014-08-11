@@ -109,8 +109,9 @@ public class GpioControlTestCase {
 		gpio.provisionDigitalOutputPin(withEqual(pin));
 		result = output;
 
+		// regardless what we do, it is switched off once ...
 		output.low();
-		maxTimes = 0;
+		times = 1;
 		output.high();
 		maxTimes = 0;
 		output.toggle();
@@ -120,6 +121,8 @@ public class GpioControlTestCase {
 	control = new GpioControl(gpio, "testControl", pin);
 	control.disable();
 	control.switchOn();
+	control.switchOff();
+	control.switchOff();
 	control.switchOff();
 	control.toggleSwitch();
 	
