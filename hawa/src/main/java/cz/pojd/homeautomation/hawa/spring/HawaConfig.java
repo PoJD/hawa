@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOImpl;
@@ -25,6 +26,7 @@ import cz.pojd.rpi.spring.RpiConfig;
  */
 @Configuration
 @Import(RpiConfig.class)
+@EnableScheduling
 public class HawaConfig {
 
     @Inject
