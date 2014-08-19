@@ -409,9 +409,10 @@ public class GpioImpl implements Gpio, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-	LOG.info("Cleaning up in GpioImpl: unexporting all pins");
+	LOG.info("Cleaning up in GpioImpl: shutting down...");
 	try {
-	    gpioController.unexportAll();
+	    gpioController.unexportAll();	    
+	    gpioController.shutdown();
 	} catch (Exception e) {
 	    LOG.warn("Unable to unexport all pins...", e);
 	}
