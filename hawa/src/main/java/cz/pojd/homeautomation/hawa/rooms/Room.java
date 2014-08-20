@@ -1,7 +1,5 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -10,13 +8,13 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Room {
 
     private String name;
     private Sensor temperatureSensor;
     private Boolean autoLights;
     private Floor floor;
+    private RoomState roomState;
 
     public String getName() {
 	return name;
@@ -40,6 +38,10 @@ public class Room {
 
     public void setAutoLights(Boolean autoLights) {
 	this.autoLights = autoLights;
+	if (getRoomState() != null) {
+	    // change the actual room state too
+	    getRoomState().setAutoLights(autoLights);
+	}
     }
 
     public Floor getFloor() {
@@ -48,6 +50,14 @@ public class Room {
 
     public void setFloor(Floor floor) {
 	this.floor = floor;
+    }
+
+    public RoomState getRoomState() {
+	return roomState;
+    }
+
+    public void setRoomState(RoomState roomState) {
+	this.roomState = roomState;
     }
 
     @Override

@@ -35,14 +35,6 @@ angular.module('homeAutomation.controllers', [])
 						$scope.stopUpdates();
 					});
 
-					$scope.switchedRooms = function($scope, $index) {
-						$scope.rooms[$index].$save();
-					};
-					
-					$scope.switchedOutdoor = function($scope) {
-						$scope.outdoor.$save();
-					};
-
 					$scope.update();
 					$scope.autoUpdate();
 				} ])

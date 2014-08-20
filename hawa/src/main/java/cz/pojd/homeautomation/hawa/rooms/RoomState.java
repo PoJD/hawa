@@ -1,11 +1,14 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Simple POJO to hold information about a room
  * 
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomState {
 
     private String name;

@@ -1,7 +1,6 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
 
     private final Map<String, Room> rooms;
-    private final List<RoomState> roomStates;
 
     /*
      * API Implementation
@@ -40,7 +38,6 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor, Refresher refresher) {
 	super(refresher);
 	rooms = new LinkedHashMap<>();
-	roomStates = new ArrayList<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    Room room = new Room();
 	    room.setName(roomSpecification.getName());
@@ -55,9 +52,14 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      * Synchronized against the update's method part updating the list...
      */
     @Override
-    public synchronized List<RoomState> getAll() {
-	// simply return new list each time based on the last cached list - could be empty in the very beginning...
-	return Collections.unmodifiableList(new ArrayList<>(roomStates));
+    public List<RoomState> getAll() {
+	List<RoomState> result = new ArrayList<>();
+	for (Room room : rooms.values()) {
+	    if (room.getRoomState() != null) {
+		result.add(room.getRoomState());
+	    }
+	}
+	return result;
     }
 
     @Override
@@ -81,24 +83,17 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
-    protected void detectState() {
-	List<RoomState> newStates = new ArrayList<>();
+    protected synchronized void detectState() {
 	for (Room room : rooms.values()) {
 	    RoomState state = new RoomState();
 	    state.setName(room.getName());
 	    state.setAutoLights(room.getAutoLights());
 	    state.setTemperature(room.getTemperatureSensor().read().getValue());
 	    state.setFloor(room.getFloor());
-	    newStates.add(state);
+	    room.setRoomState(state);
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Rooms state detected: " + state);
+	    }
 	}
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("All rooms states detected: " + newStates);
-	}
-	updateRoomStates(newStates);
-    }
-
-    private synchronized void updateRoomStates(List<RoomState> newStates) {
-	roomStates.clear();
-	roomStates.addAll(newStates);
     }
 }
