@@ -2,13 +2,15 @@ package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.List;
 
+import cz.pojd.homeautomation.hawa.refresh.Refreshable;
+
 /**
  * DAO for Rooms
  *
  * @author Lubos Housa
  * @since Jul 27, 2014 6:21:24 PM
  */
-public interface RoomsDAO {
+public interface RoomsDAO extends Refreshable {
 
     /**
      * Get all rooms

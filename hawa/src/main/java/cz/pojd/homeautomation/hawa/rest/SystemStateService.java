@@ -1,8 +1,5 @@
 package cz.pojd.homeautomation.hawa.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,13 +9,14 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cz.pojd.homeautomation.hawa.refresh.Refresher;
 import cz.pojd.rpi.state.OsStateService;
 import cz.pojd.rpi.state.PropertyValue;
+import cz.pojd.rpi.state.SystemState;
 import cz.pojd.rpi.state.VmStateService;
 
 /**
- * SystemStateService is a Restful web service providing information about the
- * running JVM and Operating System
+ * SystemStateService is a Restful web service providing information about the running JVM and Operating System
  * 
  * @author Lubos Housa
  * @since Jul 20, 2014 11:44:54 PM
@@ -32,29 +30,25 @@ public class SystemStateService {
     private VmStateService vmStateService;
     @Inject
     private OsStateService osStateService;
+    @Inject
+    private Refresher refresher;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PropertyValue> getAll() {
+    public SystemState getSystemState() {
 	LOG.info("Detecting current state of the JVM and the OS...");
-	List<PropertyValue> result = new ArrayList<>();
-	saveAdd(result, vmStateService.getHeap());
-	saveAdd(result, vmStateService.getProcessors());
-	saveAdd(result, osStateService.getCpu());
-	saveAdd(result, osStateService.getRam());
-	saveAdd(result, osStateService.getSwap());
+	SystemState result = new SystemState(refresher.getLastUpdate());
+	result.addValue(vmStateService.getHeap());
+	result.addValue(vmStateService.getProcessors());
+	result.addValue(osStateService.getCpu());
+	result.addValue(osStateService.getRam());
+	result.addValue(osStateService.getSwap());
 	for (PropertyValue value : osStateService.getFileSystems()) {
-	    saveAdd(result, value);
+	    result.addValue(value);
 	}
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("List of properties: " + result);
+	    LOG.debug("System state: " + result);
 	}
 	return result;
-    }
-
-    private void saveAdd(List<PropertyValue> result, PropertyValue value) {
-	if (value != null) {
-	    result.add(value);
-	}
     }
 }

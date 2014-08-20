@@ -26,7 +26,7 @@ angular.module('homeAutomation.controllers', [])
 					};
 
 					$scope.update = function() {
-						$scope.systemProperties = systemState.query();
+						$scope.systemState = systemState.query();
 						$scope.rooms = rooms.query();
 						$scope.outdoor = outdoor.query();
 					};

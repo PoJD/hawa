@@ -9,14 +9,16 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.joda.time.LocalDateTime;
 
+import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
+import cz.pojd.homeautomation.hawa.refresh.Refresher;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.Sensors;
 
-public class OutdoorDAOImpl implements OutdoorDAO {
+public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     private static final Log LOG = LogFactory.getLog(OutdoorDAOImpl.class);
 
@@ -26,6 +28,11 @@ public class OutdoorDAOImpl implements OutdoorDAO {
     private Control outdoorLightControl;
 
     private Outdoor outdoor = new Outdoor();
+
+    @Inject
+    public OutdoorDAOImpl(Refresher refresher) {
+	super(refresher);
+    }
 
     /*
      * DAO API
@@ -55,19 +62,8 @@ public class OutdoorDAOImpl implements OutdoorDAO {
      * Scheduler logic
      */
 
-    @Scheduled(fixedRate = 5 * 60 * 1000)
-    public void update() {
-	LOG.info("Update triggered in OutdoorDAOImpl - detecting all outdoor sensors and saving them...");
-	detectOutdoor();
-	saveLastOutdoor();
-	LOG.info("Update in OutdoorDAOImpl finished.");
-    }
-
-    private void detectOutdoor() {
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Detecting outdoor state now...");
-	}
-
+    @Override
+    protected void detectState() {
 	List<Reading> readings = new ArrayList<>();
 	for (Sensor sensor : outdoorReadSensors.getWeatherSensors()) {
 	    readings.addAll(sensor.readAll());
@@ -79,14 +75,9 @@ public class OutdoorDAOImpl implements OutdoorDAO {
 	}
     }
 
-    private void saveLastOutdoor() {
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Saving last outdoor now...");
-	}
+    @Override
+    protected void saveState(LocalDateTime dateTime) {
 	// TODO save to DB here
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Last outdoor saved.");
-	}
     }
 
     private synchronized void resetState(Collection<Reading> readings) {

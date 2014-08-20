@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOImpl;
+import cz.pojd.homeautomation.hawa.refresh.Refresher;
+import cz.pojd.homeautomation.hawa.refresh.SpringScheduledRefresher;
 import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.RoomSpecification;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
@@ -57,11 +59,21 @@ public class HawaConfig {
 
     @Bean
     public RoomsDAO roomsDAO() {
-	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor());
+	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor(), refresher());
+    }
+
+    @Bean
+    public OutdoorDAO outdoorDAO() {
+	return new OutdoorDAOImpl(refresher());
+    }
+
+    @Bean
+    public Refresher refresher() {
+	return new SpringScheduledRefresher(datePattern());
     }
     
     @Bean
-    public OutdoorDAO outdoorDAO() {
-	return new OutdoorDAOImpl();
+    public String datePattern() {
+	return "dd.MM.yyyy HH:mm";
     }
 }

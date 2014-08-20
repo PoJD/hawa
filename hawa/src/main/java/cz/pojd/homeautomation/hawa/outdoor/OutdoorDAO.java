@@ -1,12 +1,14 @@
 package cz.pojd.homeautomation.hawa.outdoor;
 
+import cz.pojd.homeautomation.hawa.refresh.Refreshable;
+
 /**
  * DAO for outdoor
  * 
  * @author Lubos Housa
  * @since Aug 10, 2014 4:07:08 PM
  */
-public interface OutdoorDAO {
+public interface OutdoorDAO extends Refreshable {
 
     /**
      * Get the outdoor state

@@ -39,7 +39,7 @@
 	<div class="col-md-3">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				Outdoor <span class="glyphicon glyphicon-cloud right"></span>
+				Outdoor ({{systemState.lastUpdate}})<span class="glyphicon glyphicon-cloud right"></span>
 			</div>
 			<div class="panel-body">
 				<div class="row">
@@ -67,7 +67,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="row"
-					ng-repeat="property in systemProperties | filter: { type: 'jvm' }">
+					ng-repeat="property in systemState.values | filter: { type: 'jvm' }">
 					<div class="col-md-3">
 						<span class="label label-default">{{property.name}}</span>
 					</div>
@@ -91,7 +91,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="row"
-					ng-repeat="property in systemProperties | filter: { type: 'os' }">
+					ng-repeat="property in systemState.values | filter: { type: 'os' }">
 					<div class="col-md-3">
 						<span class="label label-default">{{property.name}}</span>
 					</div>

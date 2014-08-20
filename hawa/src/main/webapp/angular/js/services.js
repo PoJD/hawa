@@ -10,7 +10,6 @@ services.factory('systemState', ['$resource', function($resource) {
 	return $resource('rest/systemstate', {}, {
 		query : {
 			method : 'GET',
-			isArray : true
 		}
 	});
 } ]);
