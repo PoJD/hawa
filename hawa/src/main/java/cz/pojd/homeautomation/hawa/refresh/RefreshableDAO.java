@@ -1,10 +1,14 @@
 package cz.pojd.homeautomation.hawa.refresh;
 
+import java.util.Date;
+
 import javax.inject.Inject;
+import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Generic refreshable DAO.
@@ -15,9 +19,15 @@ import org.joda.time.LocalDateTime;
 public abstract class RefreshableDAO implements Refreshable {
 
     private static final Log LOG = LogFactory.getLog(RefreshableDAO.class);
+    protected JdbcTemplate jdbcTemplate;
 
     @Inject
-    protected RefreshableDAO(Refresher refresher) {
+    public void setDataSource(DataSource dataSource) {
+	this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Inject
+    public void setRefresher(Refresher refresher) {
 	refresher.register(this);
     }
 
@@ -31,9 +41,13 @@ public abstract class RefreshableDAO implements Refreshable {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Current state detected. Saving...");
 	}
-	saveState(dateTime);
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Current state saved.");
+	try {
+	    saveState(dateTime.toDate());
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Current state saved.");
+	    }
+	} catch (Exception e) {
+	    LOG.error("Error saving state at " + dateTime + ": ", e);
 	}
 	LOG.info("Refresh in " + this.getClass().getSimpleName() + " finished.");
     }
@@ -41,7 +55,7 @@ public abstract class RefreshableDAO implements Refreshable {
     /**
      * Saving current state previously detected.
      */
-    protected abstract void saveState(LocalDateTime dateTime);
+    protected abstract void saveState(Date date);
 
     /**
      * Detect current state and save anything needed to be saved on this instance (e.g. data to be returned later)

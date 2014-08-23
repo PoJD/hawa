@@ -14,13 +14,14 @@ public class Reading {
 
     public static final class Builder {
 	private Type type;
-	private String value;
+	private double doubleValue;
+	private String units;
 
 	private Builder() {
 	}
 
 	public Reading build() {
-	    return new Reading(type, value);
+	    return new Reading(type, doubleValue, double2String(doubleValue) + (units != null ? units : ""));
 	}
 
 	public Builder type(Type type) {
@@ -28,20 +29,27 @@ public class Reading {
 	    return this;
 	}
 
-	public Builder value(String value) {
-	    this.value = value;
+	public Builder doubleValue(double doubleValue) {
+	    this.doubleValue = doubleValue;
 	    return this;
 	}
-    }
 
-    public static final String UNKNOWN_VALUE = "0";
+	public Builder units(String units) {
+	    this.units = units;
+	    return this;
+	}
+
+	private String double2String(double d) {
+	    return String.format("%.2f", d);
+	}
+    }
 
     public static final Builder newBuilder() {
 	return new Builder();
     }
 
     public static final Reading unknown(Type type) {
-	return new Reading(type, UNKNOWN_VALUE);
+	return new Reading(type, 0, "0");
     }
 
     /*
@@ -49,26 +57,36 @@ public class Reading {
      */
 
     private Type type;
-    private String value;
+    private double doubleValue;
+    private String stringValue;
 
     private Reading() {
     }
 
-    private Reading(Type type, String value) {
+    private Reading(Type type, double doubleValue, String stringValue) {
 	this.type = type;
-	this.value = value;
+	this.doubleValue = doubleValue;
+	this.stringValue = stringValue;
     }
 
     public Type getType() {
 	return type;
     }
 
-    public String getValue() {
-	return value;
+    public String getName() {
+	return getType() != null ? getType().name() : "Unknown reading";
+    }
+
+    public double getDoubleValue() {
+	return doubleValue;
+    }
+
+    public String getStringValue() {
+	return stringValue;
     }
 
     @Override
     public String toString() {
-	return "Reading [type=" + type + ", value=" + value + "]";
+	return "Reading [type=" + type + ", doubleValue=" + doubleValue + ", stringValue=" + stringValue + "]";
     }
 }

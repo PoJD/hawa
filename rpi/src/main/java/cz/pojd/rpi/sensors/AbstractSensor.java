@@ -13,8 +13,4 @@ public abstract class AbstractSensor {
 	    LOG.error("Interrupted while sleeping...");
 	}
     }
-
-    protected String double2String(double d) {
-	return String.format("%.2f", d);
-    }
 }

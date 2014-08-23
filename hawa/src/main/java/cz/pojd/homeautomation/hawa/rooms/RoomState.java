@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class RoomState {
 
     private String name;
+    private double rawTemperature;
     private String temperature;
     private Boolean autoLights;
     private Floor floor;
@@ -22,6 +23,14 @@ public class RoomState {
 
     public void setName(String name) {
 	this.name = name;
+    }
+
+    public double getRawTemperature() {
+	return rawTemperature;
+    }
+
+    public void setRawTemperature(double rawTemperature) {
+	this.rawTemperature = rawTemperature;
     }
 
     public String getTemperature() {
@@ -50,6 +59,7 @@ public class RoomState {
 
     @Override
     public String toString() {
-	return "RoomState [name=" + name + ", temperature=" + temperature + ", autoLights=" + autoLights + ", floor=" + floor + "]";
+	return "RoomState [name=" + name + ", rawTemperature=" + rawTemperature + ", temperature=" + temperature + ", autoLights=" + autoLights
+		+ ", floor=" + floor + "]";
     }
 }

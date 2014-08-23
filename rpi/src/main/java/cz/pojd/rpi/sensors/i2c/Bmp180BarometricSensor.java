@@ -350,8 +350,8 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor, Di
 	List<Reading> result = new ArrayList<>();
 	try {
 	    if (initiated) {
-		result.add(Reading.newBuilder().type(Type.temperatureB).value(double2String(readTemperature()) + "°C").build());
-		result.add(Reading.newBuilder().type(Type.pressure).value(double2String(readPressureHPaAtSeaLevel()) + "HPa").build());
+		result.add(Reading.newBuilder().type(Type.temperatureB).doubleValue(readTemperature()).units("°C").build());
+		result.add(Reading.newBuilder().type(Type.pressure).doubleValue(readPressureHPaAtSeaLevel()).units("HPa").build());
 	    } else {
 		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
 	    }

@@ -113,7 +113,7 @@ public class Bmp180BarometricSensorTestCase {
 	};
 	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0);
 	Reading reading = sensor.read();
-	assertEquals(Reading.UNKNOWN_VALUE, reading.getValue());
+	assertEquals(0, (long)reading.getDoubleValue());
 	assertEquals(Type.temperatureB, reading.getType());
     }
 
@@ -139,11 +139,11 @@ public class Bmp180BarometricSensorTestCase {
 	Reading first = result.get(0);
 	assertEquals(Type.temperatureB, first.getType());
 	// this value was just find out from the very first invocation of the test - is used to avoid regression in the algorithm
-	assertEquals("12.80°C", first.getValue());
+	assertEquals("12.80°C", first.getStringValue());
 
 	Reading second = result.get(1);
 	assertEquals(Type.pressure, second.getType());
 	// this value was just find out from the very first invocation of the test - is used to avoid regression in the algorithm
-	assertEquals("127.51HPa", second.getValue());
+	assertEquals("127.51HPa", second.getStringValue());
     }
 }

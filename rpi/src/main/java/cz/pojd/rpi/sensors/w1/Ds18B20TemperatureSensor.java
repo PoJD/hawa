@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
 
 import cz.pojd.rpi.sensors.AbstractSensor;
 import cz.pojd.rpi.sensors.Reading;
-import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.Reading.Type;
+import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**
  * DS18B20 Temperature digital sensor connected to the RPi via 1-Wire interface. This class needs to know the ID to access the proper sensor (more can
  * be attached to the same 1-Wire interface).
- *  
+ * 
  * @author Lubos Housa
  * @since Aug 1, 2014 9:53:10 PM
  */
@@ -66,7 +66,7 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 	List<Double> result = getRuntimeExecutor().execute(command);
 	if (result.size() == 1) {
 	    // the output from command line is 1000 * temperature
-	    return Reading.newBuilder().type(Type.temperatureB).value(double2String(result.get(0) / 1000)).build();
+	    return Reading.newBuilder().type(Type.temperatureB).doubleValue(result.get(0) / 1000).build();
 	} else {
 	    return Reading.unknown(Type.temperatureB);
 	}

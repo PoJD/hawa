@@ -1,6 +1,7 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +10,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.LocalDateTime;
+import org.springframework.stereotype.Repository;
 
 import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
-import cz.pojd.homeautomation.hawa.refresh.Refresher;
+import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
@@ -22,9 +23,11 @@ import cz.pojd.rpi.system.RuntimeExecutor;
  * @author Lubos Housa
  * @since Aug 1, 2014 10:58:59 PM
  */
+@Repository
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
+    private static final String SQL = "insert into roomstate(name, when, temperature) values (?, ?, ?)";
 
     private final Map<String, Room> rooms;
 
@@ -35,8 +38,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      */
 
     @Inject
-    public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor, Refresher refresher) {
-	super(refresher);
+    public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor) {
 	rooms = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    Room room = new Room();
@@ -78,8 +80,18 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      */
 
     @Override
-    protected void saveState(LocalDateTime dateTime) {
-	// TODO save to DB here
+    protected void saveState(Date date) {
+	if (rooms.isEmpty()) {
+	    LOG.warn("Nothing to save, no rooms found.");
+	    return;
+	}
+	// first create all data we want to insert
+	List<Object[]> arguments = new ArrayList<>();
+	for (Room room : rooms.values()) {
+	    arguments.add(new Object[] { room.getName(), date, room.getRoomState() != null ? room.getRoomState().getRawTemperature() : "0" });
+	}
+
+	jdbcTemplate.batchUpdate(SQL, arguments);
     }
 
     @Override
@@ -88,7 +100,9 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    RoomState state = new RoomState();
 	    state.setName(room.getName());
 	    state.setAutoLights(room.getAutoLights());
-	    state.setTemperature(room.getTemperatureSensor().read().getValue());
+	    Reading reading = room.getTemperatureSensor().read();
+	    state.setRawTemperature(reading.getDoubleValue());
+	    state.setTemperature(reading.getStringValue());
 	    state.setFloor(room.getFloor());
 	    room.setRoomState(state);
 	    if (LOG.isDebugEnabled()) {

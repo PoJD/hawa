@@ -59,19 +59,19 @@ public class HawaConfig {
 
     @Bean
     public RoomsDAO roomsDAO() {
-	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor(), refresher());
+	return new RoomsDAOImpl(rooms(), rpiConfig.runtimeExecutor());
     }
 
     @Bean
     public OutdoorDAO outdoorDAO() {
-	return new OutdoorDAOImpl(refresher());
+	return new OutdoorDAOImpl();
     }
 
     @Bean
     public Refresher refresher() {
 	return new SpringScheduledRefresher(datePattern());
     }
-    
+
     @Bean
     public String datePattern() {
 	return "dd.MM.yyyy HH:mm";

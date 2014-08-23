@@ -65,7 +65,7 @@ public class GpioObservableSensor extends ObservableSensor {
 
     @Override
     public Reading read() {
-	return Reading.newBuilder().type(Type.generic).value(gpioInputPin.getState().toString()).build();
+	return Reading.newBuilder().type(Type.generic).doubleValue(gpioInputPin.getState().getValue()).build();
     }
 
     @Override
