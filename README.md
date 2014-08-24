@@ -40,6 +40,7 @@ This project was originally based on angular-seed project https://github.com/ang
 * Make sure i2c and 1_wire groups are autoloaded
 * Make sure your web app is auto started
 * Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)
+* Install some DB (I used MySQL). Use ddl.sql and indexes.sql inside src/main/db to setup the schema. Use database.sql in the same directory to create the db in MySQL
 
 # Sensors
 
