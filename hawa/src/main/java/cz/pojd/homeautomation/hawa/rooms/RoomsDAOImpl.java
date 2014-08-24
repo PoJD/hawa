@@ -91,7 +91,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    arguments.add(new Object[] { room.getName(), date, room.getRoomState() != null ? room.getRoomState().getRawTemperature() : "0" });
 	}
 
-	jdbcTemplate.batchUpdate(SQL, arguments);
+	getJdbcTemplate().batchUpdate(SQL, arguments);
     }
 
     @Override

@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public abstract class RefreshableDAO implements Refreshable {
 
     private static final Log LOG = LogFactory.getLog(RefreshableDAO.class);
-    protected JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Inject
     public void setDataSource(DataSource dataSource) {
@@ -31,15 +31,32 @@ public abstract class RefreshableDAO implements Refreshable {
 	refresher.register(this);
     }
 
+    public JdbcTemplate getJdbcTemplate() {
+	return jdbcTemplate;
+    }
+
+    /**
+     * Sets the JDBC template of this DAO. Either use this one directly or the setDataSource instead
+     * 
+     * @param jdbcTemplate
+     */
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+	this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public void refresh(LocalDateTime dateTime) {
 	LOG.info("Refresh triggered in " + this.getClass().getSimpleName() + " - detecting current state and saving it...");
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Detecting current state...");
 	}
-	detectState();
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Current state detected. Saving...");
+	try {
+	    detectState();
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Current state detected. Saving...");
+	    }
+	} catch (Exception e) {
+	    LOG.error("Error detecting state at " + dateTime + ": ", e);
 	}
 	try {
 	    saveState(dateTime.toDate());

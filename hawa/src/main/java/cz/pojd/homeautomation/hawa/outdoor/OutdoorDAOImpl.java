@@ -31,6 +31,22 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     private Outdoor outdoor = new Outdoor();
 
+    public Sensors getOutdoorReadSensors() {
+	return outdoorReadSensors;
+    }
+
+    public void setOutdoorReadSensors(Sensors outdoorReadSensors) {
+	this.outdoorReadSensors = outdoorReadSensors;
+    }
+
+    public Control getOutdoorLightControl() {
+	return outdoorLightControl;
+    }
+
+    public void setOutdoorLightControl(Control outdoorLightControl) {
+	this.outdoorLightControl = outdoorLightControl;
+    }
+
     /*
      * DAO API
      * 
@@ -45,13 +61,13 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     public void save(Outdoor outdoor) {
 	// not saving readings, only the "autolights" flag
-	this.outdoor.setAutoLights(outdoor.isAutoLights());
+	get().setAutoLights(outdoor.isAutoLights());
 
 	// and change the related control now
-	if (this.outdoor.isAutoLights()) {
-	    outdoorLightControl.enable();
+	if (get().isAutoLights()) {
+	    getOutdoorLightControl().enable();
 	} else {
-	    outdoorLightControl.disable();
+	    getOutdoorLightControl().disable();
 	}
     }
 
@@ -62,7 +78,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     protected void detectState() {
 	List<Reading> readings = new ArrayList<>();
-	for (Sensor sensor : outdoorReadSensors.getWeatherSensors()) {
+	for (Sensor sensor : getOutdoorReadSensors().getWeatherSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
 	resetState(readings);
@@ -74,22 +90,22 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     protected void saveState(Date date) {
-	if (outdoor.getSensorReadings().isEmpty()) {
+	if (get().getSensorReadings().isEmpty()) {
 	    LOG.warn("Nothing to save, outdoor readings is an empty list.");
 	    return;
 	}
 
 	// first create all data we want to insert
 	List<Object[]> arguments = new ArrayList<>();
-	for (Reading reading : outdoor.getSensorReadings()) {
+	for (Reading reading : get().getSensorReadings()) {
 	    arguments.add(new Object[] { reading.getName(), date, reading.getDoubleValue() });
 	}
 
-	jdbcTemplate.batchUpdate(SQL, arguments);
+	getJdbcTemplate().batchUpdate(SQL, arguments);
     }
 
     private synchronized void resetState(Collection<Reading> readings) {
-	outdoor.reset();
-	outdoor.addAllReadings(readings);
+	get().reset();
+	get().addAllReadings(readings);
     }
 }
