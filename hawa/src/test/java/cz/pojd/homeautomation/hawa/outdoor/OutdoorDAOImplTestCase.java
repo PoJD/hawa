@@ -126,7 +126,7 @@ public class OutdoorDAOImplTestCase {
     @Test
     public void testGetNoStateDetectedShouldGetNoReadings() {
 	Outdoor outdoor = dao.get();
-	
+
 	assertNotNull(outdoor.getSensorReadings());
 	assertTrue(outdoor.getSensorReadings().isEmpty());
     }
@@ -140,7 +140,6 @@ public class OutdoorDAOImplTestCase {
 	assertEquals(1, list.size());
 	Reading r = list.get(0);
 	assertEquals(5., r.getDoubleValue(), 0.001);
-	assertEquals("pressure", r.getName());
 	assertEquals("5.00Pa", r.getStringValue());
 	assertEquals(Type.pressure, r.getType());
     }
@@ -153,13 +152,13 @@ public class OutdoorDAOImplTestCase {
 		times = 1;
 	    }
 	};
-	
+
 	Outdoor outdoor = new Outdoor();
 	outdoor.setAutoLights(true);
-	
+
 	dao.save(outdoor);
-	
-	assertEquals(true,  dao.get().isAutoLights());
+
+	assertEquals(true, dao.get().isAutoLights());
     }
 
     @Test
@@ -170,13 +169,13 @@ public class OutdoorDAOImplTestCase {
 		times = 1;
 	    }
 	};
-	
+
 	Outdoor outdoor = new Outdoor();
 	outdoor.setAutoLights(false);
-	
+
 	dao.save(outdoor);
-	
-	assertEquals(false,  dao.get().isAutoLights());
+
+	assertEquals(false, dao.get().isAutoLights());
     }
 
     private void detectState() {

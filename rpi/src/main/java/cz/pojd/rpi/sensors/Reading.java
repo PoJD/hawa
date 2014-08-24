@@ -6,6 +6,7 @@ package cz.pojd.rpi.sensors;
  * @author Lubos Housa
  * @since Aug 3, 2014 1:19:12 AM
  */
+
 public class Reading {
 
     public enum Type {
@@ -71,10 +72,6 @@ public class Reading {
 
     public Type getType() {
 	return type;
-    }
-
-    public String getName() {
-	return getType() != null ? getType().name() : "Unknown reading";
     }
 
     public double getDoubleValue() {
