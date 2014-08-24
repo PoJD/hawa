@@ -22,7 +22,7 @@ import cz.pojd.rpi.sensors.Sensors;
 public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     private static final Log LOG = LogFactory.getLog(OutdoorDAOImpl.class);
-    private static final String SQL = "insert into outdoor(name, when, value) values (?, ?, ?)";
+    private static final String SQL = "insert into outdoor(name, at, reading) values (?, ?, ?)";
 
     @Inject
     private Sensors outdoorReadSensors;

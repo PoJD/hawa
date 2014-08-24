@@ -27,7 +27,7 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
-    private static final String SQL = "insert into roomstate(name, when, temperature) values (?, ?, ?)";
+    private static final String SQL = "insert into roomstate(name, at, temperature) values (?, ?, ?)";
 
     private final Map<String, Room> rooms;
 
