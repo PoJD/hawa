@@ -21,6 +21,18 @@ html, body {
 	float: right;
 }
 
+.temperaturePanel {
+	padding: 0;
+}
+
 .buttonsPanel {
 	padding: 0 5px 0 0;
+}
+
+.panelLink {
+	color: #fff;
+}
+
+.panelLink:hover {
+	color: #ccc;
 }

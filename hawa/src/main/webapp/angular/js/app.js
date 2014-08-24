@@ -6,13 +6,16 @@ angular.module('homeAutomation', [
   'ngRoute',
   'angular-gauge',
   'toggle-switch',
+  'nvd3ChartDirectives',
   'homeAutomation.filters',
   'homeAutomation.services',
   'homeAutomation.directives',
   'homeAutomation.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {templateUrl: 'angular/partials/home.html', controller: 'HomeController'});
-  $routeProvider.when('/system', {templateUrl: 'angular/partials/system.html', controller: 'SystemController'});
-  $routeProvider.otherwise({redirectTo: '/home'});
+  $routeProvider
+  	.when('/home', {templateUrl: 'angular/views/home.html', controller: 'HomeController'})
+    .when('/system', {templateUrl: 'angular/views/system.html', controller: 'SystemController'})
+    .when('/rooms/:roomName', {templateUrl: 'angular/views/room.html', controller: 'RoomController'})
+    .otherwise({redirectTo: '/home'});
 }]);

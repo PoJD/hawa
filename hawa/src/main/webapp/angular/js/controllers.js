@@ -41,4 +41,8 @@ angular.module('homeAutomation.controllers', [])
 
 .controller('SystemController', [ '$scope', function($scope) {
 
+} ])
+
+.controller('RoomController', [ '$scope', '$routeParams', function($scope, $routeParams) {
+    $scope.roomName = $routeParams.roomName;
 } ]);

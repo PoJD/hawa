@@ -3,14 +3,14 @@
 		<div class="col-md-2" ng-repeat="room in rooms | filter: { floor: 'FIRST' }">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					{{room.name}}<span class="glyphicon glyphicon-time right"></span>
+					<a href="#/rooms/{{room.name}}" class="panelLink">{{room.name}}</a><span class="glyphicon glyphicon-time right"></span>
 				</div>
 				<div class="panel-body">
-					<div class="col-md-10">
+					<div class="col-md-9 temperaturePanel">
 						<span gauge value="room.temperature" label="°C"></span>
 					</div>
-					<div class="col-md-2 buttonsPanel">
-						<toggle-switch ng-show="room.autoLights!=undefined" model="room.autoLights" on-label="1" off-label="0"
+					<div class="col-md-3 buttonsPanel" ng-show="room.autoLights!=undefined">
+						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
 							ng-click="room.$save()"> </toggle-switch>
 					</div>
 				</div>
@@ -22,14 +22,14 @@
 		<div class="col-md-2" ng-repeat="room in rooms | filter: { floor: 'BASEMENT' }">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					{{room.name}}<span class="glyphicon glyphicon-time right"></span>
+					<a href="#/rooms/{{room.name}}" class="panelLink">{{room.name}}</a><span class="glyphicon glyphicon-time right"></span>
 				</div>
 				<div class="panel-body">
-					<div class="col-md-10">
+					<div class="col-md-9 temperaturePanel">
 						<span gauge value="room.temperature" label="°C"></span>
 					</div>
-					<div class="col-md-2 buttonsPanel">
-						<toggle-switch ng-show="room.autoLights!=undefined" model="room.autoLights" on-label="1" off-label="0"
+					<div class="col-md-3 buttonsPanel" ng-show="room.autoLights!=undefined">
+						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
 							ng-click="room.$save()"> </toggle-switch>
 					</div>
 				</div>
