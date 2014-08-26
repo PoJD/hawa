@@ -42,8 +42,8 @@ public class RoomsService {
     public RoomDetail get(@PathParam("roomName") String roomName) {
 	LOG.info("Detecting state of room: " + roomName);
 	RoomDetail result = roomsDAO.get(roomName);
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Detail of the room: " + result);
+	if (LOG.isTraceEnabled()) {
+	    LOG.trace("Detail of the room: " + result);
 	}
 	return result;
     }
