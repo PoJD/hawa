@@ -14,7 +14,7 @@ public class Room {
     private Sensor temperatureSensor;
     private Boolean autoLights;
     private Floor floor;
-    private RoomState roomState;
+    private RoomDetail roomDetail;
 
     public String getName() {
 	return name;
@@ -38,9 +38,9 @@ public class Room {
 
     public void setAutoLights(Boolean autoLights) {
 	this.autoLights = autoLights;
-	if (getRoomState() != null) {
+	if (getRoomDetail() != null) {
 	    // change the actual room state too
-	    getRoomState().setAutoLights(autoLights);
+	    getRoomDetail().setAutoLights(autoLights);
 	}
     }
 
@@ -52,12 +52,12 @@ public class Room {
 	this.floor = floor;
     }
 
-    public RoomState getRoomState() {
-	return roomState;
+    public RoomDetail getRoomDetail() {
+	return roomDetail;
     }
 
-    public void setRoomState(RoomState roomState) {
-	this.roomState = roomState;
+    public void setRoomDetail(RoomDetail roomDetail) {
+	this.roomDetail = roomDetail;
     }
 
     @Override

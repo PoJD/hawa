@@ -35,7 +35,7 @@ public class SystemStateService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public SystemState getSystemState() {
+    public SystemState get() {
 	LOG.info("Detecting current state of the JVM and the OS...");
 	SystemState result = new SystemState(refresher.getLastUpdate());
 	result.addValue(vmStateService.getHeap());

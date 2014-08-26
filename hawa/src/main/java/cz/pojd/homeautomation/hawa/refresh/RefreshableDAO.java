@@ -21,6 +21,8 @@ public abstract class RefreshableDAO implements Refreshable {
     private static final Log LOG = LogFactory.getLog(RefreshableDAO.class);
     private JdbcTemplate jdbcTemplate;
 
+    private Refresher refresher;
+
     @Inject
     public void setDataSource(DataSource dataSource) {
 	this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -29,6 +31,11 @@ public abstract class RefreshableDAO implements Refreshable {
     @Inject
     public void setRefresher(Refresher refresher) {
 	refresher.register(this);
+	this.refresher = refresher;
+    }
+
+    public Refresher getRefresher() {
+	return refresher;
     }
 
     public JdbcTemplate getJdbcTemplate() {

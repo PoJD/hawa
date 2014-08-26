@@ -24,7 +24,7 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class RoomsDAOImplTestCase {
 
     private RoomsDAOImpl dao;
-    private RoomState state;
+    private RoomDetail state;
 
     @Mocked
     private RuntimeExecutor runtimeExecutor;
@@ -39,20 +39,21 @@ public class RoomsDAOImplTestCase {
 	rooms.add(RoomSpecification.newBuilder().autolights(true).floor(Floor.BASEMENT).name("test").temperatureID("id").build());
 	dao = new RoomsDAOImpl(rooms, runtimeExecutor);
 	dao.setJdbcTemplate(jdbcTemplate);
+	dao.setRefresher(refresher);
 
-	state = new RoomState();
+	state = new RoomDetail();
 	state.setName("test");
     }
 
     @Test
     public void testGetAllRoomsEmptyShouldReturnEmptyList() {
 	dao = new RoomsDAOImpl(new ArrayList<RoomSpecification>(), runtimeExecutor);
-	assertTrue(dao.getAll().isEmpty());
+	assertTrue(dao.query().isEmpty());
     }
 
     @Test
     public void testGetAllNoDetectStateCalledShouldReturnEmptyList() {
-	List<RoomState> result = dao.getAll();
+	List<RoomDetail> result = dao.query();
 	assertTrue(result.isEmpty());
     }
 
@@ -60,10 +61,10 @@ public class RoomsDAOImplTestCase {
     public void testGetAllDetectStateCalledShouldReturnValidList() {
 	detectState();
 
-	List<RoomState> result = dao.getAll();
+	List<RoomDetail> result = dao.query();
 	assertEquals(1, result.size());
 
-	RoomState state = result.get(0);
+	RoomDetail state = result.get(0);
 	assertEquals(true, state.getAutoLights());
 	assertEquals(Floor.BASEMENT, state.getFloor());
 	assertEquals("test", state.getName());
@@ -77,7 +78,7 @@ public class RoomsDAOImplTestCase {
 	state.setAutoLights(false);
 	dao.save(state);
 
-	List<RoomState> list = dao.getAll();
+	List<RoomDetail> list = dao.query();
 	assertEquals(1, list.size());
 	assertEquals(false, list.get(0).getAutoLights());
     }
@@ -160,6 +161,7 @@ public class RoomsDAOImplTestCase {
 	rooms.add(RoomSpecification.newBuilder().autolights(true).floor(Floor.BASEMENT).name("test").temperatureID("id").build());
 	rooms.add(RoomSpecification.newBuilder().autolights(false).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
 	dao = new RoomsDAOImpl(rooms, runtimeExecutor);
+	dao.setRefresher(refresher);
 
 	new NonStrictExpectations() {
 	    {

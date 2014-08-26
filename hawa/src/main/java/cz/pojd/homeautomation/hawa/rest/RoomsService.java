@@ -7,13 +7,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.rooms.RoomState;
+import cz.pojd.homeautomation.hawa.rooms.RoomDetail;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOException;
 
@@ -26,19 +27,30 @@ public class RoomsService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<RoomState> getAll() {
+    public List<RoomDetail> query() {
 	LOG.info("Detecting current state of all rooms...");
-	List<RoomState> result = roomsDAO.getAll();
+	List<RoomDetail> result = roomsDAO.query();
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("List of rooms: " + result);
 	}
+	return result;
+    }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{roomName}")
+    public RoomDetail get(@PathParam("roomName") String roomName) {
+	LOG.info("Detecting state of room: " + roomName);
+	RoomDetail result = roomsDAO.get(roomName);
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Detail of the room: " + result);
+	}
 	return result;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void saveRoom(RoomState room) {
+    public void save(RoomDetail room) {
 	LOG.info("About to save room: " + room);
 	try {
 	    roomsDAO.save(room);

@@ -8,7 +8,7 @@ angular.module('homeAutomation.controllers', [])
 		'HomeController',
 		[ '$scope', '$interval', 'systemState', 'rooms', 'outdoor',
 				function($scope, $interval, systemState, rooms, outdoor) {
-					var updates;
+					var updates = undefined;
 					$scope.autoUpdate = function() {
 						if (angular.isDefined(updates))
 							return;
@@ -26,9 +26,9 @@ angular.module('homeAutomation.controllers', [])
 					};
 
 					$scope.update = function() {
-						$scope.systemState = systemState.query();
+						$scope.systemState = systemState.get();
 						$scope.rooms = rooms.query();
-						$scope.outdoor = outdoor.query();
+						$scope.outdoor = outdoor.get();
 					};
 
 					$scope.$on('$destroy', function() {
@@ -43,6 +43,16 @@ angular.module('homeAutomation.controllers', [])
 
 } ])
 
-.controller('RoomController', [ '$scope', '$routeParams', function($scope, $routeParams) {
-    $scope.roomName = $routeParams.roomName;
+.controller('RoomController', [ '$scope', '$routeParams', 'rooms', function($scope, $routeParams, rooms) {
+    $scope.roomDetail = rooms.get({ roomName: $routeParams.roomName }, function(roomDetail) {
+    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
+        $scope.temperatureHistory = roomDetail.temperatureHistory;
+        roomDetail.temperatureHistory = undefined;
+    });
+    
+    $scope.xAxisTickFormat = function() {
+    	return function(d){
+    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
+    	};
+    };
 } ]);

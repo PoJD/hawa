@@ -42,7 +42,7 @@ public class OutdoorService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void saveOutdoor(Outdoor outdoor) {
+    public void save(Outdoor outdoor) {
 	LOG.info("About to save outdoor: " + outdoor);
 	try {
 	    outdoorDAO.save(outdoor);

@@ -1,1 +1,54 @@
-<h1>{{roomName}}</h1>
+<div class="page-header">
+	<h1>{{roomDetail.name}}</h1>
+</div>
+
+<div class="row full">
+	<div class="col-md-6">
+		<nvd3-line-chart data="temperatureHistory" id="temperatureHistory"
+			width="600" height="400" margin="0"
+			xAxisTickFormat="xAxisTickFormat()" showXAxis="true" showYAxis="true" forceY="[0,40]"
+			noData="Loading..." showLegend="true" interactive="true"
+			tooltips="true" useInteractiveGuideLine="true"> <svg></svg>
+		</nvd3-line-chart>
+	</div>
+	<div class="col-md-3 right">
+		<div class="panel panel-info">
+			<div class="panel-heading">Summary</div>
+
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{roomDetail.name}}</td>
+					</tr>
+					<tr>
+						<th>Floor</th>
+						<td>{{roomDetail.floor.toLowerCase()}}</td>
+					</tr>
+					<tr>
+						<th>Current temperature</th>
+						<td>{{roomDetail.temperature}}°C</td>
+					</tr>
+					<tr>
+						<th>Last checked</th>
+						<td>{{roomDetail.lastUpdate}}</td>
+					</tr>
+					<tr>
+						<th>Auto lights</th>
+						<td>
+							<div ng-switch on="roomDetail.autoLights"
+								class="left roomLabelWrapper">
+								<div ng-switch-when="true" class="label roomLabel label-success">On</div>
+								<div ng-switch-when="false" class="label roomLabel label-danger">Off</div>
+								<div ng-switch-default class="label roomLabel label-default">Disabled</div>
+							</div> <toggle-switch class="left roomSwitch"
+								ng-show="roomDetail.autoLights!=undefined"
+								model="roomDetail.autoLights" on-label="1" off-label="0"
+								ng-click="roomDetail.$save()"> </toggle-switch>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

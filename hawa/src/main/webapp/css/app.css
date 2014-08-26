@@ -17,8 +17,27 @@ html, body {
 	min-height: 100%;
 }
 
+.left {
+	float: left;
+}
+
 .right {
 	float: right;
+}
+
+.roomLabel {
+	margin-top: 3px;
+	display: block;
+}
+
+.roomSwitch {
+	margin-left: 10px;
+	height: 22px;
+	font-size: 75%;
+}
+
+.roomSwitch span {
+	padding: 1px;
 }
 
 .temperaturePanel {
