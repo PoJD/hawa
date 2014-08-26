@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
@@ -28,11 +29,29 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
-    private static final String INSERT_SQL = "insert into roomstate(name, at, temperature) values (?, ?, ?)";
-    private static final String TEMP_HISTORY_SQL = "select at, temperature from roomstate "
-	    + "where name=? and at between now() - interval ? day and now() order by at";
 
     private final Map<String, Room> rooms;
+
+    @Value("${sql.roomsDAO.insert}")
+    private String insertSql;
+    @Value("${sql.roomsDAO.temperatureHistory}")
+    private String temperatureHistorySql;
+
+    public String getInsertSql() {
+	return insertSql;
+    }
+
+    public void setInsertSql(String insertSql) {
+	this.insertSql = insertSql;
+    }
+
+    public String getTemperatureHistorySql() {
+	return temperatureHistorySql;
+    }
+
+    public void setTemperatureHistorySql(String temperatureHistorySql) {
+	this.temperatureHistorySql = temperatureHistorySql;
+    }
 
     /*
      * API Implementation
@@ -85,7 +104,8 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    // create a new copy here - we do not want to store all the below data to memory now...
 	    RoomDetail detail = new RoomDetail(room.getRoomDetail());
 	    // TODO does the color really belong here?
-	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName), getGraphData("Last week", "#f00", 7, roomName) });
+	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
+		    getGraphData("Last week", "#f00", 7, roomName) });
 	    return detail;
 	} else {
 	    LOG.warn("Unable to find room by name " + roomName + ". Returning null in method get().");
@@ -109,7 +129,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    arguments.add(new Object[] { room.getName(), date, room.getRoomDetail() != null ? room.getRoomDetail().getRawTemperature() : "0" });
 	}
 
-	getJdbcTemplate().batchUpdate(INSERT_SQL, arguments);
+	getJdbcTemplate().batchUpdate(insertSql, arguments);
     }
 
     @Override
@@ -136,7 +156,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     private GraphData getGraphData(String key, String color, int daysBack, String roomName) {
 	List<Object[]> list = new ArrayList<>();
 	try {
-	    for (Map<String, Object> row : getJdbcTemplate().queryForList(TEMP_HISTORY_SQL, new Object[] { roomName, daysBack })) {
+	    for (Map<String, Object> row : getJdbcTemplate().queryForList(temperatureHistorySql, new Object[] { roomName, daysBack })) {
 		list.add(new Object[] { row.get("at"), row.get("temperature") });
 	    }
 	} catch (Exception e) {

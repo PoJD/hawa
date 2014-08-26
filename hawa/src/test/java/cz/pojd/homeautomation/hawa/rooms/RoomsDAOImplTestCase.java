@@ -105,7 +105,7 @@ public class RoomsDAOImplTestCase {
 
 	new NonStrictExpectations() {
 	    {
-		jdbcTemplate.batchUpdate(withSubstring("insert into roomstate(name, at, temperature)"),
+		jdbcTemplate.batchUpdate(anyString,
 			withArgThat(new BaseMatcher<List<Object[]>>() {
 			    @Override
 			    public boolean matches(Object item) {

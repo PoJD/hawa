@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
@@ -22,9 +23,16 @@ public abstract class RefreshableDAO implements Refreshable {
     private JdbcTemplate jdbcTemplate;
 
     private Refresher refresher;
+    @Value("${jdbc.driverClassName}")
+    private String jdbcDriver;
+    @Value("${jdbc.url}")
+    private String jdbcUrl;
 
     @Inject
     public void setDataSource(DataSource dataSource) {
+	if (LOG.isInfoEnabled()) {
+	    LOG.info("Using datasource: " + dataSource + " and JDBC Driver: '" + jdbcDriver + "' and jdbc URL: '" + jdbcUrl + "'.");
+	}
 	this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

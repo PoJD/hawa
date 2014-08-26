@@ -21,6 +21,6 @@
 	</bean>
 
 	<!-- this gets chosen based on the profile (different for rpi and dev) -->
-	<context:property-placeholder location="classpath:jdbc.properties" />
+	<context:property-placeholder location="classpath:*.properties" />
 
 </beans>
