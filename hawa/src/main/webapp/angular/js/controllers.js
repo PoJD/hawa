@@ -5,54 +5,67 @@
 angular.module('homeAutomation.controllers', [])
 
 .controller(
-		'HomeController',
-		[ '$scope', '$interval', 'systemState', 'rooms', 'outdoor',
-				function($scope, $interval, systemState, rooms, outdoor) {
-					var updates = undefined;
-					$scope.autoUpdate = function() {
-						if (angular.isDefined(updates))
-							return;
+		'BaseUpdateController',
+		[ '$scope', '$interval', function($scope, $interval) {
+				var updates = undefined;
+				$scope.autoUpdate = function() {
+					if (angular.isDefined(updates))
+						return;
 
-						updates = $interval(function() {
+					updates = $interval(function() {
+						if (angular.isDefined($scope.update)) {
 							$scope.update();
-						}, 5 * 60 * 1000);
-					};
-
-					$scope.stopUpdates = function() {
-						if (angular.isDefined(updates)) {
-							$interval.cancel(updates);
-							updates = undefined;
 						}
-					};
+					}, 5 * 60 * 1000);
+				};
 
-					$scope.update = function() {
-						$scope.systemState = systemState.get();
-						$scope.rooms = rooms.query();
-						$scope.outdoor = outdoor.get();
-					};
+				$scope.stopUpdates = function() {
+					if (angular.isDefined(updates)) {
+						$interval.cancel(updates);
+						updates = undefined;
+					}
+				};
+				$scope.$on('$destroy', function() {
+					$scope.stopUpdates();
+				});
+				$scope.autoUpdate();
+			} ])
 
-					$scope.$on('$destroy', function() {
-						$scope.stopUpdates();
-					});
+.controller(
+		'HomeController',
+		[ '$scope', '$controller', 'systemState', 'rooms', 'outdoor', function($scope, $controller, systemState, rooms, outdoor) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 
-					$scope.update();
-					$scope.autoUpdate();
-				} ])
+				$scope.update = function() {
+					$scope.systemState = systemState.get();
+					$scope.rooms = rooms.query();
+					$scope.outdoor = outdoor.get();
+				};
+
+				$scope.update();
+			} ])
 
 .controller('SystemController', [ '$scope', function($scope) {
 
 } ])
 
-.controller('RoomController', [ '$scope', '$routeParams', 'rooms', function($scope, $routeParams, rooms) {
-    $scope.roomDetail = rooms.get({ roomName: $routeParams.roomName }, function(roomDetail) {
-    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
-        $scope.temperatureHistory = roomDetail.temperatureHistory;
-        roomDetail.temperatureHistory = undefined;
-    });
-    
-    $scope.xAxisTickFormat = function() {
-    	return function(d){
-    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
-    	};
-    };
+.controller('RoomController', 
+		[ '$scope', '$controller', '$routeParams', 'rooms', function($scope, $controller, $routeParams, rooms) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				
+				$scope.update = function() {
+				    $scope.roomDetail = rooms.get({ roomName: $routeParams.roomName }, function(roomDetail) {
+				    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
+				        $scope.temperatureHistory = roomDetail.temperatureHistory;
+				        roomDetail.temperatureHistory = undefined;
+				    });
+				};
+
+				$scope.update();
+			    
+			    $scope.xAxisTickFormat = function() {
+			    	return function(d){
+			    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
+			    	};
+			    };
 } ]);
