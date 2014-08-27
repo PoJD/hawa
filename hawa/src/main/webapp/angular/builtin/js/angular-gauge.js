@@ -9,8 +9,7 @@ angular.module('angular-gauge', []).directive('gauge', function() {
 		},
 		link : function(scope, element, attributes) {
 			var createGauge = function (label, min, max) {
-				var config = {
-					size : 100,
+				var config = { 
 					label : label,
 					min : undefined != min ? min : 0,
 					max : undefined != max ? max : 40,
@@ -43,7 +42,7 @@ angular.module('angular-gauge', []).directive('gauge', function() {
 			var gauge = createGauge(attributes.label);
 			gauge.render(0);
 						
-			scope.$watch('value', valueChanged);			
+			scope.$watch('value', valueChanged);	
 		}
 	};
 });

@@ -8,7 +8,7 @@ function Gauge(placeholderName, configuration)
 	{
 		this.config = configuration;
 		
-		this.config.size = this.config.size * 0.9;
+		this.config.size = 100;
 		
 		this.config.raduis = this.config.size * 0.97 / 2;
 		this.config.cx = this.config.size / 2;
@@ -33,8 +33,9 @@ function Gauge(placeholderName, configuration)
 		this.body = d3.select("#" + this.placeholderName)
 							.append("svg:svg")
 							.attr("class", "gauge")
-							.attr("width", this.config.size)
-							.attr("height", this.config.size);
+							.attr("width", "100%")
+							.attr("height", "100%")
+							.attr("viewBox", "0 0 100 100");
 		
 		this.body.append("svg:circle")
 					.attr("cx", this.config.cx)
