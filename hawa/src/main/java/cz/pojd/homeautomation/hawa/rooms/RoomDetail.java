@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
+import cz.pojd.rpi.sensors.Reading;
 
 /**
  * Simple POJO to hold information about a room
@@ -16,18 +17,17 @@ import cz.pojd.homeautomation.hawa.graphs.GraphData;
 public class RoomDetail {
 
     private String name;
-    private double rawTemperature;
-    private String temperature;
     private Boolean autoLights;
     private Floor floor;
     private String lastUpdate;
+    private Reading temperature;
     private GraphData[] temperatureHistory;
-    
-    public RoomDetail() {}
-    
+
+    public RoomDetail() {
+    }
+
     public RoomDetail(RoomDetail copy) {
 	name = copy.name;
-	rawTemperature = copy.rawTemperature;
 	temperature = copy.temperature;
 	autoLights = copy.autoLights;
 	floor = copy.floor;
@@ -43,19 +43,15 @@ public class RoomDetail {
 	this.name = name;
     }
 
-    public double getRawTemperature() {
-	return rawTemperature;
-    }
-
-    public void setRawTemperature(double rawTemperature) {
-	this.rawTemperature = rawTemperature;
-    }
-
-    public String getTemperature() {
+    public Reading getTemperature() {
 	return temperature;
     }
+    
+    public boolean isValidTemperature() {
+	return getTemperature()!=null && getTemperature().isValid();
+    }
 
-    public void setTemperature(String temperature) {
+    public void setTemperature(Reading temperature) {
 	this.temperature = temperature;
     }
 
@@ -93,7 +89,7 @@ public class RoomDetail {
 
     @Override
     public String toString() {
-	return "RoomDetail [name=" + name + ", rawTemperature=" + rawTemperature + ", temperature=" + temperature + ", autoLights=" + autoLights
-		+ ", floor=" + floor + ", lastUpdate=" + lastUpdate + ", temperatureHistory=" + Arrays.toString(temperatureHistory) + "]";
+	return "RoomDetail [name=" + name + ", autoLights=" + autoLights + ", floor=" + floor + ", lastUpdate=" + lastUpdate + ", temperature="
+		+ temperature + ", temperatureHistory=" + Arrays.toString(temperatureHistory) + "]";
     }
 }

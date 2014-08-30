@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
 import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
-import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
@@ -87,13 +86,13 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
-    public void save(RoomDetail roomState) {
-	Room room = rooms.get(roomState.getName());
+    public void save(RoomDetail roomDetail) {
+	Room room = rooms.get(roomDetail.getName());
 	if (room != null) {
 	    // the only item that can change is the autolights....
-	    room.setAutoLights(roomState.getAutoLights());
+	    room.setAutoLights(roomDetail.getAutoLights());
 	} else {
-	    LOG.warn("Unable to find room by name " + roomState.getName() + ". Ignoring the call to save.");
+	    LOG.warn("Unable to find room by name " + roomDetail.getName() + ". Ignoring the call to save.");
 	}
     }
 
@@ -101,16 +100,20 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     public RoomDetail get(String roomName) {
 	Room room = rooms.get(roomName);
 	if (room != null) {
-	    // create a new copy here - we do not want to store all the below data to memory now...
-	    RoomDetail detail = new RoomDetail(room.getRoomDetail());
-	    // TODO does the color really belong here?
-	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
-		    getGraphData("Last week", "#f00", 7, roomName) });
-	    return detail;
+	    if (room.getRoomDetail() != null) {
+		// create a new copy here - we do not want to store all the below data to memory now...
+		RoomDetail detail = new RoomDetail(room.getRoomDetail());
+		// TODO does the color really belong here?
+		detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
+			getGraphData("Last week", "#f00", 7, roomName) });
+		return detail;
+	    } else {
+		LOG.warn("No room detail detected yet for room " + roomName + ". Returning null in method get().");
+	    }
 	} else {
 	    LOG.warn("Unable to find room by name " + roomName + ". Returning null in method get().");
-	    return null;
 	}
+	return null;
     }
 
     /*
@@ -119,33 +122,33 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     @Override
     protected void saveState(Date date) {
-	if (rooms.isEmpty()) {
-	    LOG.warn("Nothing to save, no rooms found.");
-	    return;
-	}
 	// first create all data we want to insert
 	List<Object[]> arguments = new ArrayList<>();
 	for (Room room : rooms.values()) {
-	    arguments.add(new Object[] { room.getName(), date, room.getRoomDetail() != null ? room.getRoomDetail().getRawTemperature() : "0" });
+	    if (room.getRoomDetail() != null && room.getRoomDetail().isValidTemperature()) {
+		arguments.add(new Object[] { room.getName(), date, room.getRoomDetail().getTemperature().getDoubleValue() });
+	    }
 	}
 
-	getJdbcTemplate().batchUpdate(insertSql, arguments);
+	if (!arguments.isEmpty()) {
+	    getJdbcTemplate().batchUpdate(insertSql, arguments);
+	} else {
+	    LOG.warn("Nothing to save, no valid temperature readings found.");
+	}
     }
 
     @Override
     protected synchronized void detectState() {
 	for (Room room : rooms.values()) {
-	    RoomDetail state = new RoomDetail();
-	    state.setName(room.getName());
-	    state.setAutoLights(room.getAutoLights());
-	    Reading reading = room.getTemperatureSensor().read();
-	    state.setRawTemperature(reading.getDoubleValue());
-	    state.setTemperature(reading.getStringValue());
-	    state.setFloor(room.getFloor());
-	    state.setLastUpdate(getRefresher().getLastUpdate());
-	    room.setRoomDetail(state);
+	    RoomDetail detail = new RoomDetail();
+	    detail.setName(room.getName());
+	    detail.setAutoLights(room.getAutoLights());
+	    detail.setTemperature(room.getTemperatureSensor().read());
+	    detail.setFloor(room.getFloor());
+	    detail.setLastUpdate(getRefresher().getLastUpdate());
+	    room.setRoomDetail(detail);
 	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Rooms state detected: " + state);
+		LOG.debug("Rooms state detected: " + detail);
 	    }
 	}
     }

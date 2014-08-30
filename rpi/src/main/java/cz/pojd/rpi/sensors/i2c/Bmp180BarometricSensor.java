@@ -368,7 +368,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor, Di
 	if (all.size() == 2) {
 	    return all.get(0);
 	} else {
-	    return Reading.unknown(Type.temperatureB);
+	    return Reading.invalid(Type.temperatureB);
 	}
     }
 

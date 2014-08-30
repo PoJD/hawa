@@ -22,7 +22,7 @@ public class Reading {
 	}
 
 	public Reading build() {
-	    return new Reading(type, doubleValue, double2String(doubleValue) + (units != null ? units : ""));
+	    return new Reading(type, doubleValue, double2String(doubleValue) + (units != null ? units : ""), true);
 	}
 
 	public Builder type(Type type) {
@@ -49,8 +49,8 @@ public class Reading {
 	return new Builder();
     }
 
-    public static final Reading unknown(Type type) {
-	return new Reading(type, 0, "0");
+    public static final Reading invalid(Type type) {
+	return new Reading(type, 0, "0", false);
     }
 
     /*
@@ -60,14 +60,16 @@ public class Reading {
     private Type type;
     private double doubleValue;
     private String stringValue;
+    private boolean valid;
 
     private Reading() {
     }
 
-    private Reading(Type type, double doubleValue, String stringValue) {
+    private Reading(Type type, double doubleValue, String stringValue, boolean valid) {
 	this.type = type;
 	this.doubleValue = doubleValue;
 	this.stringValue = stringValue;
+	this.valid = valid;
     }
 
     public Type getType() {
@@ -82,8 +84,12 @@ public class Reading {
 	return stringValue;
     }
 
+    public boolean isValid() {
+	return valid;
+    }
+
     @Override
     public String toString() {
-	return "Reading [type=" + type + ", doubleValue=" + doubleValue + ", stringValue=" + stringValue + "]";
+	return "Reading [type=" + type + ", doubleValue=" + doubleValue + ", stringValue=" + stringValue + ", valid=" + valid + "]";
     }
 }

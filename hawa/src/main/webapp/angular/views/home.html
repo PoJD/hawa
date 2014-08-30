@@ -7,7 +7,7 @@
 				</div>
 				<div class="panel-body">
 					<div class="{{room.autoLights!=undefined ? 'col-md-9 col-xs-9' : 'col-md-12 col-xs-12'}} temperaturePanel">
-						<span gauge value="room.temperature" label="°C"></span>
+						<span gauge value="room.temperature.doubleValue" label="°C"></span>
 					</div>
 					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.autoLights!=undefined">
 						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
@@ -26,7 +26,7 @@
 				</div>
 				<div class="panel-body">
 					<div class="{{room.autoLights!=undefined ? 'col-md-9 col-xs-9' : 'col-md-12 col-xs-12'}} temperaturePanel">
-						<span gauge value="room.temperature" label="°C"></span>
+						<span gauge value="room.temperature.doubleValue" label="°C"></span>
 					</div>
 					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.autoLights!=undefined">
 						<toggle-switch model="room.autoLights" on-label="1" off-label="0"

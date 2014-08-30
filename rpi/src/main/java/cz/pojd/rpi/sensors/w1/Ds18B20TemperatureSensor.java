@@ -96,6 +96,6 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 		return Reading.newBuilder().type(Type.temperatureB).doubleValue(temperature).build();
 	    }
 	}
-	return Reading.unknown(Type.temperatureB);
+	return Reading.invalid(Type.temperatureB);
     }
 }

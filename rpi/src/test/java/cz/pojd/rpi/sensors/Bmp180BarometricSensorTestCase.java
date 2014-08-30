@@ -114,6 +114,7 @@ public class Bmp180BarometricSensorTestCase {
 	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0);
 	Reading reading = sensor.read();
 	assertEquals(0, (long)reading.getDoubleValue());
+	assertEquals(false, reading.isValid());
 	assertEquals(Type.temperatureB, reading.getType());
     }
 
