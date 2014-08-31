@@ -36,7 +36,9 @@ This project was originally based on angular-seed project https://github.com/ang
 # Raspberry configuration
 
 * Make sure the webapp user (e.g. tomcat) can access /dev/i2c and /sys/class/gpio (e.g. setup module loading and group permissions or consider running the webapp as root)
-* Make sure i2c and 1_wire groups are autoloaded
+* Make sure i2c and 1_wire and v4l2 modules are autoloaded (w1-gpio i2c-bcm2708 i2c-dev bcm2835-v4l2)
+* Make sure the raspistill tool is available (to be able to take pictures from camera) and in $PATH (by default in Raspian, might be needed to be added in other distros)
+* Make sure mjpg-streamer with uvc video input and http output plugins is installed on the box (to be able to view video)
 * Make sure your web app is auto started
 * Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)
 * Install some DB (I used MySQL). Use ddl.sql and indexes.sql inside src/main/db to setup the schema. Use database.sql in the same directory to create the db in MySQL
