@@ -15,7 +15,7 @@ angular.module('homeAutomation', [
 config(['$routeProvider', function($routeProvider) {
   $routeProvider
   	.when('/home', {templateUrl: 'angular/views/home.html', controller: 'HomeController'})
-    .when('/system', {templateUrl: 'angular/views/system.html', controller: 'SystemController'})
+    .when('/liveview', {templateUrl: 'angular/views/liveview.html', controller: 'LiveViewController'})
     .when('/rooms/:roomName', {templateUrl: 'angular/views/room.html', controller: 'RoomController'})
     .otherwise({redirectTo: '/home'});
 }]);

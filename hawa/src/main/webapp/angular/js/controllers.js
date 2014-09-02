@@ -45,8 +45,12 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update();
 			} ])
 
-.controller('SystemController', [ '$scope', function($scope) {
-
+.controller('LiveViewController', [ '$scope', 'liveview', function($scope, liveview) {
+	$scope.liveview = liveview.get(function(result) {
+		if (result.cameraOK) { // only in this case change dynamically the img element to start fetching data...
+			$scope.source = "http://rpi:7070/?action=stream";
+		}
+	});
 } ])
 
 .controller('RoomController', 

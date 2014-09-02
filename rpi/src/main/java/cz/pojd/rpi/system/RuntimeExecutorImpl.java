@@ -41,29 +41,46 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
     }
 
     @Override
+    public boolean executeNoReturn(String command) {
+	return executeCommand(command) != null;
+    }
+
+    @Override
     public List<Double> execute(String commandSimple) {
 	List<Double> output = new ArrayList<>();
+	try {
+	    Process process = executeCommand(commandSimple);
+	    if (process != null) {
+		for (String s : getOutput(process.getInputStream())) {
+		    output.add(Double.parseDouble(s));
+		}
+	    }
+	} catch (IOException e) {
+	    LOG.error("Unable to parse output of system command " + commandSimple, e);
+	}
+	return output;
+    }
+
+    private Process executeCommand(String commandSimple) {
 	String[] command = new String[] { COMMAND_START[0], COMMAND_START[1], commandSimple };
 	String commaSeparatedCommand = StringUtils.arrayToCommaDelimitedString(command);
 	try {
 	    Process process = getRuntime().exec(command);
 	    process.waitFor();
-	    // since we are pipelining more commands, they always return 0 even if some of them failed. So need to check the error stream to detect the result
+
+	    // since we might pipelining more commands, they always return 0 even if some of them failed. So need to check the error stream to detect
+	    // the result
 	    Collection<String> error = getOutput(process.getErrorStream());
-	    if (!error.isEmpty()) {
+	    if (error.isEmpty()) {
+		return process;
+	    } else {
 		LOG.error("System command " + commaSeparatedCommand + " returned error.");
 		LOG.error(StringUtils.collectionToCommaDelimitedString(error));
-		return output;
-	    }
-	    for (String s : getOutput(process.getInputStream())) {
-		if (s != null) {
-		    output.add(Double.parseDouble(s));
-		}
 	    }
 	} catch (IOException | InterruptedException | NumberFormatException e) {
 	    LOG.error("Unable to execute/parse system command " + commaSeparatedCommand, e);
 	}
-	return output;
+	return null;
     }
 
     private Collection<String> getOutput(InputStream inputStream) throws IOException {

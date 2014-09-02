@@ -2,18 +2,22 @@
 
 /* Services */
 
-var services = angular.module('homeAutomation.services', [ 'ngResource' ]);
+var services = angular.module('homeAutomation.services', [ 'ngResource' ])
 
-services.value('version', '%VERSION%');
+.value('version', '%VERSION%')
 
-services.factory('systemState', [ '$resource', function($resource) {
+.factory('systemState', [ '$resource', function($resource) {
 	return $resource('rest/systemstate');
-} ]);
+} ])
 
-services.factory('rooms', [ '$resource', function($resource) {
+.factory('rooms', [ '$resource', function($resource) {
 	return $resource('rest/rooms/:roomName');
-} ]);
+} ])
 
-services.factory('outdoor', [ '$resource', function($resource) {
+.factory('outdoor', [ '$resource', function($resource) {
 	return $resource('rest/outdoor');
+} ])
+
+.factory('liveview', [ '$resource', function($resource) {
+	return $resource('rest/liveview');
 } ]);

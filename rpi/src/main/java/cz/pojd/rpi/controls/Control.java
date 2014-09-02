@@ -10,12 +10,21 @@ public interface Control {
 
     /**
      * Toggle the switch (switch on if off before or switch off if on before)
+     * @return true if toggle was OK, false otherwise
      */
-    public void toggleSwitch();
+    public boolean toggleSwitch();
 
-    public void switchOn();
+    /**
+     * Switch on this Control
+     * @return true if switch on was OK, false otherwise
+     */
+    public boolean switchOn();
 
-    public void switchOff();
+    /**
+     * Switch off this Control
+     * @return true if switch on was OK, false otherwise
+     */
+    public boolean switchOff();
 
     /**
      * Disable this control

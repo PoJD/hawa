@@ -20,6 +20,14 @@ public interface RuntimeExecutor {
     public List<Double> execute(String command);
 
     /**
+     * Execute the command, validate the output of the command (e.g. error stream) and exit
+     * 
+     * @param command command to execute
+     * @return true if the process was OK, false otherwise
+     */
+    public boolean executeNoReturn(String command);
+
+    /**
      * Detects CPU count on this machine
      * 
      * @return number of CPU cores

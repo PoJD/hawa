@@ -14,8 +14,10 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.rpi.controllers.MotionSensorController;
+import cz.pojd.rpi.controls.CameraControl;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.controls.GpioControl;
+import cz.pojd.rpi.controls.MjpegStreamerCameraControl;
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.Sensors;
 import cz.pojd.rpi.sensors.gpio.Dht22Am2302TemperatureAndHumiditySensor;
@@ -79,6 +81,11 @@ public class RpiSensorConfig {
     public Control outdoorLightControl() {
 	// GPIO 27 is P2 - change to whatever the outdoor light control is connected to
 	return new GpioControl(gpio(), "outdoor light", RaspiPin.GPIO_02);
+    }
+
+    @Bean
+    public CameraControl cameraControl() {
+	return new MjpegStreamerCameraControl("/etc/init.d/mjpg-streamer start", "/etc/init.d/mjpg-streamer stop", 2);
     }
 
     @Bean

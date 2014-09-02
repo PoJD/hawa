@@ -16,15 +16,13 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
  * @author Lubos Housa
  * @since Aug 10, 2014 10:56:10 AM
  */
-public class GpioControl implements Control {
+public class GpioControl extends BaseControl implements Control {
 
     private static final Log LOG = LogFactory.getLog(GpioControl.class);
 
     private final GpioPinDigitalOutput gpioOutputPin;
     private final String name;
     private final Runnable low, high, toggle;
-
-    private boolean enabled = true;
 
     @Inject
     public GpioControl(Gpio gpio, String name, Pin pin) {
@@ -49,38 +47,28 @@ public class GpioControl implements Control {
     }
 
     @Override
-    public void toggleSwitch() {
-	runOperation(toggle, "toggle");
+    public boolean toggleSwitch() {
+	return runOperation(toggle, "toggle");
     }
 
     @Override
-    public void switchOn() {
-	runOperation(high, "switch on");
+    public boolean switchOn() {
+	return runOperation(high, "switch on");
     }
 
     @Override
-    public void switchOff() {
-	runOperation(low, "switch off");
+    public boolean switchOff() {
+	return runOperation(low, "switch off");
     }
 
-    @Override
-    public void disable() {
-	switchOff();	
-	enabled = false;
-    }
-
-    @Override
-    public void enable() {
-	enabled = true;
-    }
-
-    private synchronized void runOperation(Runnable runnable, String operationName) {
+    private synchronized boolean runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("GpioControl '" + name + "' operation: " + operationName);
 	}
 	if (gpioOutputPin != null) {
-	    if (enabled) {
+	    if (isEnabled()) {
 		runnable.run();
+		return true;
 	    } else {
 		if (LOG.isDebugEnabled()) {
 		    LOG.debug("GpioControl '" + name + "' disabled. Not perfoming action " + operationName);
@@ -91,10 +79,6 @@ public class GpioControl implements Control {
 		    + name
 		    + "': not attempting to perform any action on the GPIO output since the provisioning did not return any real GPIO output to work with.");
 	}
-    }
-
-    @Override
-    public boolean isEnabled() {
-	return enabled;
+	return false;
     }
 }
