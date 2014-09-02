@@ -3,7 +3,7 @@
 		<div ng-show="liveview.cameraOK">
 			<img ng-src="{{source}}" width=1024px height=768px />
 		</div>
-		<div ng-show="!liveview.cameraOK" class="label roomLabel label-danger">Some issue
+		<div ng-show="liveview.cameraOK==false" class="label roomLabel label-danger">Some issue
 			with the camera (check RPi)</div>
 		<div ng-show="liveview.cameraOK==undefined"
 			class="label roomLabel label-default">Loading camera...</div>
