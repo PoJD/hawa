@@ -20,7 +20,7 @@ public class MjpegStreamerCameraControl implements CameraControl, DisposableBean
     private final String commandStart, commandEnd;
     private final int cameraAliveTime;
 
-    private LocalDateTime lastTrigger = LocalDateTime.now();
+    private LocalDateTime lastUpdate;
     private boolean running;
 
     public RuntimeExecutor getRuntimeExecutor() {
@@ -43,8 +43,8 @@ public class MjpegStreamerCameraControl implements CameraControl, DisposableBean
 	return cameraAliveTime;
     }
 
-    public LocalDateTime getLastTrigger() {
-	return lastTrigger;
+    public LocalDateTime getLastUpdate() {
+	return lastUpdate;
     }
 
     @Override
@@ -57,6 +57,7 @@ public class MjpegStreamerCameraControl implements CameraControl, DisposableBean
 	this.commandStart = commandStart;
 	this.commandEnd = commandEnd;
 	this.cameraAliveTime = minutesHeartbeatCamera;
+	setLastUpdate();
     }
 
     @Override
@@ -71,13 +72,33 @@ public class MjpegStreamerCameraControl implements CameraControl, DisposableBean
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Updating last update time in CameraControl - keeping alive...");
 	}
-	lastTrigger = LocalDateTime.now();
+	setLastUpdate();
 	return true;
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
 	switchOff();
+    }
+
+    @Scheduled(fixedRate = 3 * 60 * 1000)
+    public void checkCamera() {
+	LOG.info("checkCamera triggered in CameraControl, checking whether the mjpeg streamer is running...");
+	if (isRunning()) {
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("mjpeg streamer is running, checking whether someone is still watching...");
+	    }
+	    LocalDateTime now = LocalDateTime.now();
+	    if (now.minusMinutes(getCameraAliveTime()).isAfter(getLastUpdate())) {
+		LOG.info("More than " + getCameraAliveTime() + " minutes from last hearbeat, switching off the camera...");
+		switchOff();
+	    }
+	}
+	LOG.info("checkCamera finished.");
+    }
+
+    private void setLastUpdate() {
+	lastUpdate = LocalDateTime.now();
     }
 
     private synchronized void switchOff() {
@@ -88,21 +109,5 @@ public class MjpegStreamerCameraControl implements CameraControl, DisposableBean
 	    }
 	    running = false;
 	}
-    }
-
-    @Scheduled(fixedRate = 3 * 60 * 1000)
-    private void checkCamera() {
-	LOG.info("checkCamera triggered in CameraControl, checking whether the mjpeg streamer is running...");
-	if (isRunning()) {
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("mjpeg streamer is running, checking whether someone is still watching...");
-	    }
-	    LocalDateTime now = LocalDateTime.now();
-	    if (now.minusMinutes(getCameraAliveTime()).isAfter(getLastTrigger())) {
-		LOG.info("More than " + getCameraAliveTime() + " minutes from last hearbeat, switching off the camera...");
-		switchOff();
-	    }
-	}
-	LOG.info("checkCamera finished.");
     }
 }
