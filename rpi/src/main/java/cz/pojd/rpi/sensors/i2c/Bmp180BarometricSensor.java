@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.DisposableBean;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -30,7 +29,7 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */
-public class Bmp180BarometricSensor extends AbstractSensor implements Sensor, DisposableBean {
+public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 
     private static final Log LOG = LogFactory.getLog(Bmp180BarometricSensor.class);
 
@@ -379,17 +378,5 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor, Di
      */
     public boolean isInitiated() {
 	return initiated;
-    }
-
-    @Override
-    public void destroy() throws Exception {
-	LOG.info("Closing the I2C bus...");
-	try {
-	    if (initiated && bus != null) {
-		bus.close();
-	    }
-	} catch (Exception e) {
-	    LOG.warn("Unable to close the I2C bus...", e);
-	}
     }
 }

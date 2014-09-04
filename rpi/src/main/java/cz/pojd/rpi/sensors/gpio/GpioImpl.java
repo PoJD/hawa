@@ -409,12 +409,16 @@ public class GpioImpl implements Gpio, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-	LOG.info("Cleaning up in GpioImpl: shutting down...");
+	LOG.info("Cleaning up in GpioImpl: unexporting and unprovisioning...");
 	try {
-	    gpioController.unexportAll();	    
-	    gpioController.shutdown();
+	    // just unexport all pins and unprovision them - so e.g. after redeploy it will still work (i.e. no shutdown here)
+	    gpioController.unexportAll();
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Unprovisioning pins: " + getProvisionedPins());
+	    }
+	    unprovisionPin(getProvisionedPins().toArray(new GpioPin[] {}));
 	} catch (Exception e) {
-	    LOG.warn("Unable to unexport all pins...", e);
+	    LOG.warn("Unable to cleanup GPIO...", e);
 	}
     }
 }

@@ -14,9 +14,10 @@ This project was originally based on angular-seed project https://github.com/ang
 * P4J
 * Maven
 * Restfull WS in Java (Jersey and Jackson for JSON)
-* Angular JS
-* * Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
-* * Angular Canv Gauge: https://github.com/Mikhus/canv-gauge
+* Node.js Angular.js
+* Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
+* Google Gauge Node.js library using d3.js (custom angular port): https://developers.google.com/chart/interactive/docs/gallery/gauge?csw=1
+* Nvd3 Node.js graph library: http://cmaurer.github.io/angularjs-nvd3-directives/
 * Twitter Bootstrap
 * JUnit, JMockit
 
@@ -30,7 +31,9 @@ This project was originally based on angular-seed project https://github.com/ang
 * Right click on hawa -> Configure -> Convert to AngularJS project
 * Right click on hawa -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
 * Edit your maven settings.xml and add a definition of a server, call it TomcatServer and add your username and password you setup in your maven manager app (or change pom.xml accordingly if you use a different container
+* Copy over the pi4j jar (see maven dependency of rpi project) into web app shared lib (needed since it is using JNI and needs to be in tomcat system classloader, otherwise redeploys fail)
 * Deploy hawa on a local server and enjoy!
+* To deploy latest version on Rpi (assuming you run on tomcat): mvn clean install tomcat7:redeploy -Prpi
 * If you experience issues when redeploying to tomcat remotely, try running the below on RasPi: cp /tmp/libpi4j.so /usr/share/tomcat-7/lib/. This will copy over the file to tomcat dir (assuming the path to tomcat lib is correct). It is recommended here: http://wiki.apache.org/tomcat/HowTo#I.27m_encountering_classloader_problems_when_using_JNI_under_Tomcat. Without it Tomcat was failing with errors "already loaded in another classloader"
 
 # Raspberry configuration
