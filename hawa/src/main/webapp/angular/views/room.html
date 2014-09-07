@@ -1,13 +1,14 @@
 <div class="page-header">
+	<h1 ng-show="temperatureHistory==undefined">Loading...</h1>
 	<h1>{{roomDetail.name}}</h1>
 </div>
 
 <div class="row full">
 	<div class="col-md-6">
-		<nvd3-line-chart data="temperatureHistory" id="temperatureHistory"
+		<nvd3-line-chart ng-show="temperatureHistory" data="temperatureHistory" id="temperatureHistory"
 			width="600" height="400" margin="0"
 			xAxisTickFormat="xAxisTickFormat()" showXAxis="true" showYAxis="true" forceY="[0,40]"
-			noData="Loading..." showLegend="true" interactive="true"
+			noData="No data found for last week!" showLegend="true" interactive="true"
 			tooltips="true" useInteractiveGuideLine="true"> <svg></svg>
 		</nvd3-line-chart>
 	</div>
