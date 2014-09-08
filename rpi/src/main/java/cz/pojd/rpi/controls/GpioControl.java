@@ -5,8 +5,9 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
 
 import cz.pojd.rpi.sensors.gpio.Gpio;
 
@@ -20,28 +21,28 @@ public class GpioControl extends BaseControl implements Control {
 
     private static final Log LOG = LogFactory.getLog(GpioControl.class);
 
-    private final GpioPinDigitalOutput gpioOutputPin;
+    private final GpioPinDigitalMultipurpose gpioPin;
     private final String name;
     private final Runnable low, high, toggle;
 
     @Inject
     public GpioControl(Gpio gpio, String name, Pin pin) {
 	LOG.info("Creating GpioControl '" + name + "' connected to pin " + pin);
-	this.gpioOutputPin = gpio.provisionDigitalOutputPin(pin);
+	this.gpioPin = gpio.provisionDigitalMultipurposePin(pin, PinMode.DIGITAL_OUTPUT);
 	this.name = name;
 	this.low = new Runnable() {
 	    public void run() {
-		gpioOutputPin.low();
+		gpioPin.low();
 	    }
 	};
 	this.high = new Runnable() {
 	    public void run() {
-		gpioOutputPin.high();
+		gpioPin.high();
 	    }
 	};
 	this.toggle = new Runnable() {
 	    public void run() {
-		gpioOutputPin.toggle();
+		gpioPin.toggle();
 	    }
 	};
     }
@@ -61,11 +62,21 @@ public class GpioControl extends BaseControl implements Control {
 	return runOperation(low, "switch off");
     }
 
+    @Override
+    public synchronized boolean isSwitchedOn() {
+	try {
+	    gpioPin.setMode(PinMode.DIGITAL_INPUT);
+	    return gpioPin.isHigh();
+	} finally {
+	    gpioPin.setMode(PinMode.DIGITAL_OUTPUT);
+	}
+    }
+
     private synchronized boolean runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("GpioControl '" + name + "' operation: " + operationName);
 	}
-	if (gpioOutputPin != null) {
+	if (gpioPin != null) {
 	    if (isEnabled()) {
 		runnable.run();
 		return true;

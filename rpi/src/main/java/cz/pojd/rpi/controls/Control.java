@@ -42,4 +42,10 @@ public interface Control {
      * @return true if so, false otherwise. Note that by default all sensors are enabled
      */
     public boolean isEnabled();
+    
+    /**
+     * Detects whether this control is currently switched on or not.
+     * @return true if so, false otherwise
+     */
+    public boolean isSwitchedOn();
 }
