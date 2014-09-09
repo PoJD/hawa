@@ -119,9 +119,9 @@ public class RpiSensorConfig {
     public GpioProvider getMCP23017Provider(int address) {
 	try {
 	    return new MCP23017GpioProvider(rpiConfig.newRasPI() ? I2CBus.BUS_1 : I2CBus.BUS_0, address);
-	} catch (IOException e) {
+	} catch (IOException | UnsatisfiedLinkError e) {
 	    LOG.error("Unable to locate MCP23017 at address " + address + ", using default provider instead.", e);
-	    return GpioFactory.getDefaultProvider();
+	    return gpio().getDefaultProvider();
 	}
     }
 
