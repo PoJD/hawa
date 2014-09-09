@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.DisposableBean;
 
 import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinAnalog;
 import com.pi4j.io.gpio.GpioPinAnalogInput;
@@ -420,5 +421,10 @@ public class GpioImpl implements Gpio, DisposableBean {
 	} catch (Exception e) {
 	    LOG.warn("Unable to cleanup GPIO...", e);
 	}
+    }
+
+    @Override
+    public GpioProvider getDefaultProvider() {
+	return GpioFactory.getDefaultProvider();
     }
 }

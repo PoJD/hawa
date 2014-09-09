@@ -1,5 +1,7 @@
 package cz.pojd.rpi.controllers;
 
+import java.util.Observable;
+
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 
@@ -9,20 +11,23 @@ import org.junit.Test;
 import com.pi4j.io.gpio.PinState;
 
 import cz.pojd.rpi.controls.Control;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
-public class MotionSensorControllerTestCase {
+public class ObservableControllerTestCase {
 
-    private @Mocked
-    ObservableSensor sensor;
-    private @Mocked
-    Control control;
-
-    private MotionSensorController controller;
+    private Observable sensor;
+    private @Mocked Control control;
 
     @Before
     public void setup() {
-	controller = new MotionSensorController(sensor, control);
+	sensor = new Observable() {
+
+	    @Override
+	    public void notifyObservers(Object arg) {
+		setChanged();
+		super.notifyObservers(arg);
+	    }
+	};
+	new ObservableController(new ObservableControl(sensor, control));
     }
 
     @Test
@@ -33,7 +38,7 @@ public class MotionSensorControllerTestCase {
 		times = 1;
 	    }
 	};
-	controller.update(sensor, PinState.HIGH);
+	sensor.notifyObservers(PinState.HIGH);
     }
 
     @Test
@@ -44,6 +49,6 @@ public class MotionSensorControllerTestCase {
 		times = 1;
 	    }
 	};
-	controller.update(sensor, PinState.LOW);
+	sensor.notifyObservers(PinState.LOW);
     }
 }

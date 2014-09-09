@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
+import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 
@@ -27,8 +28,13 @@ public class GpioControl extends BaseControl implements Control {
 
     @Inject
     public GpioControl(Gpio gpio, String name, Pin pin) {
+	this(gpio, gpio.getDefaultProvider(), name, pin);
+    }
+
+    @Inject
+    public GpioControl(Gpio gpio, GpioProvider provider, String name, Pin pin) {
 	LOG.info("Creating GpioControl '" + name + "' connected to pin " + pin);
-	this.gpioPin = gpio.provisionDigitalMultipurposePin(pin, PinMode.DIGITAL_OUTPUT);
+	this.gpioPin = gpio.provisionDigitalMultipurposePin(provider, pin, PinMode.DIGITAL_OUTPUT);
 	this.name = name;
 	this.low = new Runnable() {
 	    public void run() {

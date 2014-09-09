@@ -59,7 +59,7 @@ public class GpioControlTestCase {
     public void testRealGpioToggleSwitchInvokesGpio() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.toggle();
@@ -75,7 +75,7 @@ public class GpioControlTestCase {
     public void testRealGpioSwitchOnInvokesGpio() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.high();
@@ -91,7 +91,7 @@ public class GpioControlTestCase {
     public void testRealGpioSwitchOffInvokesGpio() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.low();
@@ -107,7 +107,7 @@ public class GpioControlTestCase {
     public void testRealGpioDisabledNoGpioInvocation() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		// regardless what we do, it is switched off once ...
@@ -134,7 +134,7 @@ public class GpioControlTestCase {
     public void testEnabledDefaultControlIsSwitchedOff() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.setMode(withEqual(PinMode.DIGITAL_INPUT));
@@ -155,7 +155,7 @@ public class GpioControlTestCase {
     public void testEnabledSwitchedOnControlIsSwitchedOn() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.high();
@@ -180,7 +180,7 @@ public class GpioControlTestCase {
     public void testSwitchedOnReturnstoOutputEvenIfExceptionIsThrown() {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalMultipurposePin(withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
 		output.setMode(withEqual(PinMode.DIGITAL_INPUT));

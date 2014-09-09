@@ -1,7 +1,8 @@
 package cz.pojd.homeautomation.hawa.outdoor;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,11 +18,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.Sensors;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 public class OutdoorDAOImplTestCase {
 
@@ -29,23 +29,33 @@ public class OutdoorDAOImplTestCase {
 
     @Mocked
     private JdbcTemplate jdbcTemplate;
-
-    @Mocked
-    private Control outdoorLightControl;
     private List<Sensor> sensors;
 
     @Mocked
     private Sensor sensor, sensor2;
 
+    private Outdoor outdoor;
+    private OutdoorDetail outdoorDetail;
+    private ObservableSensor mockSensor;
+
     @Before
     public void setup() {
+	mockSensor = new ObservableSensor() {
+	    public List<Reading> readAll() {
+		return null;
+	    }
+	    public Reading read() {
+		return null;
+	    }
+	};
 	sensors = new ArrayList<>();
-	Sensors outdoorReadSensors = new Sensors(sensors);
 	sensors.add(sensor);
+	outdoor = new Outdoor(sensors);
+	outdoor.setAutoLights(mockSensor);
+	outdoorDetail = new OutdoorDetail();
 
 	dao = new OutdoorDAOImpl();
-	dao.setOutdoorLightControl(outdoorLightControl);
-	dao.setOutdoorReadSensors(outdoorReadSensors);
+	dao.setOutdoor(outdoor);
 	dao.setJdbcTemplate(jdbcTemplate);
     }
 
@@ -125,18 +135,18 @@ public class OutdoorDAOImplTestCase {
 
     @Test
     public void testGetNoStateDetectedShouldGetNoReadings() {
-	Outdoor outdoor = dao.get();
+	OutdoorDetail outdoorDetail = dao.get();
 
-	assertNotNull(outdoor.getSensorReadings());
-	assertTrue(outdoor.getSensorReadings().isEmpty());
+	assertNotNull(outdoorDetail.getSensorReadings());
+	assertTrue(outdoorDetail.getSensorReadings().isEmpty());
     }
 
     @Test
     public void testGetStateDetectedShouldReturnOK() {
 	detectState();
 
-	Outdoor outdoor = dao.get();
-	List<Reading> list = outdoor.getSensorReadings();
+	OutdoorDetail outdoorDetail = dao.get();
+	List<Reading> list = outdoorDetail.getSensorReadings();
 	assertEquals(1, list.size());
 	Reading r = list.get(0);
 	assertEquals(5., r.getDoubleValue(), 0.001);
@@ -146,36 +156,20 @@ public class OutdoorDAOImplTestCase {
 
     @Test
     public void testSaveAutolightsOn() {
-	new NonStrictExpectations() {
-	    {
-		outdoorLightControl.enable();
-		times = 1;
-	    }
-	};
-
-	Outdoor outdoor = new Outdoor();
-	outdoor.setAutoLights(true);
-
-	dao.save(outdoor);
+	outdoorDetail.setAutoLights(true);
+	dao.save(outdoorDetail);
 
 	assertEquals(true, dao.get().isAutoLights());
+	assertEquals(true, outdoor.getAutoLightsEnabled());
     }
 
     @Test
     public void testSaveAutolightsOff() {
-	new NonStrictExpectations() {
-	    {
-		outdoorLightControl.disable();
-		times = 1;
-	    }
-	};
-
-	Outdoor outdoor = new Outdoor();
-	outdoor.setAutoLights(false);
-
-	dao.save(outdoor);
+	outdoorDetail.setAutoLights(false);
+	dao.save(outdoorDetail);
 
 	assertEquals(false, dao.get().isAutoLights());
+	assertEquals(false, outdoor.getAutoLightsEnabled());
     }
 
     private void detectState() {

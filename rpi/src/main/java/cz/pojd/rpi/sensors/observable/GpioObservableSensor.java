@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -34,8 +35,13 @@ public class GpioObservableSensor extends ObservableSensor {
 
     @Inject
     public GpioObservableSensor(Gpio gpio, String name, Pin pin) {
+	this(gpio, gpio.getDefaultProvider(), name, pin);
+    }
+
+    @Inject
+    public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin) {
 	LOG.info("Creating GenericObservableSensor '" + name + "' connected to pin " + pin);
-	this.gpioInputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
+	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
 	this.name = name;
 	setupListener();
     }
@@ -69,27 +75,7 @@ public class GpioObservableSensor extends ObservableSensor {
     }
 
     @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	GpioObservableSensor other = (GpioObservableSensor) obj;
-	if (name == null) {
-	    if (other.name != null)
-		return false;
-	} else if (!name.equals(other.name))
-	    return false;
-	return true;
+    public String toString() {
+	return "GpioObservableSensor [gpioInputPin=" + gpioInputPin + ", name=" + name + "]";
     }
 }

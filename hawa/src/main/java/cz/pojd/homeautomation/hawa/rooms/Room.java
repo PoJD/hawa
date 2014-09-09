@@ -1,5 +1,7 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
+import cz.pojd.homeautomation.hawa.AutolightsCapable;
+import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -8,13 +10,12 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
-public class Room {
+public class Room extends AutolightsCapable {
 
     private String name;
     private Sensor temperatureSensor;
-    private Boolean autoLights;
+    private Control lightControl;
     private Floor floor;
-    private RoomDetail roomDetail;
 
     public String getName() {
 	return name;
@@ -32,16 +33,13 @@ public class Room {
 	this.temperatureSensor = temperatureSensor;
     }
 
-    public Boolean getAutoLights() {
-	return autoLights;
+
+    public Control getLightControl() {
+	return lightControl;
     }
 
-    public void setAutoLights(Boolean autoLights) {
-	this.autoLights = autoLights;
-	if (getRoomDetail() != null) {
-	    // change the actual room state too
-	    getRoomDetail().setAutoLights(autoLights);
-	}
+    public void setLightControl(Control lightControl) {
+	this.lightControl = lightControl;
     }
 
     public Floor getFloor() {
@@ -52,16 +50,10 @@ public class Room {
 	this.floor = floor;
     }
 
-    public RoomDetail getRoomDetail() {
-	return roomDetail;
-    }
-
-    public void setRoomDetail(RoomDetail roomDetail) {
-	this.roomDetail = roomDetail;
-    }
-
     @Override
     public String toString() {
-	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + autoLights + ", floor=" + floor + "]";
+	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + getAutoLights() + ", lightControl=" + lightControl
+		+ ", floor=" + floor + "]";
     }
+
 }

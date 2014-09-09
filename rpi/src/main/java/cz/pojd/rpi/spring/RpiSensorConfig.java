@@ -1,7 +1,6 @@
 package cz.pojd.rpi.spring;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -10,16 +9,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.i2c.I2CBus;
 
-import cz.pojd.rpi.controllers.MotionSensorController;
+import cz.pojd.rpi.controllers.ObservableControl;
+import cz.pojd.rpi.controllers.ObservableController;
 import cz.pojd.rpi.controls.CameraControl;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.controls.GpioControl;
 import cz.pojd.rpi.controls.MjpegStreamerCameraControl;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.Sensors;
 import cz.pojd.rpi.sensors.gpio.Dht22Am2302TemperatureAndHumiditySensor;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.gpio.GpioImpl;
@@ -64,23 +66,33 @@ public class RpiSensorConfig {
     }
 
     @Bean
-    public Sensors sensors() {
-	List<Sensor> result = new ArrayList<>();
-	result.add(barometricSensor());
-	result.add(temperatureAndHumiditySensor());
-	return new Sensors(result);
-    }
-
-    @Bean
     public ObservableSensor outdoorMotionSensor() {
-	// GPIO 18 is P1 - change to whatever the outdoor motion sensor is connected to
 	return new GpioObservableSensor(gpio(), "outdoor motion", RaspiPin.GPIO_01);
     }
 
     @Bean
+    public ObservableSensor hallDownMotionSensor() {
+	return new GpioObservableSensor(gpio(), "hall down motion", RaspiPin.GPIO_02);
+    }
+
+    @Bean
+    public ObservableSensor hallUpMotionSensor() {
+	return new GpioObservableSensor(gpio(), "hall up motion", RaspiPin.GPIO_03);
+    }
+
+    @Bean
     public Control outdoorLightControl() {
-	// GPIO 27 is P2 - change to whatever the outdoor light control is connected to
-	return new GpioControl(gpio(), "outdoor light", RaspiPin.GPIO_02);
+	return new GpioControl(gpio(), "outdoor light", RaspiPin.GPIO_04);
+    }
+
+    @Bean
+    public Control hallDownLightControl() {
+	return new GpioControl(gpio(), "hall down light", RaspiPin.GPIO_05);
+    }
+
+    @Bean
+    public Control hallUpLightControl() {
+	return new GpioControl(gpio(), "hall up light", RaspiPin.GPIO_06);
     }
 
     @Bean
@@ -89,8 +101,28 @@ public class RpiSensorConfig {
     }
 
     @Bean
-    public MotionSensorController motionSensorController() {
-	return new MotionSensorController(outdoorMotionSensor(), outdoorLightControl());
+    public ObservableController observableController() {
+	return new ObservableController(new ObservableControl(outdoorMotionSensor(), outdoorLightControl()), new ObservableControl(
+		hallDownMotionSensor(), hallDownLightControl()), new ObservableControl(hallUpMotionSensor(), hallUpLightControl()));
+    }
+
+    @Bean
+    public GpioProvider lightControlsFloor1() {
+	return getMCP23017Provider(0x20);
+    }
+
+    @Bean
+    public GpioProvider lightControlsFloor2() {
+	return getMCP23017Provider(0x21);
+    }
+
+    public GpioProvider getMCP23017Provider(int address) {
+	try {
+	    return new MCP23017GpioProvider(rpiConfig.newRasPI() ? I2CBus.BUS_1 : I2CBus.BUS_0, address);
+	} catch (IOException e) {
+	    LOG.error("Unable to locate MCP23017 at address " + address + ", using default provider instead.", e);
+	    return GpioFactory.getDefaultProvider();
+	}
     }
 
     @Bean

@@ -11,9 +11,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.outdoor.Outdoor;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOException;
+import cz.pojd.homeautomation.hawa.outdoor.OutdoorDetail;
 
 /**
  * OutdoorService detects the current weather conditions and allows to control outdoor gadgets
@@ -30,9 +30,9 @@ public class OutdoorService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Outdoor get() {
+    public OutdoorDetail get() {
 	LOG.info("Detecting current state of outdoor...");
-	Outdoor result = outdoorDAO.get();
+	OutdoorDetail result = outdoorDAO.get();
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Detected outdoor: " + result);
 	}
@@ -42,12 +42,12 @@ public class OutdoorService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void save(Outdoor outdoor) {
-	LOG.info("About to save outdoor: " + outdoor);
+    public void save(OutdoorDetail outdoorDetail) {
+	LOG.info("About to save outdoor: " + outdoorDetail);
 	try {
-	    outdoorDAO.save(outdoor);
+	    outdoorDAO.save(outdoorDetail);
 	} catch (OutdoorDAOException e) {
-	    LOG.error("Unable to save the outdoor: ", e);
+	    LOG.error("Unable to save the outdoorDetail: ", e);
 	    throw e;
 	}
     }

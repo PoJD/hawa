@@ -1,11 +1,9 @@
 package cz.pojd.homeautomation.hawa.outdoor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
@@ -13,10 +11,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
 import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
-import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.Sensors;
 
 @Repository
 public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
@@ -25,27 +21,8 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     private static final String SQL = "insert into outdoor(name, at, reading) values (?, ?, ?)";
 
     @Inject
-    private Sensors outdoorReadSensors;
-    @Resource(name = "outdoorLightControl")
-    private Control outdoorLightControl;
-
-    private Outdoor outdoor = new Outdoor();
-
-    public Sensors getOutdoorReadSensors() {
-	return outdoorReadSensors;
-    }
-
-    public void setOutdoorReadSensors(Sensors outdoorReadSensors) {
-	this.outdoorReadSensors = outdoorReadSensors;
-    }
-
-    public Control getOutdoorLightControl() {
-	return outdoorLightControl;
-    }
-
-    public void setOutdoorLightControl(Control outdoorLightControl) {
-	this.outdoorLightControl = outdoorLightControl;
-    }
+    private Outdoor outdoor;
+    private OutdoorDetail outdoorDetail = new OutdoorDetail();
 
     /*
      * DAO API
@@ -53,22 +30,24 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
      * @see cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO
      */
 
-    @Override
-    public Outdoor get() {
+    public Outdoor getOutdoor() {
 	return outdoor;
     }
 
-    @Override
-    public void save(Outdoor outdoor) {
-	// not saving readings, only the "autolights" flag
-	get().setAutoLights(outdoor.isAutoLights());
+    public void setOutdoor(Outdoor outdoor) {
+	this.outdoor = outdoor;
+    }
 
-	// and change the related control now
-	if (get().isAutoLights()) {
-	    getOutdoorLightControl().enable();
-	} else {
-	    getOutdoorLightControl().disable();
-	}
+    @Override
+    public OutdoorDetail get() {
+	return outdoorDetail;
+    }
+
+    @Override
+    public void save(OutdoorDetail outdoorDetail) {
+	// not saving readings, only the "autolights" flag
+	this.outdoor.setAutolightsEnabled(outdoorDetail.isAutoLights());
+	this.outdoorDetail.setAutoLights(outdoorDetail.isAutoLights());
     }
 
     /*
@@ -78,7 +57,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     protected void detectState() {
 	List<Reading> readings = new ArrayList<>();
-	for (Sensor sensor : getOutdoorReadSensors().getWeatherSensors()) {
+	for (Sensor sensor : outdoor.getOutdoorSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
 	resetState(readings);
@@ -104,8 +83,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	getJdbcTemplate().batchUpdate(SQL, arguments);
     }
 
-    private synchronized void resetState(Collection<Reading> readings) {
-	get().reset();
-	get().addAllReadings(readings);
+    private synchronized void resetState(List<Reading> sensorReadings) {
+	get().setSensorReadings(sensorReadings);
     }
 }

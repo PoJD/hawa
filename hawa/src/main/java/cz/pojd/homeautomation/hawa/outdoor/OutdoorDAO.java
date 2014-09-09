@@ -11,11 +11,11 @@ import cz.pojd.homeautomation.hawa.refresh.Refreshable;
 public interface OutdoorDAO extends Refreshable {
 
     /**
-     * Get the outdoor state
+     * Get the outdoor detail
      * 
      * @return outdoor POJO representing outdoor state
      */
-    Outdoor get();
+    OutdoorDetail get();
 
     /**
      * Save the Outdoor
@@ -23,5 +23,5 @@ public interface OutdoorDAO extends Refreshable {
      * @param outdoor
      *            outdoor to save
      */
-    void save(Outdoor outdoor);
+    void save(OutdoorDetail outdoor);
 }

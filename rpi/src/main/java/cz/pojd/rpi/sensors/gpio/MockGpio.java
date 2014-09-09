@@ -479,4 +479,9 @@ public class MockGpio implements Gpio {
     public boolean isReal() {
 	return false;
     }
+
+    @Override
+    public GpioProvider getDefaultProvider() {
+	return null;
+    }
 }

@@ -1,21 +1,10 @@
 package cz.pojd.rpi.controls;
 
-public abstract class BaseControl implements Control {
-    private boolean enabled = true;
+public abstract class BaseControl extends ControllableBase implements Control {
 
     @Override
     public void disable() {
 	switchOff();
-	enabled = false;
-    }
-
-    @Override
-    public void enable() {
-	enabled = true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-	return enabled;
+	super.disable();
     }
 }

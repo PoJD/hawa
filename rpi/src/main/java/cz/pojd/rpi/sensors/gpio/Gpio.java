@@ -1,6 +1,7 @@
 package cz.pojd.rpi.sensors.gpio;
 
 import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioProvider;
 
 /**
  * Custom GPIO interface
@@ -16,4 +17,11 @@ public interface Gpio extends GpioController {
      * @return
      */
     public boolean isReal();
+
+    /**
+     * Get default provider for GPIO
+     * 
+     * @return default provider
+     */
+    public GpioProvider getDefaultProvider();
 }

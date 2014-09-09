@@ -2,6 +2,7 @@ package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
 
     private final Map<String, Room> rooms;
+    private final Map<String, RoomDetail> roomDetails;
 
     @Value("${sql.roomsDAO.insert}")
     private String insertSql;
@@ -61,11 +63,13 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     @Inject
     public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor) {
 	rooms = new LinkedHashMap<>();
+	roomDetails = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    Room room = new Room();
 	    room.setName(roomSpecification.getName());
 	    room.setTemperatureSensor(new Ds18B20TemperatureSensor(runtimeExecutor, roomSpecification.getTemperatureID()));
 	    room.setAutoLights(roomSpecification.getAutolights());
+	    room.setLightControl(roomSpecification.getLightControl());
 	    room.setFloor(roomSpecification.getFloor());
 	    rooms.put(room.getName(), room);
 	}
@@ -75,43 +79,40 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      * Synchronized against the update's method part updating the list...
      */
     @Override
-    public List<RoomDetail> query() {
-	List<RoomDetail> result = new ArrayList<>();
-	for (Room room : rooms.values()) {
-	    if (room.getRoomDetail() != null) {
-		result.add(room.getRoomDetail());
-	    }
-	}
-	return result;
+    public synchronized List<RoomDetail> query() {
+	return new ArrayList<>(roomDetails.values());
     }
 
     @Override
     public void save(RoomDetail roomDetail) {
+	// the only item that can change is the autolights....
 	Room room = rooms.get(roomDetail.getName());
 	if (room != null) {
-	    // the only item that can change is the autolights....
-	    room.setAutoLights(roomDetail.getAutoLights());
+	    room.setAutolightsEnabled(roomDetail.getAutoLights());
 	} else {
-	    LOG.warn("Unable to find room by name " + roomDetail.getName() + ". Ignoring the call to save.");
+	    LOG.warn("Unable to find room by name " + roomDetail.getName() + ". Not updating any room in save().");
+	}
+
+	RoomDetail detail = roomDetails.get(roomDetail.getName());
+	if (detail != null) {
+	    detail.setAutoLights(roomDetail.getAutoLights());
+	} else {
+	    LOG.warn("Unable to find room detail by name " + roomDetail.getName() + ". Not updating any room detail in save().");
 	}
     }
 
     @Override
     public RoomDetail get(String roomName) {
-	Room room = rooms.get(roomName);
-	if (room != null) {
-	    if (room.getRoomDetail() != null) {
-		// create a new copy here - we do not want to store all the below data to memory now...
-		RoomDetail detail = new RoomDetail(room.getRoomDetail());
-		// TODO does the color really belong here?
-		detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
-			getGraphData("Last week", "#f00", 7, roomName) });
-		return detail;
-	    } else {
-		LOG.warn("No room detail detected yet for room " + roomName + ". Returning null in method get().");
-	    }
+	RoomDetail roomDetail = roomDetails.get(roomName);
+	if (roomDetail != null) {
+	    // create a new copy here - we do not want to store all the below data to memory now...
+	    RoomDetail detail = new RoomDetail(roomDetail);
+	    // TODO does the color really belong here?
+	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
+		    getGraphData("Last week", "#f00", 7, roomName) });
+	    return detail;
 	} else {
-	    LOG.warn("Unable to find room by name " + roomName + ". Returning null in method get().");
+	    LOG.warn("Unable to find roomDetail by name " + roomName + ". Returning null in method get().");
 	}
 	return null;
     }
@@ -124,9 +125,9 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     protected void saveState(Date date) {
 	// first create all data we want to insert
 	List<Object[]> arguments = new ArrayList<>();
-	for (Room room : rooms.values()) {
-	    if (room.getRoomDetail() != null && room.getRoomDetail().isValidTemperature()) {
-		arguments.add(new Object[] { room.getName(), date, room.getRoomDetail().getTemperature().getDoubleValue() });
+	for (RoomDetail roomDetail : roomDetails.values()) {
+	    if (roomDetail.isValidTemperature()) {
+		arguments.add(new Object[] { roomDetail.getName(), date, roomDetail.getTemperature().getDoubleValue() });
 	    }
 	}
 
@@ -138,24 +139,32 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
-    protected synchronized void detectState() {
+    protected void detectState() {
+	Map<String, RoomDetail> roomDetails = new HashMap<>();
 	for (Room room : rooms.values()) {
 	    RoomDetail detail = new RoomDetail();
 	    detail.setName(room.getName());
-	    detail.setAutoLights(room.getAutoLights());
+	    detail.setAutoLights(room.getAutoLightsEnabled());
 	    detail.setTemperature(room.getTemperatureSensor().read());
 	    detail.setFloor(room.getFloor());
 	    detail.setLastUpdate(getRefresher().getLastUpdate());
-	    room.setRoomDetail(detail);
+	    roomDetails.put(room.getName(), detail);
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Rooms state detected: " + detail);
 	    }
 	}
+	resetState(roomDetails);
     }
 
     /*
      * Other stuff
      */
+
+    private synchronized void resetState(Map<String, RoomDetail> roomDetails) {
+	this.roomDetails.clear();
+	this.roomDetails.putAll(roomDetails);
+    }
+
     private GraphData getGraphData(String key, String color, int daysBack, String roomName) {
 	List<Object[]> list = new ArrayList<>();
 	try {

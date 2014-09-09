@@ -3,6 +3,7 @@ package cz.pojd.rpi.sensors.observable;
 import java.util.Observable;
 import java.util.Observer;
 
+import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -12,7 +13,29 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Aug 10, 2014 10:13:47 AM
  */
-public abstract class ObservableSensor extends Observable implements Sensor {
+public abstract class ObservableSensor extends Observable implements Sensor, Controllable {
+
+    private boolean enabled = true;
+
+    @Override
+    public void disable() {
+	enabled = false;
+    }
+
+    @Override
+    public void enable() {
+	enabled = true;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+	this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+	return enabled;
+    }
 
     /**
      * Add new observer to be notified any time this sensor reading is changed. When that heppens, the Observer's update method is invoked with

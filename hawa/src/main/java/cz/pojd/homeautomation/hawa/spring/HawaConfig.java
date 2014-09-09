@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import cz.pojd.homeautomation.hawa.outdoor.Outdoor;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOImpl;
 import cz.pojd.homeautomation.hawa.refresh.Refresher;
@@ -18,7 +19,9 @@ import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.RoomSpecification;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOImpl;
+import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.spring.RpiConfig;
+import cz.pojd.rpi.spring.RpiSensorConfig;
 
 /**
  * Main configuration for spring
@@ -33,17 +36,22 @@ public class HawaConfig {
 
     @Inject
     private RpiConfig rpiConfig;
+    @Inject
+    private RpiSensorConfig rpiSensorConfig;
 
     @Bean
     public List<RoomSpecification> rooms() {
+	// TODO add light controls here to all rooms
 	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().name("Hall down").temperatureID("28-0000060a84d1").autolights(true).build());
+	rooms.add(RoomSpecification.newBuilder().name("Hall down").temperatureID("28-0000060a84d1")
+		.autolights(rpiSensorConfig.hallDownMotionSensor()).build());
 	rooms.add(RoomSpecification.newBuilder().name("Kitchen").temperatureID("28-0000060a84d1").build());
 	rooms.add(RoomSpecification.newBuilder().name("Living room").temperatureID("28-0000060a84d1").build());
 	rooms.add(RoomSpecification.newBuilder().name("Bathroom down").temperatureID("28-0000060a84d1").build());
 	rooms.add(RoomSpecification.newBuilder().name("WC down").temperatureID("28-0000060a84d1").build());
 	rooms.add(RoomSpecification.newBuilder().name("Down room").temperatureID("28-0000060a84d1").build());
-	rooms.add(RoomSpecification.newBuilder().name("Hall up").temperatureID("28-0000060a84d1").autolights(true).floor(Floor.FIRST).build());
+	rooms.add(RoomSpecification.newBuilder().name("Hall up").temperatureID("28-0000060a84d1").autolights(rpiSensorConfig.hallUpMotionSensor())
+		.floor(Floor.FIRST).build());
 	rooms.add(RoomSpecification.newBuilder().name("Bedroom").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
 	rooms.add(RoomSpecification.newBuilder().name("Child room 1").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
 	rooms.add(RoomSpecification.newBuilder().name("Child room 2").temperatureID("28-0000060a84d1").floor(Floor.FIRST).build());
@@ -65,6 +73,14 @@ public class HawaConfig {
     @Bean
     public OutdoorDAO outdoorDAO() {
 	return new OutdoorDAOImpl();
+    }
+
+    @Bean
+    public Outdoor outdoor() {
+	List<Sensor> outdoorSensors = new ArrayList<>();
+	outdoorSensors.add(rpiSensorConfig.barometricSensor());
+	outdoorSensors.add(rpiSensorConfig.temperatureAndHumiditySensor());
+	return new Outdoor(outdoorSensors);
     }
 
     @Bean

@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cz.pojd.homeautomation.hawa.refresh.Refresher;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 public class RoomsDAOImplTestCase {
@@ -38,11 +39,13 @@ public class RoomsDAOImplTestCase {
     private JdbcTemplate jdbcTemplate;
     @Mocked
     private Refresher refresher;
+    @Mocked
+    private ObservableSensor mockSensor;
 
     @Before
     public void setup() {
 	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(true).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
 	createDAO(rooms);
 
 	detail = new RoomDetail();
@@ -73,7 +76,7 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
-    public void testSaveShouldChangeAutolights() {
+    public void testSaveShouldChangeAutolightsOff() {
 	detectState();
 	detail.setAutoLights(false);
 	dao.save(detail);
@@ -81,6 +84,17 @@ public class RoomsDAOImplTestCase {
 	List<RoomDetail> list = dao.query();
 	assertEquals(1, list.size());
 	assertEquals(false, list.get(0).getAutoLights());
+    }
+
+    @Test
+    public void testSaveShouldChangeAutolightsOn() {
+	detectState();
+	detail.setAutoLights(true);
+	dao.save(detail);
+
+	List<RoomDetail> list = dao.query();
+	assertEquals(1, list.size());
+	assertEquals(true, list.get(0).getAutoLights());
     }
 
     @Test
@@ -157,9 +171,9 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testSaveStateShouldNotSaveInvalidTemperature() {
 	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(true).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(false).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(false).floor(Floor.BASEMENT).name("test3").temperatureID("id3").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test3").temperatureID("id3").build());
 	createDAO(rooms);
 
 	new NonStrictExpectations() {
@@ -210,8 +224,8 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testDetectStateShouldReadTemperatureForEachRoom() {
 	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(true).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(false).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
+	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
 	createDAO(rooms);
 
 	new NonStrictExpectations() {
@@ -281,7 +295,7 @@ public class RoomsDAOImplTestCase {
 	row.put("temperature", 28.);
 	new NonStrictExpectations() {
 	    {
-		jdbcTemplate.queryForList(anyString, (Object[])any);
+		jdbcTemplate.queryForList(anyString, (Object[]) any);
 		returns(Collections.singletonList(row), new ArrayList<>());
 	    }
 	};
@@ -300,10 +314,10 @@ public class RoomsDAOImplTestCase {
     @Test(expected = RoomsDAOException.class)
     public void testGetGraphDataSqlError() {
 	detectState();
-	
+
 	new NonStrictExpectations() {
 	    {
-		jdbcTemplate.queryForList(anyString, (Object[])any);
+		jdbcTemplate.queryForList(anyString, (Object[]) any);
 		result = new RuntimeException("Some error ocurred while calling JDBC here...");
 	    }
 	};
@@ -325,7 +339,7 @@ public class RoomsDAOImplTestCase {
     }
 
     private void checkDetail(RoomDetail detail) {
-	assertEquals(true, detail.getAutoLights());
+	assertEquals(false, detail.getAutoLights());
 	assertEquals(Floor.BASEMENT, detail.getFloor());
 	assertEquals(ROOM_NAME, detail.getName());
 	assertEquals(22.0, detail.getTemperature().getDoubleValue(), 0.001);
