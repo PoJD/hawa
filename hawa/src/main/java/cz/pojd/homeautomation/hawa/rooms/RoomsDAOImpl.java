@@ -2,10 +2,10 @@ package cz.pojd.homeautomation.hawa.rooms;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
@@ -140,15 +140,17 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     @Override
     protected void detectState() {
-	Map<String, RoomDetail> roomDetails = new HashMap<>();
-	for (Room room : rooms.values()) {
+	Map<String, RoomDetail> roomDetails = new LinkedHashMap<>();
+	for (Entry<String, Room> roomEntry : rooms.entrySet()) {
+	    String key = roomEntry.getKey();
+	    Room room = roomEntry.getValue();
 	    RoomDetail detail = new RoomDetail();
 	    detail.setName(room.getName());
 	    detail.setAutoLights(room.getAutoLightsEnabled());
 	    detail.setTemperature(room.getTemperatureSensor().read());
 	    detail.setFloor(room.getFloor());
 	    detail.setLastUpdate(getRefresher().getLastUpdate());
-	    roomDetails.put(room.getName(), detail);
+	    roomDetails.put(key, detail);
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Rooms state detected: " + detail);
 	    }

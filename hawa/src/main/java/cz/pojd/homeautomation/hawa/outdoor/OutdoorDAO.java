@@ -20,8 +20,8 @@ public interface OutdoorDAO extends Refreshable {
     /**
      * Save the Outdoor
      * 
-     * @param outdoor
+     * @param outdoorDetail
      *            outdoor to save
      */
-    void save(OutdoorDetail outdoor);
+    void save(OutdoorDetail outdoorDetail);
 }
