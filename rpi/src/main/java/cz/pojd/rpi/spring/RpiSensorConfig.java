@@ -15,8 +15,7 @@ import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 
-import cz.pojd.rpi.controllers.ObservableControl;
-import cz.pojd.rpi.controllers.ObservableController;
+import cz.pojd.rpi.controllers.ControlObserver;
 import cz.pojd.rpi.controls.CameraControl;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.controls.GpioControl;
@@ -67,17 +66,23 @@ public class RpiSensorConfig {
 
     @Bean
     public ObservableSensor outdoorMotionSensor() {
-	return new GpioObservableSensor(gpio(), "outdoor motion", RaspiPin.GPIO_01);
+	ObservableSensor sensor = new GpioObservableSensor(gpio(), "outdoor motion", RaspiPin.GPIO_01);
+	sensor.addObserver(new ControlObserver(outdoorLightControl()));
+	return sensor;
     }
 
     @Bean
     public ObservableSensor hallDownMotionSensor() {
-	return new GpioObservableSensor(gpio(), "hall down motion", RaspiPin.GPIO_02);
+	ObservableSensor sensor = new GpioObservableSensor(gpio(), "hall down motion", RaspiPin.GPIO_02);
+	sensor.addObserver(new ControlObserver(hallDownLightControl()));
+	return sensor;
     }
 
     @Bean
     public ObservableSensor hallUpMotionSensor() {
-	return new GpioObservableSensor(gpio(), "hall up motion", RaspiPin.GPIO_03);
+	ObservableSensor sensor = new GpioObservableSensor(gpio(), "hall up motion", RaspiPin.GPIO_03);
+	sensor.addObserver(new ControlObserver(hallUpLightControl()));
+	return sensor;
     }
 
     @Bean
@@ -98,12 +103,6 @@ public class RpiSensorConfig {
     @Bean
     public CameraControl cameraControl() {
 	return new MjpegStreamerCameraControl("/etc/init.d/mjpg-streamer start", "/etc/init.d/mjpg-streamer stop", 2);
-    }
-
-    @Bean
-    public ObservableController observableController() {
-	return new ObservableController(new ObservableControl(outdoorMotionSensor(), outdoorLightControl()), new ObservableControl(
-		hallDownMotionSensor(), hallDownLightControl()), new ObservableControl(hallUpMotionSensor(), hallUpLightControl()));
     }
 
     @Bean

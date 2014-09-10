@@ -12,7 +12,7 @@ import com.pi4j.io.gpio.PinState;
 
 import cz.pojd.rpi.controls.Control;
 
-public class ObservableControllerTestCase {
+public class ControlObserverTestCase {
 
     private Observable sensor;
     private @Mocked Control control;
@@ -20,14 +20,13 @@ public class ObservableControllerTestCase {
     @Before
     public void setup() {
 	sensor = new Observable() {
-
 	    @Override
 	    public void notifyObservers(Object arg) {
 		setChanged();
 		super.notifyObservers(arg);
 	    }
 	};
-	new ObservableController(new ObservableControl(sensor, control));
+	sensor.addObserver(new ControlObserver(control));
     }
 
     @Test
