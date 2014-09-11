@@ -9,8 +9,8 @@
 					<div class="col-md-9 col-xs-9 temperaturePanel">
 						<span gauge value="room.temperature.doubleValue" label="°C"></span>
 					</div>
-					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.autoLights!=undefined">
-						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
+					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.motionSensor!=undefined">
+						<toggle-switch model="room.motionSensor.enabled" on-label="1" off-label="0"
 							ng-click="room.$save()"> </toggle-switch>
 					</div>
 				</div>
@@ -28,8 +28,8 @@
 					<div class="col-md-9 col-xs-9 temperaturePanel">
 						<span gauge value="room.temperature.doubleValue" label="°C"></span>
 					</div>
-					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.autoLights!=undefined">
-						<toggle-switch model="room.autoLights" on-label="1" off-label="0"
+					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.motionSensor!=undefined">
+						<toggle-switch model="room.motionSensor.enabled" on-label="1" off-label="0"
 							ng-click="room.$save()"> </toggle-switch>
 					</div>
 				</div>

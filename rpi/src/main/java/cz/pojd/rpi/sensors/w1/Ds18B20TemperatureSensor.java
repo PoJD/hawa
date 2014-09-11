@@ -98,4 +98,10 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 	}
 	return Reading.invalid(Type.temperatureB);
     }
+
+    @Override
+    public boolean isInitiated() {
+	// no init needed for this sensor really, so we assume all is OK (we will find out till at runtime once someone will attempt reading)
+	return true;
+    }
 }

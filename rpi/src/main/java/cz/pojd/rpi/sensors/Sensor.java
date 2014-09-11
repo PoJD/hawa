@@ -23,4 +23,11 @@ public interface Sensor {
      * @return current reading of the sensor (could read as 0 if an issue was found). Never returns null
      */
     public Reading read();
+
+    /**
+     * Detects whether this sensor is properly initiated or not
+     * 
+     * @return true if so, false otherwise
+     */
+    public boolean isInitiated();
 }

@@ -142,7 +142,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    detail.setLastUpdate(getRefresher().getLastUpdate());
 	    roomDetails.put(key, detail);
 	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Rooms state detected: " + detail);
+		LOG.debug("Room state detected: " + detail);
 	    }
 	}
 	resetState(roomDetails);

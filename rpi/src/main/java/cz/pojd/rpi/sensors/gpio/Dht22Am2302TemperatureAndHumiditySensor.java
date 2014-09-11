@@ -2,6 +2,7 @@ package cz.pojd.rpi.sensors.gpio;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -49,16 +50,16 @@ public class Dht22Am2302TemperatureAndHumiditySensor extends AbstractSensor impl
     @Override
     public List<Reading> readAll() {
 	List<Reading> result = new ArrayList<>();
-	if (initiated) {
+	if (isInitiated()) {
 	    double[] numbers = executeNative(gpioPin);
 	    if (numbers != null && numbers.length == 2) {
 		result.add(Reading.newBuilder().type(Type.temperatureD).doubleValue(numbers[0]).units("°C").build());
 		result.add(Reading.newBuilder().type(Type.humidity).doubleValue(numbers[1]).units("%").build());
 	    } else {
-		LOG.warn("Some error ocurred when attempting to read the values from the sensor.");
+		LOG.warn("Some error ocurred when attempting to read the values from the sensor. Output: " + Arrays.asList(numbers));
 	    }
 	} else {
-	    LOG.warn("Not attempting to read anything from the sensor given the library load failed before.");
+	    LOG.warn("Init failed before, not attempting to read anything from the sensor.");
 	}
 	return result;
     }
@@ -71,6 +72,11 @@ public class Dht22Am2302TemperatureAndHumiditySensor extends AbstractSensor impl
 	} else {
 	    return Reading.invalid(Type.temperatureD);
 	}
+    }
+
+    @Override
+    public boolean isInitiated() {
+	return initiated;
     }
 
     /**

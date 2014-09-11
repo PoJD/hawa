@@ -46,8 +46,23 @@ public class GpioObservableSensor extends ObservableSensor {
 	setupListener();
     }
 
+    @Override
+    public List<Reading> readAll() {
+	return Collections.singletonList(read());
+    }
+
+    @Override
+    public Reading read() {
+	if (isInitiated()) {
+	    return Reading.newBuilder().type(Type.generic).doubleValue(gpioInputPin.getState().getValue()).build();
+	} else {
+	    LOG.warn("GenericObservableSensor '" + name + "': init failed before, returning invalid value in read().");
+	    return Reading.invalid(Type.generic);
+	}
+    }
+
     private void setupListener() {
-	if (gpioInputPin != null) {
+	if (isInitiated()) {
 	    gpioInputPin.addListener(new GpioPinListenerDigital() {
 		@Override
 		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
@@ -60,18 +75,13 @@ public class GpioObservableSensor extends ObservableSensor {
 		}
 	    });
 	} else {
-	    LOG.warn("GenericObservableSensor '" + name + "': no gpio input initiated, not setting up any listener through GPIO.");
+	    LOG.warn("GenericObservableSensor '" + name + "': init failed before, not setting up any GPIO listener.");
 	}
     }
 
     @Override
-    public List<Reading> readAll() {
-	return Collections.singletonList(read());
-    }
-
-    @Override
-    public Reading read() {
-	return Reading.newBuilder().type(Type.generic).doubleValue(gpioInputPin.getState().getValue()).build();
+    public boolean isInitiated() {
+	return gpioInputPin != null;
     }
 
     @Override

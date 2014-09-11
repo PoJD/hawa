@@ -53,4 +53,11 @@ public interface Control extends Controllable {
      * @return wrapper for this control state
      */
     public SensorState asSensorState();
+
+    /**
+     * Detects whether this control is properly initiated or not
+     * 
+     * @return true if so, false otherwise
+     */
+    public boolean isInitiated();
 }

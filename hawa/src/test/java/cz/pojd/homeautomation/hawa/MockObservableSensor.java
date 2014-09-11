@@ -24,4 +24,9 @@ public class MockObservableSensor extends ObservableSensor {
     public void setReadCount(int readCount) {
 	this.readCount = readCount;
     }
+
+    @Override
+    public boolean isInitiated() {
+	return true;
+    }
 }

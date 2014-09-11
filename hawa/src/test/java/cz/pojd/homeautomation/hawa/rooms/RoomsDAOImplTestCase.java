@@ -131,7 +131,6 @@ public class RoomsDAOImplTestCase {
 	assertEquals(true, list.get(0).getLightSwitch().isEnabled());
     }
 
-    
     @Test
     public void testSaveShouldChangeRoomToo() {
 	detectState();
@@ -366,6 +365,17 @@ public class RoomsDAOImplTestCase {
 	    }
 	};
 	dao.get(ROOM_NAME);
+    }
+
+    @Test
+    public void testGetShouldHaveLightDetailsSet() {
+	detectState();
+
+	RoomDetail roomDetail = dao.get(ROOM_NAME);
+	assertNotNull(roomDetail);
+	assertNotNull(roomDetail.getMotionSensor());
+	assertNotNull(roomDetail.getLightControl());
+	assertNotNull(roomDetail.getLightSwitch());
     }
 
     private void detectState() {

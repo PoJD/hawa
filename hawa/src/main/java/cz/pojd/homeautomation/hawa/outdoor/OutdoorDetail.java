@@ -19,12 +19,16 @@ public class OutdoorDetail extends LightCapableDetail {
 
     private List<Reading> sensorReadings = new ArrayList<>();
 
-    public List<Reading> getSensorReadings() {
-	return sensorReadings;
+    public OutdoorDetail() {
     }
 
-    public void setSensorReadings(List<Reading> sensorReadings) {
+    public OutdoorDetail(Outdoor outdoor, List<Reading> sensorReadings) {
+	super(outdoor);
 	this.sensorReadings = sensorReadings;
+    }
+
+    public List<Reading> getSensorReadings() {
+	return sensorReadings;
     }
 
     @Override

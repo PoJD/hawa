@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -22,7 +20,6 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     private static final Log LOG = LogFactory.getLog(OutdoorDAOImpl.class);
     private static final String SQL = "insert into outdoor(name, at, reading) values (?, ?, ?)";
 
-    @Inject
     private Outdoor outdoor;
     private OutdoorDetail outdoorDetail = new OutdoorDetail();
 
@@ -36,12 +33,8 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	this.outdoor = outdoorFactory.create(outdoorSpecification);
     }
 
-    public Outdoor getOutdoor() {
-	return outdoor;
-    }
-
     @Override
-    public synchronized OutdoorDetail get() {
+    public OutdoorDetail get() {
 	return outdoorDetail;
     }
 
@@ -61,10 +54,10 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	for (Sensor sensor : outdoor.getSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
-	resetState(readings);
+	resetState(new OutdoorDetail(outdoor, readings));
 
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Outdoor state detected: " + readings);
+	    LOG.debug("Outdoor state detected: " + get());
 	}
     }
 
@@ -84,7 +77,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	getJdbcTemplate().batchUpdate(SQL, arguments);
     }
 
-    private synchronized void resetState(List<Reading> sensorReadings) {
-	get().setSensorReadings(sensorReadings);
+    private void resetState(OutdoorDetail outdoorDetail) {
+	this.outdoorDetail = outdoorDetail;
     }
 }

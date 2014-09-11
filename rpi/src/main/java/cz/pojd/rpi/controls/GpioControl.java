@@ -79,19 +79,29 @@ public class GpioControl extends BaseControl implements Control {
 
     @Override
     public synchronized boolean isSwitchedOn() {
-	try {
-	    gpioPin.setMode(PinMode.DIGITAL_INPUT);
-	    return gpioPin.isHigh();
-	} finally {
-	    gpioPin.setMode(PinMode.DIGITAL_OUTPUT);
+	if (isInitiated()) {
+	    try {
+		gpioPin.setMode(PinMode.DIGITAL_INPUT);
+		return gpioPin.isHigh();
+	    } finally {
+		gpioPin.setMode(PinMode.DIGITAL_OUTPUT);
+	    }
+	} else {
+	    logWarnNoInit();
+	    return false;
 	}
+    }
+
+    @Override
+    public boolean isInitiated() {
+	return gpioPin != null;
     }
 
     private synchronized boolean runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("GpioControl '" + name + "' operation: " + operationName);
 	}
-	if (gpioPin != null) {
+	if (isInitiated()) {
 	    if (isEnabled()) {
 		runnable.run();
 		return true;
@@ -101,10 +111,12 @@ public class GpioControl extends BaseControl implements Control {
 		}
 	    }
 	} else {
-	    LOG.warn("GpioControl '"
-		    + name
-		    + "': not attempting to perform any action on the GPIO output since the provisioning did not return any real GPIO output to work with.");
+	    logWarnNoInit();
 	}
 	return false;
+    }
+
+    private void logWarnNoInit() {
+	LOG.warn("GpioControl '" + name + "': init failed before, not attempting to run any operation with this control.");
     }
 }

@@ -59,7 +59,7 @@ public class OutdoorDAOImplTestCase {
 	outdoor.setMotionSensor(mockedMotionSensor);
 	outdoor.setLightControl(mockControl);
 	outdoor.setLightSwitch(mockedLightSwitch);
-	
+
 	detail = new OutdoorDetail();
 	detail.setMotionSensor(SensorState.newBuilder().build());
 	detail.setLightControl(SensorState.newBuilder().build());
@@ -166,6 +166,17 @@ public class OutdoorDAOImplTestCase {
 	assertEquals(5., r.getDoubleValue(), 0.001);
 	assertEquals("5.00Pa", r.getStringValue());
 	assertEquals(Type.pressure, r.getType());
+    }
+
+    @Test
+    public void testGetShouldHaveLightDetailsSet() {
+	detectState();
+
+	OutdoorDetail outdoorDetail = dao.get();
+	assertNotNull(outdoorDetail);
+	assertNotNull(outdoorDetail.getMotionSensor());
+	assertNotNull(outdoorDetail.getLightControl());
+	assertNotNull(outdoorDetail.getLightSwitch());
     }
 
     @Test

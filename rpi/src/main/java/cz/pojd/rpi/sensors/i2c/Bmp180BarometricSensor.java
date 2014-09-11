@@ -97,7 +97,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	    LOG.error("Error connecting to the device via I2C", e);
 	}
 
-	if (initiated) {
+	if (isInitiated()) {
 	    try {
 		readCalibrationData();
 	    } catch (Exception e) {
@@ -348,11 +348,11 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
     public List<Reading> readAll() {
 	List<Reading> result = new ArrayList<>();
 	try {
-	    if (initiated) {
+	    if (isInitiated()) {
 		result.add(Reading.newBuilder().type(Type.temperatureB).doubleValue(readTemperature()).units("°C").build());
 		result.add(Reading.newBuilder().type(Type.pressure).doubleValue(readPressureHPaAtSeaLevel()).units("HPa").build());
 	    } else {
-		LOG.warn("Init failed before, not attempting to read any output from the sensor.");
+		LOG.warn("Init failed before, not attempting to read anything from the sensor.");
 	    }
 	} catch (IOException e) {
 	    LOG.error("Unable to read the output of the sensor", e);
@@ -371,11 +371,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	}
     }
 
-    /**
-     * Detects whether this sensor is properly initiated or not
-     * 
-     * @return true if so, false otherwise
-     */
+    @Override
     public boolean isInitiated() {
 	return initiated;
     }
