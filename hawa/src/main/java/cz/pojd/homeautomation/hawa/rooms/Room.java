@@ -1,7 +1,6 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
-import cz.pojd.homeautomation.hawa.AutolightsCapable;
-import cz.pojd.rpi.controls.Control;
+import cz.pojd.homeautomation.hawa.LightCapable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -10,11 +9,10 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Jul 27, 2014 12:51:36 AM
  */
-public class Room extends AutolightsCapable {
+public class Room extends LightCapable {
 
     private String name;
     private Sensor temperatureSensor;
-    private Control lightControl;
     private Floor floor;
 
     public String getName() {
@@ -33,15 +31,6 @@ public class Room extends AutolightsCapable {
 	this.temperatureSensor = temperatureSensor;
     }
 
-
-    public Control getLightControl() {
-	return lightControl;
-    }
-
-    public void setLightControl(Control lightControl) {
-	this.lightControl = lightControl;
-    }
-
     public Floor getFloor() {
 	return floor;
     }
@@ -52,8 +41,8 @@ public class Room extends AutolightsCapable {
 
     @Override
     public String toString() {
-	return "Room [name=" + name + ", temperatureSensor=" + temperatureSensor + ", autoLights=" + getAutoLights() + ", lightControl=" + lightControl
-		+ ", floor=" + floor + "]";
+	return "Room [getName()=" + getName() + ", getTemperatureSensor()=" + getTemperatureSensor() + ", getFloor()=" + getFloor()
+		+ ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl()
+		+ "]";
     }
-
 }

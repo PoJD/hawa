@@ -18,10 +18,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cz.pojd.homeautomation.hawa.MockControl;
+import cz.pojd.homeautomation.hawa.MockObservableSensor;
+import cz.pojd.homeautomation.hawa.outdoor.factory.OutdoorFactory;
+import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
+import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
+import cz.pojd.rpi.sensors.SensorState;
 
 public class OutdoorDAOImplTestCase {
 
@@ -35,27 +40,36 @@ public class OutdoorDAOImplTestCase {
     private Sensor sensor, sensor2;
 
     private Outdoor outdoor;
-    private OutdoorDetail outdoorDetail;
-    private ObservableSensor mockSensor;
+    private OutdoorDetail detail;
+
+    private MockObservableSensor mockedLightSwitch, mockedMotionSensor;
+    private Control mockControl;
 
     @Before
     public void setup() {
-	mockSensor = new ObservableSensor() {
-	    public List<Reading> readAll() {
-		return null;
-	    }
-	    public Reading read() {
-		return null;
-	    }
-	};
+	mockedLightSwitch = new MockObservableSensor();
+	mockedMotionSensor = new MockObservableSensor();
+	mockControl = new MockControl();
+
 	sensors = new ArrayList<>();
 	sensors.add(sensor);
-	outdoor = new Outdoor(sensors);
-	outdoor.setAutoLights(mockSensor);
-	outdoorDetail = new OutdoorDetail();
 
-	dao = new OutdoorDAOImpl();
-	dao.setOutdoor(outdoor);
+	outdoor = new Outdoor();
+	outdoor.setSensors(sensors);
+	outdoor.setMotionSensor(mockedMotionSensor);
+	outdoor.setLightControl(mockControl);
+	outdoor.setLightSwitch(mockedLightSwitch);
+	
+	detail = new OutdoorDetail();
+	detail.setMotionSensor(SensorState.newBuilder().build());
+	detail.setLightControl(SensorState.newBuilder().build());
+	detail.setLightSwitch(SensorState.newBuilder().build());
+
+	dao = new OutdoorDAOImpl(new OutdoorFactory() {
+	    public Outdoor create(OutdoorSpecification outdoorSpecification) {
+		return outdoor;
+	    }
+	}, new OutdoorSpecification());
 	dao.setJdbcTemplate(jdbcTemplate);
     }
 
@@ -155,21 +169,55 @@ public class OutdoorDAOImplTestCase {
     }
 
     @Test
-    public void testSaveAutolightsOn() {
-	outdoorDetail.setAutoLights(true);
-	dao.save(outdoorDetail);
+    public void testSaveMotionSensorOn() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	dao.save(detail);
 
-	assertEquals(true, dao.get().isAutoLights());
-	assertEquals(true, outdoor.getAutoLightsEnabled());
+	assertNotNull(dao.get().getMotionSensor());
+	assertEquals(true, dao.get().getMotionSensor().isEnabled());
     }
 
     @Test
-    public void testSaveAutolightsOff() {
-	outdoorDetail.setAutoLights(false);
-	dao.save(outdoorDetail);
+    public void testSaveMotionSensorOff() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(false).build());
+	dao.save(detail);
 
-	assertEquals(false, dao.get().isAutoLights());
-	assertEquals(false, outdoor.getAutoLightsEnabled());
+	assertNotNull(dao.get().getMotionSensor());
+	assertEquals(false, dao.get().getMotionSensor().isEnabled());
+    }
+
+    @Test
+    public void testSaveShouldChangeLightControlAndSwitchToo() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	dao.save(detail);
+
+	assertEquals(true, dao.get().getMotionSensor().isEnabled());
+	assertEquals(true, dao.get().getLightControl().isEnabled());
+	// for light control we are storing state too, not only enabling/disabling
+	assertEquals(true, dao.get().getLightControl().isOn());
+	assertEquals(true, dao.get().getLightSwitch().isEnabled());
+    }
+
+    @Test
+    public void testSaveShouldChangeOutdoorToo() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	dao.save(detail);
+
+	detectState();
+
+	assertEquals(true, dao.get().getMotionSensor().isEnabled());
+	assertEquals(true, dao.get().getLightControl().isEnabled());
+	// for light control we are storing state too, not only enabling/disabling
+	assertEquals(true, dao.get().getLightControl().isOn());
+	assertEquals(true, dao.get().getLightSwitch().isEnabled());
     }
 
     private void detectState() {

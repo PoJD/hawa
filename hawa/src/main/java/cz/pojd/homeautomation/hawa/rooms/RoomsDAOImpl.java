@@ -16,7 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
 import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
-import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
+import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
+import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**
@@ -61,17 +62,11 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      */
 
     @Inject
-    public RoomsDAOImpl(List<RoomSpecification> roomSpecifications, RuntimeExecutor runtimeExecutor) {
+    public RoomsDAOImpl(RoomFactory factory, RoomSpecification[] roomSpecifications, RuntimeExecutor runtimeExecutor) {
 	rooms = new LinkedHashMap<>();
 	roomDetails = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
-	    Room room = new Room();
-	    room.setName(roomSpecification.getName());
-	    room.setTemperatureSensor(new Ds18B20TemperatureSensor(runtimeExecutor, roomSpecification.getTemperatureID()));
-	    room.setAutoLights(roomSpecification.getAutolights());
-	    room.setLightControl(roomSpecification.getLightControl());
-	    room.setFloor(roomSpecification.getFloor());
-	    rooms.put(room.getName(), room);
+	    rooms.put(roomSpecification.getName(), factory.create(roomSpecification));
 	}
     }
 
@@ -85,17 +80,16 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     @Override
     public void save(RoomDetail roomDetail) {
-	// the only item that can change is the autolights....
 	Room room = rooms.get(roomDetail.getName());
 	if (room != null) {
-	    room.setAutolightsEnabled(roomDetail.getAutoLights());
+	    room.setFrom(roomDetail);
 	} else {
 	    LOG.warn("Unable to find room by name " + roomDetail.getName() + ". Not updating any room in save().");
 	}
 
 	RoomDetail detail = roomDetails.get(roomDetail.getName());
 	if (detail != null) {
-	    detail.setAutoLights(roomDetail.getAutoLights());
+	    detail.setFrom(roomDetail);
 	} else {
 	    LOG.warn("Unable to find room detail by name " + roomDetail.getName() + ". Not updating any room detail in save().");
 	}
@@ -144,11 +138,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	for (Entry<String, Room> roomEntry : rooms.entrySet()) {
 	    String key = roomEntry.getKey();
 	    Room room = roomEntry.getValue();
-	    RoomDetail detail = new RoomDetail();
-	    detail.setName(room.getName());
-	    detail.setAutoLights(room.getAutoLightsEnabled());
-	    detail.setTemperature(room.getTemperatureSensor().read());
-	    detail.setFloor(room.getFloor());
+	    RoomDetail detail = new RoomDetail(room);
 	    detail.setLastUpdate(getRefresher().getLastUpdate());
 	    roomDetails.put(key, detail);
 	    if (LOG.isDebugEnabled()) {

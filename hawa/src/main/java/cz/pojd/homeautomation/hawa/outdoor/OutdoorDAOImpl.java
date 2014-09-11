@@ -10,7 +10,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
+import cz.pojd.homeautomation.hawa.outdoor.factory.OutdoorFactory;
 import cz.pojd.homeautomation.hawa.refresh.RefreshableDAO;
+import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Sensor;
 
@@ -30,24 +32,23 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
      * @see cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO
      */
 
+    public OutdoorDAOImpl(OutdoorFactory outdoorFactory, OutdoorSpecification outdoorSpecification) {
+	this.outdoor = outdoorFactory.create(outdoorSpecification);
+    }
+
     public Outdoor getOutdoor() {
 	return outdoor;
     }
 
-    public void setOutdoor(Outdoor outdoor) {
-	this.outdoor = outdoor;
-    }
-
     @Override
-    public OutdoorDetail get() {
+    public synchronized OutdoorDetail get() {
 	return outdoorDetail;
     }
 
     @Override
     public void save(OutdoorDetail outdoorDetail) {
-	// not saving readings, only the "autolights" flag
-	this.outdoor.setAutolightsEnabled(outdoorDetail.isAutoLights());
-	this.outdoorDetail.setAutoLights(outdoorDetail.isAutoLights());
+	this.outdoor.setFrom(outdoorDetail);
+	this.outdoorDetail.setFrom(outdoorDetail);
     }
 
     /*
@@ -57,7 +58,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     protected void detectState() {
 	List<Reading> readings = new ArrayList<>();
-	for (Sensor sensor : outdoor.getOutdoorSensors()) {
+	for (Sensor sensor : outdoor.getSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
 	resetState(readings);

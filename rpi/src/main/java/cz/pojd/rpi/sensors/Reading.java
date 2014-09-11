@@ -80,6 +80,10 @@ public class Reading {
 	return doubleValue;
     }
 
+    public boolean getBooleanValue() {
+	return Double.compare(1.00, getDoubleValue()) == 0;
+    }
+
     public String getStringValue() {
 	return stringValue;
     }

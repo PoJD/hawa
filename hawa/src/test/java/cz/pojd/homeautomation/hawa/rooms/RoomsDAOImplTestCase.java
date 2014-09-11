@@ -23,13 +23,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cz.pojd.homeautomation.hawa.MockControl;
+import cz.pojd.homeautomation.hawa.MockObservableSensor;
 import cz.pojd.homeautomation.hawa.refresh.Refresher;
+import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
+import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
+import cz.pojd.rpi.controls.Control;
+import cz.pojd.rpi.sensors.Reading;
+import cz.pojd.rpi.sensors.Reading.Type;
+import cz.pojd.rpi.sensors.SensorState;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 public class RoomsDAOImplTestCase {
 
-    private static final String ROOM_NAME = "test";
+    private static final String ROOM_NAME = RoomSpecification.HALL_DOWN.getName();
     private RoomsDAOImpl dao;
     private RoomDetail detail;
 
@@ -40,21 +48,30 @@ public class RoomsDAOImplTestCase {
     @Mocked
     private Refresher refresher;
     @Mocked
-    private ObservableSensor mockSensor;
+    private RoomFactory mockRoomFactory;
+
+    private MockObservableSensor mockedLightSwitch, mockedMotionSensor, mockedTemperatureSensor;
+    private Control mockControl;
 
     @Before
     public void setup() {
-	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
-	createDAO(rooms);
-
 	detail = new RoomDetail();
 	detail.setName(ROOM_NAME);
+	detail.setMotionSensor(SensorState.newBuilder().build());
+	detail.setLightControl(SensorState.newBuilder().build());
+	detail.setLightSwitch(SensorState.newBuilder().build());
+
+	mockedLightSwitch = new MockObservableSensor();
+	mockedMotionSensor = new MockObservableSensor();
+	mockedTemperatureSensor = new MockObservableSensor();
+	mockControl = new MockControl();
+
+	createDAO(RoomSpecification.HALL_DOWN);
     }
 
     @Test
     public void testGetAllRoomsEmptyShouldReturnEmptyList() {
-	createDAO(new ArrayList<RoomSpecification>());
+	createDAO(new RoomSpecification[] {});
 	assertTrue(dao.query().isEmpty());
     }
 
@@ -76,30 +93,69 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
-    public void testSaveShouldChangeAutolightsOff() {
+    public void testSaveShouldChangeMotionSensorOff() {
 	detectState();
-	detail.setAutoLights(false);
+	detail.setMotionSensor(SensorState.newBuilder().enabled(false).build());
 	dao.save(detail);
 
 	List<RoomDetail> list = dao.query();
 	assertEquals(1, list.size());
-	assertEquals(false, list.get(0).getAutoLights());
+	assertEquals(false, list.get(0).getMotionSensor().isEnabled());
     }
 
     @Test
-    public void testSaveShouldChangeAutolightsOn() {
+    public void testSaveShouldChangeMotionSensorOn() {
 	detectState();
-	detail.setAutoLights(true);
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	List<RoomDetail> list = dao.query();
 	assertEquals(1, list.size());
-	assertEquals(true, list.get(0).getAutoLights());
+	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
+    }
+
+    @Test
+    public void testSaveShouldChangeLightControlAndSwitchToo() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	dao.save(detail);
+
+	List<RoomDetail> list = dao.query();
+	assertEquals(1, list.size());
+	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
+	assertEquals(true, list.get(0).getLightControl().isEnabled());
+	// for light control we are storing state too, not only enabling/disabling
+	assertEquals(true, list.get(0).getLightControl().isOn());
+	assertEquals(true, list.get(0).getLightSwitch().isEnabled());
+    }
+
+    
+    @Test
+    public void testSaveShouldChangeRoomToo() {
+	detectState();
+	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+
+	dao.save(detail);
+
+	// we now mimic another detect state - yet the above should still be stored (we know it is done via saving to room dirctly)
+	detectState();
+
+	List<RoomDetail> list = dao.query();
+	assertEquals(1, list.size());
+	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
+	assertEquals(true, list.get(0).getLightControl().isEnabled());
+	// for light control we are storing state too, not only enabling/disabling
+	assertEquals(true, list.get(0).getLightControl().isOn());
+	assertEquals(true, list.get(0).getLightSwitch().isOn());
     }
 
     @Test
     public void testSaveRoomsEmptyShouldNotFail() {
-	createDAO(new ArrayList<RoomSpecification>());
+	createDAO(new RoomSpecification[] {});
 	dao.save(detail);
     }
 
@@ -137,7 +193,7 @@ public class RoomsDAOImplTestCase {
 			if (!(args[2] instanceof Double)) {
 			    return false;
 			}
-			if (Double.compare(22., (Double) args[2]) != 0) {
+			if (Double.compare(1., (Double) args[2]) != 0) {
 			    return false;
 			}
 
@@ -164,22 +220,21 @@ public class RoomsDAOImplTestCase {
 		times = 0;
 	    }
 	};
-	dao = new RoomsDAOImpl(new ArrayList<RoomSpecification>(), runtimeExecutor);
+	dao = new RoomsDAOImpl(mockRoomFactory, new RoomSpecification[] {}, runtimeExecutor);
 	dao.saveState(new Date());
     }
 
     @Test
     public void testSaveStateShouldNotSaveInvalidTemperature() {
-	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test3").temperatureID("id3").build());
-	createDAO(rooms);
+	createDAO(new RoomSpecification[] { RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP, RoomSpecification.WC_BEDROOM },
+		new ObservableSensor[] { mockedTemperatureSensor, mockedTemperatureSensor, new MockObservableSensor() {
+		    public Reading read() {
+			return Reading.invalid(Type.temperatureB);
+		    }
+		} });
 
 	new NonStrictExpectations() {
 	    {
-		runtimeExecutor.execute(anyString);
-		returns(Collections.singletonList(0.), Collections.singletonList(50000.), Collections.singletonList(22000.));
 		jdbcTemplate.batchUpdate(anyString, withArgThat(new BaseMatcher<List<Object[]>>() {
 
 		    @Override
@@ -188,7 +243,7 @@ public class RoomsDAOImplTestCase {
 			    return false;
 			}
 			List<?> unTypedList = (List<?>) item;
-			if (unTypedList.size() != 1) {
+			if (unTypedList.size() != 2) {
 			    return false;
 			}
 			if (!(unTypedList.get(0) instanceof Object[])) {
@@ -201,7 +256,7 @@ public class RoomsDAOImplTestCase {
 			if (!(row[2] instanceof Double)) {
 			    return false;
 			}
-			if (Double.compare(22., (double) row[2]) != 0) {
+			if (Double.compare(1., (double) row[2]) != 0) {
 			    return false;
 			}
 
@@ -210,7 +265,7 @@ public class RoomsDAOImplTestCase {
 
 		    @Override
 		    public void describeTo(Description description) {
-			description.appendText("list that contains exactly one array of 3 objects, where the last is a specific double");
+			description.appendText("list that contains exactly two arrays of 3 objects, where the last is a specific double");
 		    }
 		}));
 		times = 1;
@@ -223,29 +278,16 @@ public class RoomsDAOImplTestCase {
 
     @Test
     public void testDetectStateShouldReadTemperatureForEachRoom() {
-	List<RoomSpecification> rooms = new ArrayList<>();
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name(ROOM_NAME).temperatureID("id").build());
-	rooms.add(RoomSpecification.newBuilder().autolights(mockSensor).floor(Floor.BASEMENT).name("test2").temperatureID("id2").build());
-	createDAO(rooms);
-
-	new NonStrictExpectations() {
-	    {
-		runtimeExecutor.execute(anyString);
-		result = 22000.; // our temperature will be 22°C always
-		times = 2;
-	    }
-	};
+	createDAO(RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP);
 	dao.detectState();
+
+	assertEquals(2, mockedTemperatureSensor.getReadCount());
     }
 
     @Test
     public void testRefreshDetectOKSaveOK() {
 	new NonStrictExpectations() {
 	    {
-		runtimeExecutor.execute(anyString);
-		result = 22000.; // our temperature will be 22°C always
-		times = 1;
-
 		jdbcTemplate.batchUpdate(anyString, withInstanceLike(new ArrayList<Object[]>()));
 		result = new int[] { 1 };
 		times = 1;
@@ -253,6 +295,8 @@ public class RoomsDAOImplTestCase {
 	};
 
 	dao.refresh(new LocalDateTime());
+
+	assertEquals(1, mockedTemperatureSensor.getReadCount());
     }
 
     @Test
@@ -325,29 +369,42 @@ public class RoomsDAOImplTestCase {
     }
 
     private void detectState() {
-	new NonStrictExpectations() {
-	    {
-		runtimeExecutor.execute(anyString);
-		result = 22000.; // our temperature will be 22°C always
-		times = 1;
-	    }
-	};
-
 	// we do want to test getAll in isolation - we could call refresh here, but the tests would be too dependent on each other then, so we use the
 	// fact the below is protected
+	mockedTemperatureSensor.setReadCount(0);
 	dao.detectState();
+
+	// confirm the sensor read something
+	assertEquals(1, mockedTemperatureSensor.getReadCount());
     }
 
     private void checkDetail(RoomDetail detail) {
-	assertEquals(false, detail.getAutoLights());
+	assertTrue(detail.getMotionSensor().isEnabled());
 	assertEquals(Floor.BASEMENT, detail.getFloor());
 	assertEquals(ROOM_NAME, detail.getName());
-	assertEquals(22.0, detail.getTemperature().getDoubleValue(), 0.001);
-	assertEquals("22.00", detail.getTemperature().getStringValue());
+	assertEquals(1.0, detail.getTemperature().getDoubleValue(), 0.001);
+	assertEquals("1.00", detail.getTemperature().getStringValue());
     }
 
-    private void createDAO(List<RoomSpecification> rooms) {
-	dao = new RoomsDAOImpl(rooms, runtimeExecutor);
+    private void createDAO(RoomSpecification... rooms) {
+	createDAO(rooms, null);
+    }
+
+    private void createDAO(RoomSpecification[] rooms, final ObservableSensor[] temperatureSensor) {
+	dao = new RoomsDAOImpl(new RoomFactory() {
+	    int index = 0;
+
+	    public Room create(RoomSpecification specification) {
+		Room result = new Room();
+		result.setFloor(specification.getFloor() != null ? specification.getFloor() : Floor.BASEMENT);
+		result.setName(specification.getName());
+		result.setMotionSensor(mockedMotionSensor);
+		result.setLightControl(mockControl);
+		result.setLightSwitch(mockedLightSwitch);
+		result.setTemperatureSensor(temperatureSensor != null ? temperatureSensor[index++] : mockedTemperatureSensor);
+		return result;
+	    }
+	}, rooms, runtimeExecutor);
 	dao.setJdbcTemplate(jdbcTemplate);
 	dao.setRefresher(refresher);
     }

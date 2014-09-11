@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import cz.pojd.homeautomation.hawa.LightCapableDetail;
 import cz.pojd.rpi.sensors.Reading;
 
 /**
@@ -14,18 +15,9 @@ import cz.pojd.rpi.sensors.Reading;
  * @since Aug 10, 2014 3:58:02 PM
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OutdoorDetail {
+public class OutdoorDetail extends LightCapableDetail {
 
     private List<Reading> sensorReadings = new ArrayList<>();
-    private boolean autoLights = true;
-
-    public boolean isAutoLights() {
-	return autoLights;
-    }
-
-    public void setAutoLights(boolean autoLights) {
-	this.autoLights = autoLights;
-    }
 
     public List<Reading> getSensorReadings() {
 	return sensorReadings;
@@ -37,6 +29,7 @@ public class OutdoorDetail {
 
     @Override
     public String toString() {
-	return "OutdoorDetail [sensorReadings=" + sensorReadings + ", autoLights=" + autoLights + "]";
+	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()="
+		+ getLightSwitch() + ", getLightControl()=" + getLightControl() + "]";
     }
 }

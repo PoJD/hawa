@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import cz.pojd.homeautomation.hawa.LightCapableDetail;
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
 import cz.pojd.rpi.sensors.Reading;
 
@@ -14,10 +15,9 @@ import cz.pojd.rpi.sensors.Reading;
  * @since Jul 27, 2014 12:51:36 AM
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoomDetail {
+public class RoomDetail extends LightCapableDetail {
 
     private String name;
-    private Boolean autoLights;
     private Floor floor;
     private String lastUpdate;
     private Reading temperature;
@@ -27,12 +27,19 @@ public class RoomDetail {
     }
 
     public RoomDetail(RoomDetail copy) {
-	name = copy.name;
-	temperature = copy.temperature;
-	autoLights = copy.autoLights;
-	floor = copy.floor;
-	lastUpdate = copy.lastUpdate;
-	temperatureHistory = copy.temperatureHistory;
+	super(copy);
+	setName(copy.getName());
+	setTemperature(copy.getTemperature());
+	setFloor(copy.getFloor());
+	setLastUpdate(copy.getLastUpdate());
+	setTemperatureHistory(copy.getTemperatureHistory());
+    }
+
+    public RoomDetail(Room room) {
+	super(room);
+	setName(room.getName());
+	setTemperature(room.getTemperatureSensor().read());
+	setFloor(room.getFloor());
     }
 
     public String getName() {
@@ -41,26 +48,6 @@ public class RoomDetail {
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    public Reading getTemperature() {
-	return temperature;
-    }
-    
-    public boolean isValidTemperature() {
-	return getTemperature()!=null && getTemperature().isValid();
-    }
-
-    public void setTemperature(Reading temperature) {
-	this.temperature = temperature;
-    }
-
-    public Boolean getAutoLights() {
-	return autoLights;
-    }
-
-    public void setAutoLights(Boolean autoLights) {
-	this.autoLights = autoLights;
     }
 
     public Floor getFloor() {
@@ -79,6 +66,18 @@ public class RoomDetail {
 	this.lastUpdate = lastUpdate;
     }
 
+    public Reading getTemperature() {
+	return temperature;
+    }
+
+    public void setTemperature(Reading temperature) {
+	this.temperature = temperature;
+    }
+
+    public boolean isValidTemperature() {
+	return getTemperature() != null && getTemperature().isValid();
+    }
+
     public GraphData[] getTemperatureHistory() {
 	return temperatureHistory;
     }
@@ -89,7 +88,9 @@ public class RoomDetail {
 
     @Override
     public String toString() {
-	return "RoomDetail [name=" + name + ", autoLights=" + autoLights + ", floor=" + floor + ", lastUpdate=" + lastUpdate + ", temperature="
-		+ temperature + ", temperatureHistory=" + Arrays.toString(temperatureHistory) + "]";
+	return "RoomDetail [getName()=" + getName() + ", getFloor()=" + getFloor() + ", getLastUpdate()=" + getLastUpdate() + ", getTemperature()="
+		+ getTemperature() + ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()="
+		+ Arrays.toString(getTemperatureHistory()) + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
+		+ ", getLightControl()=" + getLightControl() + "]";
     }
 }

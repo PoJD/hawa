@@ -2,9 +2,7 @@ package cz.pojd.homeautomation.hawa.outdoor;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import cz.pojd.homeautomation.hawa.AutolightsCapable;
+import cz.pojd.homeautomation.hawa.LightCapable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -13,21 +11,21 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Sep 9, 2014 11:32:45 PM
  */
-public class Outdoor extends AutolightsCapable {
+public class Outdoor extends LightCapable {
 
-    private final List<Sensor> outdoorSensors;
+    private List<Sensor> sensors;
 
-    @Inject
-    public Outdoor(List<Sensor> outdoorSensors) {
-	this.outdoorSensors = outdoorSensors;
+    public List<Sensor> getSensors() {
+	return sensors;
     }
 
-    public List<Sensor> getOutdoorSensors() {
-	return outdoorSensors;
+    public void setSensors(List<Sensor> outdoorSensors) {
+	this.sensors = outdoorSensors;
     }
 
     @Override
     public String toString() {
-	return "Outdoor [outdoorSensors=" + outdoorSensors + ", autoLights=" + getAutoLights() + "]";
+	return "Outdoor [getSensors()=" + getSensors() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
+		+ ", getLightControl()=" + getLightControl() + "]";
     }
 }
