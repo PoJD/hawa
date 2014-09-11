@@ -1,5 +1,7 @@
 package cz.pojd.rpi.sensors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Reading is a reading of a value from a Sensor
  * 
@@ -80,6 +82,7 @@ public class Reading {
 	return doubleValue;
     }
 
+    @JsonIgnore
     public boolean getBooleanValue() {
 	return Double.compare(1.00, getDoubleValue()) == 0;
     }
