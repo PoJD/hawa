@@ -22,11 +22,11 @@ import cz.pojd.homeautomation.hawa.MockControl;
 import cz.pojd.homeautomation.hawa.MockObservableSensor;
 import cz.pojd.homeautomation.hawa.outdoor.factory.OutdoorFactory;
 import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
+import cz.pojd.rpi.State;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.SensorState;
 
 public class OutdoorDAOImplTestCase {
 
@@ -61,9 +61,9 @@ public class OutdoorDAOImplTestCase {
 	outdoor.setLightSwitch(mockedLightSwitch);
 
 	detail = new OutdoorDetail();
-	detail.setMotionSensor(SensorState.newBuilder().build());
-	detail.setLightControl(SensorState.newBuilder().build());
-	detail.setLightSwitch(SensorState.newBuilder().build());
+	detail.setMotionSensor(State.newBuilder().build());
+	detail.setLightControl(State.newBuilder().build());
+	detail.setLightSwitch(State.newBuilder().build());
 
 	dao = new OutdoorDAOImpl(new OutdoorFactory() {
 	    public Outdoor create(OutdoorSpecification outdoorSpecification) {
@@ -182,7 +182,7 @@ public class OutdoorDAOImplTestCase {
     @Test
     public void testSaveMotionSensorOn() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	assertNotNull(dao.get().getMotionSensor());
@@ -192,7 +192,7 @@ public class OutdoorDAOImplTestCase {
     @Test
     public void testSaveMotionSensorOff() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(false).build());
+	detail.setMotionSensor(State.newBuilder().enabled(false).build());
 	dao.save(detail);
 
 	assertNotNull(dao.get().getMotionSensor());
@@ -202,9 +202,9 @@ public class OutdoorDAOImplTestCase {
     @Test
     public void testSaveShouldChangeLightControlAndSwitchToo() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
-	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
-	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	assertEquals(true, dao.get().getMotionSensor().isEnabled());
@@ -217,9 +217,9 @@ public class OutdoorDAOImplTestCase {
     @Test
     public void testSaveShouldChangeOutdoorToo() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
-	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
-	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	detectState();

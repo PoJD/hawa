@@ -1,6 +1,6 @@
 package cz.pojd.rpi.controls;
 
-import cz.pojd.rpi.sensors.SensorState;
+import cz.pojd.rpi.State;
 
 /**
  * Generic control in the application - used to control various devices through various means
@@ -48,11 +48,11 @@ public interface Control extends Controllable {
     public boolean isSwitchedOn();
 
     /**
-     * Returns this control as sensor state - e.g. whether it is enabled and switched on or not
+     * Returns this control's state - e.g. whether it is enabled and switched on or not
      * 
      * @return wrapper for this control state
      */
-    public SensorState asSensorState();
+    public State getState();
 
     /**
      * Detects whether this control is properly initiated or not

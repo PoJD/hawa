@@ -1,22 +1,28 @@
-package cz.pojd.rpi.sensors;
+package cz.pojd.rpi;
 
 /**
- * Simple wrapper for a sensor state
+ * Simple wrapper for a sensor/control state
  *
  * @author Lubos Housa
  * @since Sep 10, 2014 11:39:04 PM
  */
-public class SensorState {
+public class State {
 
+    private boolean initiated;
     private boolean enabled;
     private boolean on;
 
-    public SensorState() {
+    public State() {
     }
 
-    public SensorState(Builder builder) {
+    public State(Builder builder) {
+	this.initiated = builder.initiated;
 	this.enabled = builder.enabled;
 	this.on = builder.on;
+    }
+
+    public boolean isInitiated() {
+	return initiated;
     }
 
     public boolean isEnabled() {
@@ -29,7 +35,7 @@ public class SensorState {
 
     @Override
     public String toString() {
-	return "SensorState [enabled=" + enabled + ", on=" + on + "]";
+	return "State [initiated=" + initiated + ", enabled=" + enabled + ", on=" + on + "]";
     }
 
     public static Builder newBuilder() {
@@ -37,10 +43,16 @@ public class SensorState {
     }
 
     public static class Builder {
+	private boolean initiated;
 	private boolean enabled;
 	private boolean on;
 
 	private Builder() {
+	}
+
+	public Builder initiated(boolean initiated) {
+	    this.initiated = initiated;
+	    return this;
 	}
 
 	public Builder enabled(boolean enabled) {
@@ -53,8 +65,8 @@ public class SensorState {
 	    return this;
 	}
 
-	public SensorState build() {
-	    return new SensorState(this);
+	public State build() {
+	    return new State(this);
 	}
     }
 }

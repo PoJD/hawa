@@ -1,6 +1,6 @@
 package cz.pojd.rpi.controls;
 
-import cz.pojd.rpi.sensors.SensorState;
+import cz.pojd.rpi.State;
 
 public abstract class BaseControl extends ControllableBase implements Control {
 
@@ -11,7 +11,7 @@ public abstract class BaseControl extends ControllableBase implements Control {
     }
 
     @Override
-    public SensorState asSensorState() {
-	return SensorState.newBuilder().enabled(isEnabled()).on(isSwitchedOn()).build();
+    public State getState() {
+	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(isSwitchedOn()).build();
     }
 }

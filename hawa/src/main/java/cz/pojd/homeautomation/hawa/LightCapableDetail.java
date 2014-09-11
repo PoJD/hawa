@@ -1,17 +1,17 @@
 package cz.pojd.homeautomation.hawa;
 
-import cz.pojd.rpi.sensors.SensorState;
+import cz.pojd.rpi.State;
 
 public abstract class LightCapableDetail {
-    private SensorState motionSensor, lightSwitch, lightControl;
+    private State motionSensor, lightSwitch, lightControl;
 
     protected LightCapableDetail() {
     }
 
     protected LightCapableDetail(LightCapable lightCapable) {
-	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().asSensorState() : null);
-	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().asSensorState() : null);
-	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().asSensorState() : null);
+	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().getState() : null);
+	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().getState() : null);
+	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().getState() : null);
     }
 
     protected LightCapableDetail(LightCapableDetail detail) {
@@ -24,27 +24,27 @@ public abstract class LightCapableDetail {
 	setLightControl(detail.getLightControl());
     }
 
-    public SensorState getMotionSensor() {
+    public State getMotionSensor() {
 	return motionSensor;
     }
 
-    public void setMotionSensor(SensorState motionSensor) {
+    public void setMotionSensor(State motionSensor) {
 	this.motionSensor = motionSensor;
     }
 
-    public SensorState getLightSwitch() {
+    public State getLightSwitch() {
 	return lightSwitch;
     }
 
-    public void setLightSwitch(SensorState lightSwitch) {
+    public void setLightSwitch(State lightSwitch) {
 	this.lightSwitch = lightSwitch;
     }
 
-    public SensorState getLightControl() {
+    public State getLightControl() {
 	return lightControl;
     }
 
-    public void setLightControl(SensorState lightControl) {
+    public void setLightControl(State lightControl) {
 	this.lightControl = lightControl;
     }
 }

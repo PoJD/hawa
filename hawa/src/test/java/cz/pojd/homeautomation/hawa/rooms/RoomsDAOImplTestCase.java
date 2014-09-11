@@ -28,10 +28,10 @@ import cz.pojd.homeautomation.hawa.MockObservableSensor;
 import cz.pojd.homeautomation.hawa.refresh.Refresher;
 import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
+import cz.pojd.rpi.State;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
-import cz.pojd.rpi.sensors.SensorState;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
@@ -57,9 +57,9 @@ public class RoomsDAOImplTestCase {
     public void setup() {
 	detail = new RoomDetail();
 	detail.setName(ROOM_NAME);
-	detail.setMotionSensor(SensorState.newBuilder().build());
-	detail.setLightControl(SensorState.newBuilder().build());
-	detail.setLightSwitch(SensorState.newBuilder().build());
+	detail.setMotionSensor(State.newBuilder().build());
+	detail.setLightControl(State.newBuilder().build());
+	detail.setLightSwitch(State.newBuilder().build());
 
 	mockedLightSwitch = new MockObservableSensor();
 	mockedMotionSensor = new MockObservableSensor();
@@ -95,7 +95,7 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testSaveShouldChangeMotionSensorOff() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(false).build());
+	detail.setMotionSensor(State.newBuilder().enabled(false).build());
 	dao.save(detail);
 
 	List<RoomDetail> list = dao.query();
@@ -106,7 +106,7 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testSaveShouldChangeMotionSensorOn() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	List<RoomDetail> list = dao.query();
@@ -117,9 +117,9 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testSaveShouldChangeLightControlAndSwitchToo() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
-	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
-	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	List<RoomDetail> list = dao.query();
@@ -134,9 +134,9 @@ public class RoomsDAOImplTestCase {
     @Test
     public void testSaveShouldChangeRoomToo() {
 	detectState();
-	detail.setMotionSensor(SensorState.newBuilder().enabled(true).build());
-	detail.setLightControl(SensorState.newBuilder().enabled(true).on(true).build());
-	detail.setLightSwitch(SensorState.newBuilder().enabled(true).build());
+	detail.setMotionSensor(State.newBuilder().enabled(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 
 	dao.save(detail);
 

@@ -3,9 +3,9 @@ package cz.pojd.rpi.sensors.observable;
 import java.util.Observable;
 import java.util.Observer;
 
+import cz.pojd.rpi.State;
 import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.sensors.SensorState;
 
 /**
  * Special kind of sensor allowing adding observers to it and letting them get notified any time the reading of the sensor changes. Implementations of
@@ -55,11 +55,11 @@ public abstract class ObservableSensor extends Observable implements Sensor, Con
     }
 
     /**
-     * Returns this control as sensor state - e.g. whether it is enabled and switched on or not
+     * Returns this observable sensor's state - e.g. whether it is enabled and switched on or not
      * 
-     * @return wrapper for this control state
+     * @return wrapper for this sensor state
      */
-    public SensorState asSensorState() {
-	return SensorState.newBuilder().enabled(isEnabled()).on(read().getBooleanValue()).build();
+    public State getState() {
+	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(read().getBooleanValue()).build();
     }
 }
