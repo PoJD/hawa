@@ -60,6 +60,9 @@ html, body {
 .bulb {
 	width: 40px;
 	height: 40px;
+}
+
+.cursor {
 	cursor: pointer;
 }
 

@@ -1,4 +1,3 @@
-<img ng-class="{{['bulb', class!=undefined ? class : '']}}"
-	ng-src="{{entity.lightControl.on ? 'img/bulb-on.png' : 'img/bulb-off.png'}}"
+<img ng-class="{{['bulb', class!=undefined ? class : '', entity.lightControl.enabled ? 'cursor' : '']}}"
+	ng-src="{{entity.lightControl.enabled ? (entity.lightControl.on ? 'img/bulb-on.png' : 'img/bulb-off.png') : 'img/bulb-disabled.png'}}"
 	ng-click="lightControlClicked()">
-	
