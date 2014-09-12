@@ -5,10 +5,10 @@
 		class="left label label-state label-danger">E</div>
 
 	<toggle-switch class="left switch-state" model="state.enabled"
-		on-label="Enabled" off-label="Disabled" ng-click="entity.$save()">
+		on-label="Enabled" off-label="Disabled" ng-click="entityEnabledChanged()">
 	</toggle-switch>
 
-	<toggle-switch class="left switch-state" ng-disabled="!state.switchable"
+	<toggle-switch class="left switch-state" ng-disabled="!state.enabled || !state.switchable"
 		model="state.on" on-label="On" off-label="Off"
 		ng-click="entity.$save()"> </toggle-switch>
 </div>

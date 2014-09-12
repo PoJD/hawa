@@ -15,9 +15,18 @@ angular.module('homeAutomation.directives', [])
 		restrict : 'E',
 		scope : {
 			state : '=',
-			entity : '='
+			entity : '=',
 		},
-		templateUrl : 'angular/components/state.html'
+		templateUrl : 'angular/components/state.html',
+		link: function link(scope, element, attrs) {
+	        scope.entityEnabledChanged = function() {
+			    // mimics the same logic from the server - the control gets switched off when disabled...
+				if (attrs.shouldSwitchOffWhenDisabled && !scope.state.enabled) {
+					scope.state.on = false;
+				}
+				scope.entity.$save();
+			}
+	    }
 	};
 } ])
 
@@ -38,7 +47,15 @@ angular.module('homeAutomation.directives', [])
 			entity : '=',
 			'class' : '@'
 		},
-		templateUrl : 'angular/components/lightControl.html'
+		templateUrl : 'angular/components/lightControl.html',
+		link: function link(scope) {
+	        scope.lightControlClicked = function() {
+				if (scope.entity.lightControl.enabled) { 
+					scope.entity.lightControl.on = !scope.entity.lightControl.on; 
+					scope.entity.$save(); 
+				}
+			};
+	    }
 	};
 } ])
 

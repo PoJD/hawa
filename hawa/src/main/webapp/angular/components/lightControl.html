@@ -1,3 +1,4 @@
 <img ng-class="{{['bulb', class!=undefined ? class : '']}}"
 	ng-src="{{entity.lightControl.on ? 'img/bulb-on.png' : 'img/bulb-off.png'}}"
-	ng-click="entity.lightControl.on=!entity.lightControl.on; entity.$save()">
+	ng-click="lightControlClicked()">
+	
