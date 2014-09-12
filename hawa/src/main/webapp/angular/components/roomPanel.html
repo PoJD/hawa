@@ -1,0 +1,14 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<a href="#/rooms/{{room.name}}" class="link-panel">{{room.name}}</a><span
+			class="glyphicon glyphicon-time right"></span>
+	</div>
+	<div class="panel-body">
+		<div class="col-md-9 col-xs-9 panel-temperature">
+			<span gauge value="room.temperature.doubleValue" label="°C"></span>
+		</div>
+		<div class="col-md-3 col-xs-3 panel-buttons">
+			<ha-light-control entity="room" />
+		</div>
+	</div>
+</div>

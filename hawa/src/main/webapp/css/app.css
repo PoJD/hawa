@@ -13,6 +13,7 @@ html, body {
 .top {
 	height: 50px;
 }
+
 .full {
 	min-height: 100%;
 }
@@ -25,33 +26,44 @@ html, body {
 	float: right;
 }
 
-.roomLabel {
+.label-state {
 	margin-top: 3px;
 	display: block;
 }
 
-.roomSwitch {
+.switch-state {
 	margin-left: 10px;
 	height: 22px;
 	font-size: 75%;
 }
 
-.roomSwitch span {
+.switch-state span {
 	padding: 1px;
 }
 
-.temperaturePanel {
+.panel-temperature {
 	padding: 0;
 }
 
-.buttonsPanel {
+.panel-buttons {
 	padding: 0 5px 0 0;
 }
 
-.panelLink {
+.link-panel {
 	color: #fff;
 }
 
-.panelLink:hover {
+.link-panel:hover {
 	color: #ccc;
+}
+
+.bulb {
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+}
+
+img.small {
+	width: 20px;
+	height: 20px;
 }

@@ -60,6 +60,6 @@ public abstract class ObservableSensor extends Observable implements Sensor, Con
      * @return wrapper for this sensor state
      */
     public State getState() {
-	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(read().getBooleanValue()).build();
+	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(read().getBooleanValue()).switchable(false).build();
     }
 }

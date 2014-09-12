@@ -1,86 +1,44 @@
 <div class="row full">
 	<div class="col-md-9 col-xs-8">
-		<div class="col-md-2 col-xs-6" ng-repeat="room in rooms | filter: { floor: 'FIRST' }">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<a href="#/rooms/{{room.name}}" class="panelLink">{{room.name}}</a><span class="glyphicon glyphicon-time right"></span>
-				</div>
-				<div class="panel-body">
-					<div class="col-md-9 col-xs-9 temperaturePanel">
-						<span gauge value="room.temperature.doubleValue" label="°C"></span>
-					</div>
-					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.motionSensor!=undefined">
-						<toggle-switch model="room.motionSensor.enabled" on-label="1" off-label="0"
-							ng-click="room.$save()"> </toggle-switch>
-					</div>
-				</div>
-			</div>
+		<div class="col-md-2 col-xs-6"
+			ng-repeat="room in rooms | filter: { floor: 'FIRST' }">
+			<ha-room-panel room="room" />
 		</div>
 		<div class="col-md-12 col-xs-12">
-			<div class="label-default" style="width:100%;height:1px;margin-bottom:20px;">&nbsp;</div>
+			<div class="label-default"
+				style="width: 100%; height: 1px; margin-bottom: 20px;">&nbsp;</div>
 		</div>
-		<div class="col-md-2 col-xs-6" ng-repeat="room in rooms | filter: { floor: 'BASEMENT' }">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<a href="#/rooms/{{room.name}}" class="panelLink">{{room.name}}</a><span class="glyphicon glyphicon-time right"></span>
-				</div>
-				<div class="panel-body">
-					<div class="col-md-9 col-xs-9 temperaturePanel">
-						<span gauge value="room.temperature.doubleValue" label="°C"></span>
-					</div>
-					<div class="col-md-3 col-xs-3 buttonsPanel" ng-show="room.motionSensor!=undefined">
-						<toggle-switch model="room.motionSensor.enabled" on-label="1" off-label="0"
-							ng-click="room.$save()"> </toggle-switch>
-					</div>
-				</div>
-			</div>
+		<div class="col-md-2 col-xs-6"
+			ng-repeat="room in rooms | filter: { floor: 'BASEMENT' }">
+			<ha-room-panel room="room" />
 		</div>
 	</div>
 	<div class="col-md-3 col-xs-4">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				Outdoor ({{systemState.lastUpdate}})<span class="glyphicon glyphicon-cloud right"></span>
+				Outdoor ({{systemState.lastUpdate}})
+				<ha-light-control entity="room" class="small"></ha-light-control>
+				<span class="glyphicon glyphicon-cloud right"></span>
 			</div>
-			<div class="panel-body">
-				<div class="row">
-					<div class="buttonsPanel right">
-						<toggle-switch model="outdoor.autoLights" on-label="1" off-label="0"
-							ng-click="outdoor.$save()"> </toggle-switch>
-					</div>					
-				</div>
-				<div class="row"
-					ng-repeat="reading in outdoor.sensorReadings">
-					<div class="col-md-5 col-xs-6">
-						<span class="label label-default">{{reading.type}}</span>
-					</div>
-					<div class="col-md-7 col-xs-6">
-						<span class="label label-success">{{reading.stringValue}}</span>
-					</div>
-				</div>
-			</div>
+			<table class="table">
+				<tbody>
+					<tr ng-repeat="reading in outdoor.sensorReadings">
+						<th><span class="label label-default">{{reading.type}}</span></th>
+						<td><span class="label label-success">{{reading.stringValue}}</span></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				Home Automation <span app-version></span><span
+				Home Automation <span ha-app-version></span><span
 					class="glyphicon glyphicon-heart right"></span>
 			</div>
 			<div class="panel-body">
 				<div class="row"
 					ng-repeat="property in systemState.values | filter: { type: 'jvm' }">
-					<div class="col-md-3 col-xs-3">
-						<span class="label label-default">{{property.name}}</span>
-					</div>
-					<div class="col-md-9 col-xs-9">
-						<div class="progress">
-							<div
-								class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}"
-								role="progressbar"
-								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}"
-								aria-valuemin="0" aria-valuemax="100"
-								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
-						</div>
-					</div>
+					<ha-property property="property" />
 				</div>
 			</div>
 		</div>
@@ -92,19 +50,7 @@
 			<div class="panel-body">
 				<div class="row"
 					ng-repeat="property in systemState.values | filter: { type: 'os' }">
-					<div class="col-md-3 col-xs-3">
-						<span class="label label-default">{{property.name}}</span>
-					</div>
-					<div class="col-md-9 col-xs-9">
-						<div class="progress">
-							<div
-								class="progress-bar {{(property.percentage > property.criticalPercentage) ? 'progress-bar-danger' : 'progress-bar-success'}}"
-								role="progressbar"
-								aria-valuenow="{{property.percentage > 100 ? 100 : property.percentage}}"
-								aria-valuemin="0" aria-valuemax="100"
-								style="min-width: 30%; width:{{property.percentage > 100 ? 100 : property.percentage}}%">{{property.textValue}}</div>
-						</div>
-					</div>
+					<ha-property property="property" />
 				</div>
 			</div>
 		</div>

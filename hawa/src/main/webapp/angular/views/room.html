@@ -5,12 +5,13 @@
 
 <div class="row full">
 	<div class="col-md-6">
-		<nvd3-line-chart ng-show="temperatureHistory" data="temperatureHistory" id="temperatureHistory"
-			width="600" height="400" margin="0"
-			xAxisTickFormat="xAxisTickFormat()" showXAxis="true" showYAxis="true" forceY="[0,40]"
-			noData="No data found for last week!" showLegend="true" interactive="true"
-			tooltips="true" useInteractiveGuideLine="true"> <svg></svg>
-		</nvd3-line-chart>
+		<nvd3-line-chart ng-show="temperatureHistory"
+			data="temperatureHistory" id="temperatureHistory" width="600"
+			height="400" margin="0" xAxisTickFormat="xAxisTickFormat()"
+			showXAxis="true" showYAxis="true" forceY="[0,40]"
+			noData="No data found for last week!" showLegend="true"
+			interactive="true" tooltips="true" useInteractiveGuideLine="true">
+		<svg></svg> </nvd3-line-chart>
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">
@@ -27,26 +28,27 @@
 						<td>{{roomDetail.floor.toLowerCase()}}</td>
 					</tr>
 					<tr>
-						<th>Current temperature</th>
+						<th>Current Temperature</th>
 						<td>{{roomDetail.temperature.stringValue}}°C</td>
 					</tr>
 					<tr>
-						<th>Last checked</th>
+						<th>Last Checked</th>
 						<td>{{roomDetail.lastUpdate}}</td>
 					</tr>
 					<tr>
-						<th>Motion sensor</th>
-						<td>
-							<div ng-switch on="roomDetail.motionSensor.enabled"
-								class="left roomLabelWrapper">
-								<div ng-switch-when="true" class="label roomLabel label-success">On</div>
-								<div ng-switch-when="false" class="label roomLabel label-danger">Off</div>
-								<div ng-switch-default class="label roomLabel label-default">Not installed</div>
-							</div> <toggle-switch class="left roomSwitch"
-								ng-show="roomDetail.motionSensor!=undefined"
-								model="roomDetail.motionSensor.enabled" on-label="1" off-label="0"
-								ng-click="roomDetail.$save()"> </toggle-switch>
-						</td>
+						<th>Motion Sensor</th>
+						<td><ha-state entity="roomDetail"
+								state="roomDetail.motionSensor" /></td>
+					</tr>
+					<tr>
+						<th>Light Switch</th>
+						<td><ha-state entity="roomDetail"
+								state="roomDetail.lightSwitch" /></td>
+					</tr>
+					<tr>
+						<th>Light Control</th>
+						<td><ha-state entity="roomDetail"
+								state="roomDetail.lightControl" /></td>
 					</tr>
 				</tbody>
 			</table>
