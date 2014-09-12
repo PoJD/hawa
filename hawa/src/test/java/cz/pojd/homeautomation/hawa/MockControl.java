@@ -24,12 +24,6 @@ public class MockControl extends BaseControl {
     }
 
     @Override
-    public boolean setSwitchedOn(boolean switchedOn) {
-	on = switchedOn;
-	return true;
-    }
-
-    @Override
     public boolean isInitiated() {
 	return true;
     }

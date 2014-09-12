@@ -11,6 +11,15 @@ public abstract class BaseControl extends ControllableBase implements Control {
     }
 
     @Override
+    public boolean setSwitchedOn(boolean switchedOn) {
+	if (switchedOn) {
+	    return switchOn();
+	} else {
+	    return switchOff();
+	}
+    }
+
+    @Override
     public State getState() {
 	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(isSwitchedOn()).switchable(true).build();
     }

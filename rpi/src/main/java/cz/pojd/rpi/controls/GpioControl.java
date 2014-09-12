@@ -64,15 +64,6 @@ public class GpioControl extends BaseControl implements Control {
     }
 
     @Override
-    public boolean setSwitchedOn(boolean switchedOn) {
-	if (switchedOn) {
-	    return switchOn();
-	} else {
-	    return switchOff();
-	}
-    }
-
-    @Override
     public boolean switchOff() {
 	return runOperation(low, "switch off");
     }
