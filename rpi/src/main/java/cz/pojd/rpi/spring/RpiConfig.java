@@ -73,7 +73,7 @@ public class RpiConfig {
 	try {
 	    return new MCP23017GpioProvider(newRasPI() ? I2CBus.BUS_1 : I2CBus.BUS_0, address);
 	} catch (IOException | UnsatisfiedLinkError e) {
-	    LOG.error("Unable to locate MCP23017 at address " + address + ", using default provider instead.", e);
+	    LOG.error("Unable to locate MCP23017 at address " + String.format("0x%x", address) + ", using default provider instead.", e);
 	    return gpio().getDefaultProvider();
 	}
     }
