@@ -40,8 +40,8 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     public void save(OutdoorDetail outdoorDetail) {
-	this.outdoor.setFrom(outdoorDetail);
-	this.outdoorDetail.setFrom(outdoorDetail);
+	this.outdoor.resetFrom(outdoorDetail);
+	this.outdoorDetail.resetFrom(outdoorDetail);
     }
 
     /*

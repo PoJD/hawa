@@ -15,10 +15,10 @@ public abstract class LightCapableDetail {
     }
 
     protected LightCapableDetail(LightCapableDetail detail) {
-	setFrom(detail);
+	resetFrom(detail);
     }
 
-    public void setFrom(LightCapableDetail detail) {
+    public void resetFrom(LightCapableDetail detail) {
 	setMotionSensor(detail.getMotionSensor());
 	setLightSwitch(detail.getLightSwitch());
 	setLightControl(detail.getLightControl());

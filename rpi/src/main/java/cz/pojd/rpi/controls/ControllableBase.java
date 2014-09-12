@@ -15,7 +15,12 @@ public abstract class ControllableBase implements Controllable {
 
     @Override
     public void setEnabled(boolean enabled) {
-	this.enabled = enabled;
+	// on purpose do not set the enabled flag here directly - allow descendants override enable or disable as needed
+	if (enabled) {
+	    enable();
+	} else {
+	    disable();
+	}
     }
 
     @Override

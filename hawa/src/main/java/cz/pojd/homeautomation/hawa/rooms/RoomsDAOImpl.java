@@ -82,14 +82,14 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     public void save(RoomDetail roomDetail) {
 	Room room = rooms.get(roomDetail.getName());
 	if (room != null) {
-	    room.setFrom(roomDetail);
+	    room.resetFrom(roomDetail);
 	} else {
 	    LOG.warn("Unable to find room by name " + roomDetail.getName() + ". Not updating any room in save().");
 	}
 
 	RoomDetail detail = roomDetails.get(roomDetail.getName());
 	if (detail != null) {
-	    detail.setFrom(roomDetail);
+	    detail.resetFrom(roomDetail);
 	} else {
 	    LOG.warn("Unable to find room detail by name " + roomDetail.getName() + ". Not updating any room detail in save().");
 	}

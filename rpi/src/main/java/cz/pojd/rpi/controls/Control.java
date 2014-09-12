@@ -55,6 +55,14 @@ public interface Control extends Controllable {
     public State getState();
 
     /**
+     * Resets this control from the state
+     * 
+     * @param state
+     *            state to base new state of this control on
+     */
+    public void resetFrom(State state);
+
+    /**
      * Detects whether this control is properly initiated or not
      * 
      * @return true if so, false otherwise

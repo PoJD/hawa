@@ -131,6 +131,23 @@ public class GpioControlTestCase {
     }
 
     @Test
+    public void testSetEnabledFalseAlsoSwitchesOff() {
+	new NonStrictExpectations() {
+	    {
+		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
+		result = output;
+
+		output.low();
+		times = 1;
+	    }
+	};
+	control = new GpioControl(gpio, "testControl", pin);
+	control.setEnabled(false);
+
+	assertFalse(control.isEnabled());
+    }
+
+    @Test
     public void testEnabledDefaultControlIsSwitchedOff() {
 	new NonStrictExpectations() {
 	    {

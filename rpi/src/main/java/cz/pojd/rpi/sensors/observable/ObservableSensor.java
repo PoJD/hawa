@@ -62,4 +62,16 @@ public abstract class ObservableSensor extends Observable implements Sensor, Con
     public State getState() {
 	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(read().getBooleanValue()).switchable(false).build();
     }
+
+    /**
+     * Resets this sensor from the state
+     * 
+     * @param state
+     *            state to base new state of this sensor on
+     */
+    public void resetFrom(State state) {
+	if (state != null) {
+	    setEnabled(state.isEnabled());
+	}
+    }
 }

@@ -14,4 +14,12 @@ public abstract class BaseControl extends ControllableBase implements Control {
     public State getState() {
 	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(isSwitchedOn()).switchable(true).build();
     }
+
+    @Override
+    public void resetFrom(State state) {
+	if (state != null) {
+	    setEnabled(state.isEnabled());
+	    setSwitchedOn(state.isOn());
+	}
+    }
 }
