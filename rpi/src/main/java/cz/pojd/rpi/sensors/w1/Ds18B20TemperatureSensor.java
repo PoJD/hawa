@@ -104,4 +104,9 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 	// no init needed for this sensor really, so we assume all is OK (we will find out till at runtime once someone will attempt reading)
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Ds18B20TemperatureSensor [id=" + id + "]";
+    }
 }

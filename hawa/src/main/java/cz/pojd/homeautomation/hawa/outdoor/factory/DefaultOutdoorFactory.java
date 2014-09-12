@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import cz.pojd.homeautomation.hawa.outdoor.Outdoor;
 import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
 import cz.pojd.rpi.controllers.ControlObserver;
@@ -16,6 +19,8 @@ import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
 import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
 
 public class DefaultOutdoorFactory implements OutdoorFactory {
+
+    private static final Log LOG = LogFactory.getLog(DefaultOutdoorFactory.class);
 
     @Inject
     private Gpio gpio;
@@ -30,6 +35,7 @@ public class DefaultOutdoorFactory implements OutdoorFactory {
 
     @Override
     public Outdoor create(OutdoorSpecification outdoorSpecification) {
+	LOG.info("Creating new instance of outdoor using: " + outdoorSpecification);
 	Outdoor outdoor = new Outdoor();
 
 	List<Sensor> sensors = new ArrayList<>();
@@ -48,6 +54,7 @@ public class DefaultOutdoorFactory implements OutdoorFactory {
 	outdoor.getLightSwitch().addObserver(new ControlObserver(outdoor.getLightControl()));
 	outdoor.getMotionSensor().addObserver(new ControlObserver(outdoor.getLightControl()));
 
+	LOG.info("New outdoor created: " + outdoor);
 	return outdoor;
     }
 }

@@ -2,6 +2,9 @@ package cz.pojd.homeautomation.hawa.rooms.factory;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.pi4j.io.gpio.GpioProvider;
 
 import cz.pojd.homeautomation.hawa.rooms.Floor;
@@ -16,6 +19,7 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 
 public class DefaultRoomFactory implements RoomFactory {
 
+    private static final Log LOG = LogFactory.getLog(DefaultRoomFactory.class);
     private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches, firstFloorLightControls;
 
     @Inject
@@ -66,6 +70,8 @@ public class DefaultRoomFactory implements RoomFactory {
 
     @Override
     public Room create(RoomSpecification roomSpecification) {
+	LOG.info("Creating new instance of room using: " + roomSpecification);
+
 	Room room = new Room();
 	room.setName(roomSpecification.getName());
 	room.setTemperatureSensor(new Ds18B20TemperatureSensor(getRuntimeExecutor(), roomSpecification.getTemperatureID()));
@@ -92,6 +98,7 @@ public class DefaultRoomFactory implements RoomFactory {
 	    room.getMotionSensor().addObserver(new ControlObserver(room.getLightControl()));
 	}
 
+	LOG.info("New room created: " + room);
 	return room;
     }
 }
