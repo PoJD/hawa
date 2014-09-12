@@ -45,7 +45,7 @@ angular.module('homeAutomation.directives', [])
 		restrict : 'E',
 		scope : {
 			entity : '=',
-			'class' : '@'
+			small : '@'
 		},
 		templateUrl : 'angular/components/lightControl.html',
 		link: function link(scope) {

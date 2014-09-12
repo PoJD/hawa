@@ -62,11 +62,11 @@ html, body {
 	height: 40px;
 }
 
-.cursor {
-	cursor: pointer;
-}
-
-img.small {
+.bulb-small {
 	width: 20px;
 	height: 20px;
+}
+
+.cursor {
+	cursor: pointer;
 }
