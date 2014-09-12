@@ -1,6 +1,6 @@
 <div class="row full">
-	<div class="col-md-9 col-xs-8">
-		<div class="col-md-2 col-xs-6"
+	<div class="col-md-9 col-xs-6">
+		<div class="col-md-2 col-xs-12"
 			ng-repeat="room in rooms | filter: { floor: 'FIRST' }">
 			<ha-room-panel room="room" />
 		</div>
@@ -8,12 +8,12 @@
 			<div class="label-default"
 				style="width: 100%; height: 1px; margin-bottom: 20px;">&nbsp;</div>
 		</div>
-		<div class="col-md-2 col-xs-6"
+		<div class="col-md-2 col-xs-12"
 			ng-repeat="room in rooms | filter: { floor: 'BASEMENT' }">
 			<ha-room-panel room="room" />
 		</div>
 	</div>
-	<div class="col-md-3 col-xs-4">
+	<div class="col-md-3 col-xs-6">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				Outdoor ({{systemState.lastUpdate}})
