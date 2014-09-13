@@ -33,9 +33,9 @@ public class GpioControl extends BaseControl implements Control {
 
     @Inject
     public GpioControl(Gpio gpio, GpioProvider provider, String name, Pin pin) {
-	LOG.info("Creating GpioControl '" + name + "' connected to pin " + pin);
-	this.gpioPin = gpio.provisionDigitalMultipurposePin(provider, pin, PinMode.DIGITAL_OUTPUT);
 	this.name = name;
+	LOG.info("Creating " + this + " connected to pin " + pin);
+	this.gpioPin = gpio.provisionDigitalMultipurposePin(provider, pin, PinMode.DIGITAL_OUTPUT);
 	this.low = new Runnable() {
 	    public void run() {
 		gpioPin.low();
@@ -90,7 +90,7 @@ public class GpioControl extends BaseControl implements Control {
 
     private synchronized boolean runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("GpioControl '" + name + "' operation: " + operationName);
+	    LOG.debug(this + " operation: " + operationName);
 	}
 	if (isInitiated()) {
 	    if (isEnabled()) {
@@ -98,7 +98,7 @@ public class GpioControl extends BaseControl implements Control {
 		return true;
 	    } else {
 		if (LOG.isDebugEnabled()) {
-		    LOG.debug("GpioControl '" + name + "' disabled. Not perfoming action " + operationName);
+		    LOG.debug(this + " disabled. Not perfoming action " + operationName);
 		}
 	    }
 	} else {
@@ -108,6 +108,11 @@ public class GpioControl extends BaseControl implements Control {
     }
 
     private void logWarnNoInit() {
-	LOG.warn("GpioControl '" + name + "': init failed before, not attempting to run any operation with this control.");
+	LOG.warn(this + ": init failed before, not attempting to run any operation with this control.");
+    }
+
+    @Override
+    public String toString() {
+	return "GpioControl [name=" + name + "]";
     }
 }

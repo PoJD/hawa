@@ -40,9 +40,9 @@ public class GpioObservableSensor extends BaseObservableSensor {
 
     @Inject
     public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin) {
-	LOG.info("Creating GenericObservableSensor '" + name + "' connected to pin " + pin);
-	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
 	this.name = name;
+	LOG.info("Creating " + this + " connected to pin " + pin);
+	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
 	setupListener();
     }
 
@@ -56,7 +56,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 	if (isInitiated()) {
 	    return Reading.newBuilder().type(Type.generic).doubleValue(gpioInputPin.getState().getValue()).build();
 	} else {
-	    LOG.warn("GenericObservableSensor '" + name + "': init failed before, returning invalid value in read().");
+	    LOG.warn(this + ": init failed before, returning invalid value in read().");
 	    return Reading.invalid(Type.generic);
 	}
     }
@@ -67,13 +67,13 @@ public class GpioObservableSensor extends BaseObservableSensor {
 		@Override
 		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		    if (LOG.isDebugEnabled()) {
-			LOG.debug("GenericObservableSensor '" + name + "' detected change on pin " + event.getPin() + ". Value = " + event.getState());
+			LOG.debug(this + ": detected change on pin " + event.getPin() + ". Value = " + event.getState());
 		    }
 		    notifyObservers(event.getState());
 		}
 	    });
 	} else {
-	    LOG.warn("GenericObservableSensor '" + name + "': init failed before, not setting up any GPIO listener.");
+	    LOG.warn(this + ": init failed before, not setting up any GPIO listener.");
 	}
     }
 
@@ -84,6 +84,6 @@ public class GpioObservableSensor extends BaseObservableSensor {
 
     @Override
     public String toString() {
-	return "GpioObservableSensor [gpioInputPin=" + gpioInputPin + ", name=" + name + "]";
+	return "GpioObservableSensor [name=" + name + "]";
     }
 }
