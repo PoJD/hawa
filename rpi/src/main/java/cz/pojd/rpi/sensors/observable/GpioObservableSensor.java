@@ -26,7 +26,7 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
  * @author Lubos Housa
  * @since Aug 10, 2014 10:23:44 AM
  */
-public class GpioObservableSensor extends ObservableSensor {
+public class GpioObservableSensor extends BaseObservableSensor {
 
     private static final Log LOG = LogFactory.getLog(GpioObservableSensor.class);
 

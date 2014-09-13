@@ -3,9 +3,9 @@ package cz.pojd.homeautomation.hawa;
 import java.util.List;
 
 import cz.pojd.rpi.sensors.Reading;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
+import cz.pojd.rpi.sensors.observable.BaseObservableSensor;
 
-public class MockObservableSensor extends ObservableSensor {
+public class MockObservableSensor extends BaseObservableSensor {
     private int readCount;
 
     public List<Reading> readAll() {

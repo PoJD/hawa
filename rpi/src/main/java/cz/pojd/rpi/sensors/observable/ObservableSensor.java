@@ -1,12 +1,10 @@
 package cz.pojd.rpi.sensors.observable;
 
-import java.util.Observable;
 import java.util.Observer;
 
 import com.pi4j.io.gpio.PinState;
 
-import cz.pojd.rpi.controls.BaseControl;
-import cz.pojd.rpi.controls.Controllable;
+import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -21,40 +19,7 @@ import cz.pojd.rpi.sensors.Sensor;
  * @author Lubos Housa
  * @since Sep 13, 2014 6:20:56 PM
  */
-public abstract class ObservableSensor extends BaseControl implements Sensor, Controllable {
-
-    private Observable observable = new Observable() {
-	@Override
-	public void notifyObservers(Object arg) {
-	    setChanged();
-	    super.notifyObservers(arg);
-	}
-    };
-
-    @Override
-    public boolean isSwitchedOn() {
-	return read().getBooleanValue();
-    }
-
-    @Override
-    public boolean isSwitchable() {
-	return false;
-    }
-
-    @Override
-    public boolean toggleSwitch() {
-	return false;
-    }
-
-    @Override
-    public boolean switchOn() {
-	return false;
-    }
-
-    @Override
-    public boolean switchOff() {
-	return false;
-    }
+public interface ObservableSensor extends Sensor, Control {
 
     /**
      * Add new observer to be notified any time this sensor reading is changed. When that heppens, the Observer's update method is invoked with
@@ -63,9 +28,7 @@ public abstract class ObservableSensor extends BaseControl implements Sensor, Co
      * @param o
      *            observer to observe the changes
      */
-    public void addObserver(Observer o) {
-	observable.addObserver(o);
-    }
+    public void addObserver(Observer o);
 
     /**
      * Notify the observers about a change - new pinState of this observable sensors
@@ -73,7 +36,5 @@ public abstract class ObservableSensor extends BaseControl implements Sensor, Co
      * @param pinState
      *            new value of this sensor' state
      */
-    protected void notifyObservers(PinState pinState) {
-	observable.notifyObservers(pinState);
-    }
+    public void notifyObservers(PinState pinState);
 }
