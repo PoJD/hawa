@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
-import cz.pojd.homeautomation.hawa.lights.LightCapableDetail;
+import cz.pojd.homeautomation.hawa.refresh.RefreshedLightCapableDetail;
 import cz.pojd.rpi.sensors.Reading;
 
 /**
@@ -15,11 +15,10 @@ import cz.pojd.rpi.sensors.Reading;
  * @since Jul 27, 2014 12:51:36 AM
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoomDetail extends LightCapableDetail {
+public class RoomDetail extends RefreshedLightCapableDetail {
 
     private String name;
     private Floor floor;
-    private String lastUpdate;
     private Reading temperature;
     private GraphData[] temperatureHistory;
 
@@ -29,17 +28,16 @@ public class RoomDetail extends LightCapableDetail {
     public RoomDetail(RoomDetail copy) {
 	super(copy);
 	setName(copy.getName());
-	setTemperature(copy.getTemperature());
 	setFloor(copy.getFloor());
-	setLastUpdate(copy.getLastUpdate());
+	setTemperature(copy.getTemperature());
 	setTemperatureHistory(copy.getTemperatureHistory());
     }
-
+    
     public RoomDetail(Room room) {
 	super(room);
 	setName(room.getName());
-	setTemperature(room.getTemperatureSensor().read());
 	setFloor(room.getFloor());
+	setTemperature(room.getTemperatureSensor().read());
     }
 
     public String getName() {
@@ -56,14 +54,6 @@ public class RoomDetail extends LightCapableDetail {
 
     public void setFloor(Floor floor) {
 	this.floor = floor;
-    }
-
-    public String getLastUpdate() {
-	return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-	this.lastUpdate = lastUpdate;
     }
 
     public Reading getTemperature() {

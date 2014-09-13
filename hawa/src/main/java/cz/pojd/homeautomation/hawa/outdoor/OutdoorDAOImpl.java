@@ -54,7 +54,12 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	for (Sensor sensor : outdoor.getSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
-	resetState(new OutdoorDetail(outdoor, readings));
+	
+	OutdoorDetail detail = new OutdoorDetail(outdoor);
+	detail.setSensorReadings(readings);
+	detail.setLastUpdate(getRefresher().getLastUpdate());
+
+	resetState(detail);
 
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Outdoor state detected: " + get());

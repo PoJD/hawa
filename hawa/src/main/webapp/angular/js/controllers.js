@@ -28,6 +28,14 @@ angular.module('homeAutomation.controllers', [])
 				$scope.$on('$destroy', function() {
 					$scope.stopUpdates();
 				});
+				
+			    
+			    $scope.xAxisTickFormat = function() {
+			    	return function(d){
+			    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
+			    	};
+			    };
+				
 				$scope.autoUpdate();
 			} ])
 
@@ -53,6 +61,20 @@ angular.module('homeAutomation.controllers', [])
 	});
 } ])
 
+.controller(
+		'OutdoorController',
+		[ '$scope', '$controller', 'outdoor', function($scope, $controller, outdoor) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+
+				$scope.update = function() {
+					$scope.outdoorDetail = outdoor.get();
+				};
+				
+				$scope.outdoorHistory = [];
+
+				$scope.update();
+			} ])
+
 .controller('RoomController', 
 		[ '$scope', '$controller', '$routeParams', 'rooms', function($scope, $controller, $routeParams, rooms) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
@@ -66,10 +88,4 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
-			    
-			    $scope.xAxisTickFormat = function() {
-			    	return function(d){
-			    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
-			    	};
-			    };
 } ]);

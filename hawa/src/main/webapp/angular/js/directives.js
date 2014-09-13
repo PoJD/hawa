@@ -18,7 +18,7 @@ angular.module('homeAutomation.directives', [])
 			entity : '=',
 		},
 		templateUrl : 'angular/components/state.html',
-		link: function link(scope, element, attrs) {
+		link: function (scope, element, attrs) {
 	        scope.entityEnabledChanged = function() {
 			    // mimics the same logic from the server - the control gets switched off when disabled...
 				if (attrs.shouldSwitchOffWhenDisabled && !scope.state.enabled) {
@@ -27,6 +27,16 @@ angular.module('homeAutomation.directives', [])
 				scope.entity.$save();
 			}
 	    }
+	};
+} ])
+
+.directive('haLightDetails', [ function() {
+	return {
+		restrict : 'E',
+		scope : {
+			entity : '=',
+		},
+		templateUrl : 'angular/components/lightDetails.html'
 	};
 } ])
 
@@ -48,7 +58,7 @@ angular.module('homeAutomation.directives', [])
 			small : '@'
 		},
 		templateUrl : 'angular/components/lightControl.html',
-		link: function link(scope) {
+		link: function (scope) {
 	        scope.lightControlClicked = function() {
 				if (scope.entity.lightControl.enabled) { 
 					scope.entity.lightControl.switchedOn = !scope.entity.lightControl.switchedOn; 

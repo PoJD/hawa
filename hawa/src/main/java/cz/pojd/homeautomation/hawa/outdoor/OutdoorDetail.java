@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import cz.pojd.homeautomation.hawa.lights.LightCapableDetail;
+import cz.pojd.homeautomation.hawa.refresh.RefreshedLightCapableDetail;
 import cz.pojd.rpi.sensors.Reading;
 
 /**
@@ -15,25 +15,28 @@ import cz.pojd.rpi.sensors.Reading;
  * @since Aug 10, 2014 3:58:02 PM
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OutdoorDetail extends LightCapableDetail {
+public class OutdoorDetail extends RefreshedLightCapableDetail {
 
     private List<Reading> sensorReadings = new ArrayList<>();
 
     public OutdoorDetail() {
     }
 
-    public OutdoorDetail(Outdoor outdoor, List<Reading> sensorReadings) {
+    public OutdoorDetail(Outdoor outdoor) {
 	super(outdoor);
-	this.sensorReadings = sensorReadings;
     }
 
     public List<Reading> getSensorReadings() {
 	return sensorReadings;
     }
 
+    public void setSensorReadings(List<Reading> sensorReadings) {
+	this.sensorReadings = sensorReadings;
+    }
+
     @Override
     public String toString() {
-	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()="
-		+ getLightSwitch() + ", getLightControl()=" + getLightControl() + "]";
+	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()="
+		+ getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + "]";
     }
 }

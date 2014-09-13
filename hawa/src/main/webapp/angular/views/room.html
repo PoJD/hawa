@@ -15,8 +15,7 @@
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">
-			<div class="panel-heading">Summary</div>
-
+			<div class="panel-heading">Room details</div>
 			<table class="table">
 				<tbody>
 					<tr>
@@ -35,23 +34,9 @@
 						<th>Last Checked</th>
 						<td>{{roomDetail.lastUpdate}}</td>
 					</tr>
-					<tr>
-						<th>Motion Sensor</th>
-						<td><ha-state entity="roomDetail"
-								state="roomDetail.motionSensor" /></td>
-					</tr>
-					<tr>
-						<th>Light Switch</th>
-						<td><ha-state entity="roomDetail"
-								state="roomDetail.lightSwitch" /></td>
-					</tr>
-					<tr>
-						<th>Light Control</th>
-						<td><ha-state entity="roomDetail"
-								state="roomDetail.lightControl" should-switch-off-when-disabled="true" /></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
+		<ha-light-details entity="roomDetail" />
 	</div>
 </div>

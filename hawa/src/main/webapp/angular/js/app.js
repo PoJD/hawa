@@ -16,6 +16,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider
   	.when('/home', {templateUrl: 'angular/views/home.html', controller: 'HomeController'})
     .when('/liveview', {templateUrl: 'angular/views/liveview.html', controller: 'LiveViewController'})
+    .when('/outdoor', {templateUrl: 'angular/views/outdoor.html', controller: 'OutdoorController'})
     .when('/rooms/:roomName', {templateUrl: 'angular/views/room.html', controller: 'RoomController'})
     .otherwise({redirectTo: '/home'});
 }]);
