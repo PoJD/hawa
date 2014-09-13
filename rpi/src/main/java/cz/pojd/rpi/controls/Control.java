@@ -32,6 +32,13 @@ public interface Control extends Controllable {
     public boolean switchOff();
 
     /**
+     * Detects whether this control is switchable or not (i.e. whether calling switch on, switch off and toggleSwitch have any effect
+     * 
+     * @return true if so, false otherwise. False would be typical for pseudo controls, e.g. observable sensors
+     */
+    public boolean isSwitchable();
+
+    /**
      * Sets whether this control is switched on or not
      * 
      * @param switchedOn

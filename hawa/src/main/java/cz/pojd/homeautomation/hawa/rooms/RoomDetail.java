@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import cz.pojd.homeautomation.hawa.LightCapableDetail;
 import cz.pojd.homeautomation.hawa.graphs.GraphData;
+import cz.pojd.homeautomation.hawa.lights.LightCapableDetail;
 import cz.pojd.rpi.sensors.Reading;
 
 /**

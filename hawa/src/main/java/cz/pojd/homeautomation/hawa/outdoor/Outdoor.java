@@ -2,7 +2,7 @@ package cz.pojd.homeautomation.hawa.outdoor;
 
 import java.util.List;
 
-import cz.pojd.homeautomation.hawa.LightCapable;
+import cz.pojd.homeautomation.hawa.lights.LightCapable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -21,6 +21,11 @@ public class Outdoor extends LightCapable {
 
     public void setSensors(List<Sensor> outdoorSensors) {
 	this.sensors = outdoorSensors;
+    }
+
+    @Override
+    public String getName() {
+	return "Outdoor";
     }
 
     @Override

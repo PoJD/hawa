@@ -22,7 +22,7 @@ angular.module('homeAutomation.directives', [])
 	        scope.entityEnabledChanged = function() {
 			    // mimics the same logic from the server - the control gets switched off when disabled...
 				if (attrs.shouldSwitchOffWhenDisabled && !scope.state.enabled) {
-					scope.state.on = false;
+					scope.state.switchedOn = false;
 				}
 				scope.entity.$save();
 			}
@@ -51,7 +51,7 @@ angular.module('homeAutomation.directives', [])
 		link: function link(scope) {
 	        scope.lightControlClicked = function() {
 				if (scope.entity.lightControl.enabled) { 
-					scope.entity.lightControl.on = !scope.entity.lightControl.on; 
+					scope.entity.lightControl.switchedOn = !scope.entity.lightControl.switchedOn; 
 					scope.entity.$save(); 
 				}
 			};

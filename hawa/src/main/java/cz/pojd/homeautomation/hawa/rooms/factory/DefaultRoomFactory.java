@@ -7,17 +7,15 @@ import org.apache.commons.logging.LogFactory;
 
 import com.pi4j.io.gpio.GpioProvider;
 
+import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
 import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.Room;
 import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
-import cz.pojd.rpi.controllers.ControlObserver;
-import cz.pojd.rpi.controls.GpioControl;
 import cz.pojd.rpi.sensors.gpio.Gpio;
-import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
-public class DefaultRoomFactory implements RoomFactory {
+public class DefaultRoomFactory extends LightCapableFactorySupport implements RoomFactory {
 
     private static final Log LOG = LogFactory.getLog(DefaultRoomFactory.class);
     private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches, firstFloorLightControls;
@@ -77,26 +75,17 @@ public class DefaultRoomFactory implements RoomFactory {
 	room.setTemperatureSensor(new Ds18B20TemperatureSensor(getRuntimeExecutor(), roomSpecification.getTemperatureID()));
 	room.setFloor(roomSpecification.getFloor() != null ? roomSpecification.getFloor() : Floor.BASEMENT);
 
-	GpioProvider switchProvider = null, lightProvider = null;
+	GpioProvider switchProvider = null, controlProvider = null;
 	if (Floor.BASEMENT.equals(room.getFloor())) {
 	    switchProvider = getBasementFloorLightSwitches();
-	    lightProvider = getBasementFloorLightControls();
+	    controlProvider = getBasementFloorLightControls();
 	} else {
 	    switchProvider = getFirstFloorLightSwitches();
-	    lightProvider = getFirstFloorLightControls();
+	    controlProvider = getFirstFloorLightControls();
 	}
 
-	room.setLightControl(new GpioControl(getGpio(), lightProvider, roomSpecification.getName() + " light control", roomSpecification
-		.getLightPin()));
-	room.setLightSwitch(new GpioObservableSensor(getGpio(), switchProvider, roomSpecification.getName() + " light switch", roomSpecification
-		.getLightPin()));
-	room.getLightSwitch().addObserver(new ControlObserver(room.getLightControl()));
-
-	if (roomSpecification.getMotionSensorPin() != null) {
-	    room.setMotionSensor(new GpioObservableSensor(getGpio(), switchProvider, roomSpecification.getName() + " motion sensor",
-		    roomSpecification.getMotionSensorPin()));
-	    room.getMotionSensor().addObserver(new ControlObserver(room.getLightControl()));
-	}
+	enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
+		roomSpecification.getLightPin());
 
 	LOG.info("New room created: " + room);
 	return room;

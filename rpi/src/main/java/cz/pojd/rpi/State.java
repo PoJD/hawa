@@ -10,7 +10,7 @@ public class State {
 
     private boolean initiated;
     private boolean enabled;
-    private boolean on;
+    private boolean switchedOn;
     private boolean switchable;
 
     public State() {
@@ -19,7 +19,7 @@ public class State {
     public State(Builder builder) {
 	this.initiated = builder.initiated;
 	this.enabled = builder.enabled;
-	this.on = builder.on;
+	this.switchedOn = builder.switchedOn;
 	this.switchable = builder.switchable;
     }
 
@@ -31,8 +31,8 @@ public class State {
 	return enabled;
     }
 
-    public boolean isOn() {
-	return on;
+    public boolean isSwitchedOn() {
+	return switchedOn;
     }
 
     public boolean isSwitchable() {
@@ -41,7 +41,7 @@ public class State {
 
     @Override
     public String toString() {
-	return "State [initiated=" + initiated + ", enabled=" + enabled + ", on=" + on + ", switchable=" + switchable + "]";
+	return "State [initiated=" + initiated + ", enabled=" + enabled + ", switchedOn=" + switchedOn + ", switchable=" + switchable + "]";
     }
 
     public static Builder newBuilder() {
@@ -51,7 +51,7 @@ public class State {
     public static class Builder {
 	private boolean initiated;
 	private boolean enabled;
-	private boolean on;
+	private boolean switchedOn;
 	private boolean switchable;
 
 	private Builder() {
@@ -67,8 +67,8 @@ public class State {
 	    return this;
 	}
 
-	public Builder on(boolean on) {
-	    this.on = on;
+	public Builder switchedOn(boolean switchedOn) {
+	    this.switchedOn = switchedOn;
 	    return this;
 	}
 

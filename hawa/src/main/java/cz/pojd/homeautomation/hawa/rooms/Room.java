@@ -1,6 +1,6 @@
 package cz.pojd.homeautomation.hawa.rooms;
 
-import cz.pojd.homeautomation.hawa.LightCapable;
+import cz.pojd.homeautomation.hawa.lights.LightCapable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**

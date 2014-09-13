@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa;
+package cz.pojd.homeautomation.hawa.lights;
 
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
@@ -15,6 +15,8 @@ public abstract class LightCapable {
     private ObservableSensor lightSwitch;
     private Control lightControl;
 
+    public abstract String getName();
+    
     public ObservableSensor getMotionSensor() {
 	return motionSensor;
     }

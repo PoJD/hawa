@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa;
+package cz.pojd.homeautomation.hawa.lights;
 
 import cz.pojd.rpi.State;
 

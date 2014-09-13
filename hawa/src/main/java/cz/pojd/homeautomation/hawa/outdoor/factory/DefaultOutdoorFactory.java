@@ -8,17 +8,15 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
 import cz.pojd.homeautomation.hawa.outdoor.Outdoor;
 import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
-import cz.pojd.rpi.controllers.ControlObserver;
-import cz.pojd.rpi.controls.GpioControl;
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.gpio.Dht22Am2302TemperatureAndHumiditySensor;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
-import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
 
-public class DefaultOutdoorFactory implements OutdoorFactory {
+public class DefaultOutdoorFactory extends LightCapableFactorySupport implements OutdoorFactory {
 
     private static final Log LOG = LogFactory.getLog(DefaultOutdoorFactory.class);
 
@@ -43,16 +41,8 @@ public class DefaultOutdoorFactory implements OutdoorFactory {
 	sensors.add(new Dht22Am2302TemperatureAndHumiditySensor(outdoorSpecification.getDhtSensorSysClassPin()));
 	outdoor.setSensors(sensors);
 
-	outdoor.setLightControl(new GpioControl(getGpio(), outdoorSpecification.getGpioProvider(), "Outdoor light control", outdoorSpecification
-		.getLightControlPin()));
-	outdoor.setLightSwitch(new GpioObservableSensor(getGpio(), outdoorSpecification.getGpioProvider(), "Outdoor light switch",
-		outdoorSpecification.getLightSwitchPin()));
-	outdoor.setMotionSensor(new GpioObservableSensor(getGpio(), outdoorSpecification.getGpioProvider(), "Outdoor motion sensor",
-		outdoorSpecification.getMotionSensorPin()));
-
-	// now setup the wiring between these
-	outdoor.getLightSwitch().addObserver(new ControlObserver(outdoor.getLightControl()));
-	outdoor.getMotionSensor().addObserver(new ControlObserver(outdoor.getLightControl()));
+	enrichLight(outdoor, getGpio(), outdoorSpecification.getGpioProvider(), outdoorSpecification.getGpioProvider(),
+		outdoorSpecification.getMotionSensorPin(), outdoorSpecification.getLightSwitchPin(), outdoorSpecification.getLightControlPin());
 
 	LOG.info("New outdoor created: " + outdoor);
 	return outdoor;

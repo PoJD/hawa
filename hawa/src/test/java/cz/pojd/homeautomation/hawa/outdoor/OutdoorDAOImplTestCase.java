@@ -203,14 +203,14 @@ public class OutdoorDAOImplTestCase {
     public void testSaveShouldChangeLightControlAndSwitchToo() {
 	detectState();
 	detail.setMotionSensor(State.newBuilder().enabled(true).build());
-	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).switchedOn(true).build());
 	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
 	assertEquals(true, dao.get().getMotionSensor().isEnabled());
 	assertEquals(true, dao.get().getLightControl().isEnabled());
 	// for light control we are storing state too, not only enabling/disabling
-	assertEquals(true, dao.get().getLightControl().isOn());
+	assertEquals(true, dao.get().getLightControl().isSwitchedOn());
 	assertEquals(true, dao.get().getLightSwitch().isEnabled());
     }
 
@@ -218,7 +218,7 @@ public class OutdoorDAOImplTestCase {
     public void testSaveShouldChangeOutdoorToo() {
 	detectState();
 	detail.setMotionSensor(State.newBuilder().enabled(true).build());
-	detail.setLightControl(State.newBuilder().enabled(true).on(true).build());
+	detail.setLightControl(State.newBuilder().enabled(true).switchedOn(true).build());
 	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
@@ -227,7 +227,7 @@ public class OutdoorDAOImplTestCase {
 	assertEquals(true, dao.get().getMotionSensor().isEnabled());
 	assertEquals(true, dao.get().getLightControl().isEnabled());
 	// for light control we are storing state too, not only enabling/disabling
-	assertEquals(true, dao.get().getLightControl().isOn());
+	assertEquals(true, dao.get().getLightControl().isSwitchedOn());
 	assertEquals(true, dao.get().getLightSwitch().isEnabled());
     }
 

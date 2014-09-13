@@ -69,8 +69,6 @@ public class GpioObservableSensor extends ObservableSensor {
 		    if (LOG.isDebugEnabled()) {
 			LOG.debug("GenericObservableSensor '" + name + "' detected change on pin " + event.getPin() + ". Value = " + event.getState());
 		    }
-		    // now notify observers about the change
-		    setChanged();
 		    notifyObservers(event.getState());
 		}
 	    });

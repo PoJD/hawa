@@ -3,44 +3,57 @@ package cz.pojd.rpi.sensors.observable;
 import java.util.Observable;
 import java.util.Observer;
 
-import cz.pojd.rpi.State;
+import com.pi4j.io.gpio.PinState;
+
+import cz.pojd.rpi.controls.BaseControl;
 import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
- * Special kind of sensor allowing adding observers to it and letting them get notified any time the reading of the sensor changes. Implementations of
- * this interface guarantee that they are immutable (at least from the hashCode/equals perspective) and can therefore be safely used as keys into
- * Maps.
+ * Special kind of sensor allowing adding observers to it and letting them get notified any time the reading of the sensor changes.
  * 
- * Is is advised this is used for some binary sensors (eg. switches or motion sensors). Using for generic sensors (e.g. temperature) is allowed too,
- * but might add too much pressure on the runtime since the readings could actually take a long time to compute, thus puting the Rpi under potentially
- * heavy load
+ * Is is advised this is used for some binary sensors (e.g. switches or motion sensors). Using for generic sensors (e.g. temperature) is allowed too,
+ * but care should be taken when setting up the triggering logic, so that the sensor is not polled too often and too much load is given to the Rpi.
+ * Binary switched have direct support tin P4J, so this is the preferred way.
  * 
+ * Note that this is in fact also a control - allows to be enabled/disabled, etc.
+ *
  * @author Lubos Housa
- * @since Aug 10, 2014 10:13:47 AM
+ * @since Sep 13, 2014 6:20:56 PM
  */
-public abstract class ObservableSensor extends Observable implements Sensor, Controllable {
+public abstract class ObservableSensor extends BaseControl implements Sensor, Controllable {
 
-    private boolean enabled = true;
+    private Observable observable = new Observable() {
+	@Override
+	public void notifyObservers(Object arg) {
+	    setChanged();
+	    super.notifyObservers(arg);
+	}
+    };
 
     @Override
-    public void disable() {
-	enabled = false;
+    public boolean isSwitchedOn() {
+	return read().getBooleanValue();
     }
 
     @Override
-    public void enable() {
-	enabled = true;
+    public boolean isSwitchable() {
+	return false;
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-	this.enabled = enabled;
+    public boolean toggleSwitch() {
+	return false;
     }
 
     @Override
-    public boolean isEnabled() {
-	return enabled;
+    public boolean switchOn() {
+	return false;
+    }
+
+    @Override
+    public boolean switchOff() {
+	return false;
     }
 
     /**
@@ -50,28 +63,17 @@ public abstract class ObservableSensor extends Observable implements Sensor, Con
      * @param o
      *            observer to observe the changes
      */
-    public final void addObserver(Observer o) {
-	super.addObserver(o);
+    public void addObserver(Observer o) {
+	observable.addObserver(o);
     }
 
     /**
-     * Returns this observable sensor's state - e.g. whether it is enabled and switched on or not
+     * Notify the observers about a change - new pinState of this observable sensors
      * 
-     * @return wrapper for this sensor state
+     * @param pinState
+     *            new value of this sensor' state
      */
-    public State getState() {
-	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).on(read().getBooleanValue()).switchable(false).build();
-    }
-
-    /**
-     * Resets this sensor from the state
-     * 
-     * @param state
-     *            state to base new state of this sensor on
-     */
-    public void resetFrom(State state) {
-	if (state != null) {
-	    setEnabled(state.isEnabled());
-	}
+    protected void notifyObservers(PinState pinState) {
+	observable.notifyObservers(pinState);
     }
 }

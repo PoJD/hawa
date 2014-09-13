@@ -27,4 +27,9 @@ public class MockControl extends BaseControl {
     public boolean isInitiated() {
 	return true;
     }
+
+    @Override
+    public boolean isSwitchable() {
+	return true;
+    }
 }
