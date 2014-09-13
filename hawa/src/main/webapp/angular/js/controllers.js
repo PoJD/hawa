@@ -16,7 +16,7 @@ angular.module('homeAutomation.controllers', [])
 						if (angular.isDefined($scope.update)) {
 							$scope.update();
 						}
-					}, 5 * 60 * 1000);
+					}, 1 * 60 * 1000);
 				};
 
 				$scope.stopUpdates = function() {
