@@ -1,10 +1,12 @@
 package cz.pojd.homeautomation.hawa.outdoor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import cz.pojd.homeautomation.hawa.graphs.GraphData;
 import cz.pojd.homeautomation.hawa.refresh.RefreshedLightCapableDetail;
 import cz.pojd.rpi.sensors.Reading;
 
@@ -18,8 +20,15 @@ import cz.pojd.rpi.sensors.Reading;
 public class OutdoorDetail extends RefreshedLightCapableDetail {
 
     private List<Reading> sensorReadings = new ArrayList<>();
+    private GraphData[] outdoorHistory;
 
     public OutdoorDetail() {
+    }
+
+    public OutdoorDetail(OutdoorDetail copy) {
+	super(copy);
+	setSensorReadings(copy.getSensorReadings());
+	setOutdoorHistory(copy.getOutdoorHistory());
     }
 
     public OutdoorDetail(Outdoor outdoor) {
@@ -34,9 +43,18 @@ public class OutdoorDetail extends RefreshedLightCapableDetail {
 	this.sensorReadings = sensorReadings;
     }
 
+    public GraphData[] getOutdoorHistory() {
+	return outdoorHistory;
+    }
+
+    public void setOutdoorHistory(GraphData[] outdoorHistory) {
+	this.outdoorHistory = outdoorHistory;
+    }
+
     @Override
     public String toString() {
-	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()="
-		+ getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + "]";
+	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getOutdoorHistory()=" + Arrays.toString(getOutdoorHistory())
+		+ ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
+		+ ", getLightControl()=" + getLightControl() + "]";
     }
 }

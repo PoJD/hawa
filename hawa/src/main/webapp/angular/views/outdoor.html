@@ -5,12 +5,14 @@
 
 <div class="row full">
 	<div class="col-md-6">
-		<nvd3-line-chart ng-show="outdoorHistory" data="outdoorHistory"
-			id="outdoorHistory" width="600" height="400" margin="0"
-			xAxisTickFormat="xAxisTickFormat()" showXAxis="true" showYAxis="true"
-			forceY="[0,40]" noData="No data found for last week!"
+
+		<nvd3-stacked-area-chart ng-show="outdoorHistory"
+			data="outdoorHistory" id="outdoorHistory" width="600" height="400"
+			margin="0" xAxisTickFormat="xAxisTickFormat()" showXAxis="true"
+			showYAxis="true" noData="No data found for last week!"
 			showLegend="true" interactive="true" tooltips="true"
-			useInteractiveGuideLine="true"> <svg></svg> </nvd3-line-chart>
+			useInteractiveGuideLine="true"> <svg></svg>
+		</nvd3-stacked-area-chart>
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">

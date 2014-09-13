@@ -40,6 +40,22 @@ public class OutdoorService {
 	return result;
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/withHistory")
+    public OutdoorDetail getWithHistory() {
+	LOG.info("Detecting current state of outdoor including the history...");
+	OutdoorDetail result = outdoorDAO.getWithHistory();
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Outdoor with history detected.");
+	}
+	if (LOG.isTraceEnabled()) {
+	    LOG.trace("Detail: " + result);
+	}
+
+	return result;
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void save(OutdoorDetail outdoorDetail) {

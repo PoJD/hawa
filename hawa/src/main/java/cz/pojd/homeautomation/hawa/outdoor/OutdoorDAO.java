@@ -18,6 +18,13 @@ public interface OutdoorDAO extends Refreshable {
     OutdoorDetail get();
 
     /**
+     * Get the outdoor detail including the outdoor history (evolution of the sensors)
+     * 
+     * @return outdoor POJO representing outdoor state and history
+     */
+    OutdoorDetail getWithHistory();
+
+    /**
      * Save the Outdoor
      * 
      * @param outdoorDetail

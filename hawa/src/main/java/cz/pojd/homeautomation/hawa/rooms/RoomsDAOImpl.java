@@ -30,6 +30,7 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
+    private static final int DAYS_BACK_HISTORY = 7;
 
     private final Map<String, Room> rooms;
     private final Map<String, RoomDetail> roomDetails;
@@ -102,8 +103,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    // create a new copy here - we do not want to store all the below data to memory now...
 	    RoomDetail detail = new RoomDetail(roomDetail);
 	    // TODO does the color really belong here?
-	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Last 24 hours", "#0f0", 1, roomName),
-		    getGraphData("Last week", "#f00", 7, roomName) });
+	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Temperature", "#700", roomName) });
 	    return detail;
 	} else {
 	    LOG.warn("Unable to find roomDetail by name " + roomName + ". Returning null in method get().");
@@ -157,14 +157,14 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	this.roomDetails.putAll(roomDetails);
     }
 
-    private GraphData getGraphData(String key, String color, int daysBack, String roomName) {
+    private GraphData getGraphData(String key, String color, String roomName) {
 	List<Object[]> list = new ArrayList<>();
 	try {
-	    for (Map<String, Object> row : getJdbcTemplate().queryForList(temperatureHistorySql, new Object[] { roomName, daysBack })) {
+	    for (Map<String, Object> row : getJdbcTemplate().queryForList(temperatureHistorySql, new Object[] { roomName, DAYS_BACK_HISTORY })) {
 		list.add(new Object[] { row.get("at"), row.get("temperature") });
 	    }
 	} catch (Exception e) {
-	    throw new RoomsDAOException("Unable to detect history for room '" + roomName + "' for past " + daysBack + " days.", e);
+	    throw new RoomsDAOException("Unable to detect history for room '" + roomName + "' for past " + DAYS_BACK_HISTORY + " days.", e);
 	}
 
 	GraphData result = new GraphData();

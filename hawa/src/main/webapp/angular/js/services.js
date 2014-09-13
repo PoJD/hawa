@@ -15,7 +15,7 @@ var services = angular.module('homeAutomation.services', [ 'ngResource' ])
 } ])
 
 .factory('outdoor', [ '$resource', function($resource) {
-	return $resource('rest/outdoor');
+	return $resource('rest/outdoor/:type');
 } ])
 
 .factory('liveview', [ '$resource', function($resource) {

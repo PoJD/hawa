@@ -244,4 +244,6 @@ public class OutdoorDAOImplTestCase {
 	// fact the below is protected
 	dao.detectState();
     }
+    
+    // TODO add tests to cover get with history
 }

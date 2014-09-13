@@ -67,10 +67,12 @@ angular.module('homeAutomation.controllers', [])
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 
 				$scope.update = function() {
-					$scope.outdoorDetail = outdoor.get();
+				    $scope.outdoorDetail = outdoor.get({ type: 'withHistory' }, function(outdoorDetail) {
+				    	// after load, avoid having the history in the outdoorDetail object directly - otherwise save would always send it back to the server, which is unnecessary
+				        $scope.outdoorHistory = outdoorDetail.outdoorHistory;
+				        outdoorDetail.outdoorHistory = undefined;
+				    });
 				};
-				
-				$scope.outdoorHistory = [];
 
 				$scope.update();
 			} ])
