@@ -66,12 +66,12 @@ public class HawaConfig {
     public OutdoorSpecification outdoorSpecification() {
 	OutdoorSpecification result = new OutdoorSpecification();
 	result.setAltitude(290);
-	result.setDhtSensorSysClassPin(17);
+	result.setDhtSensorSysClassPin(22); // 22 is GPIO3 in Pi4J numbering
 	result.setNewRaspi(rpiConfig.newRasPI());
-	result.setGpioProvider(rpiConfig.getMCP23017Provider(0x24));
-	result.setMotionSensorPin(RaspiPin.GPIO_01);
-	result.setLightSwitchPin(RaspiPin.GPIO_02);
-	result.setLightControlPin(RaspiPin.GPIO_03);
+	result.setGpioProvider(rpiConfig.gpio().getDefaultProvider());
+	result.setMotionSensorPin(RaspiPin.GPIO_00);
+	result.setLightSwitchPin(RaspiPin.GPIO_01);
+	result.setLightControlPin(RaspiPin.GPIO_02);
 	return result;
     }
 
