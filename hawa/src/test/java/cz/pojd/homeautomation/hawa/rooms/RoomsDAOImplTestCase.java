@@ -322,11 +322,9 @@ public class RoomsDAOImplTestCase {
 	RoomDetail detail = dao.get(ROOM_NAME);
 	checkDetail(detail);
 	assertNotNull(detail.getTemperatureHistory());
-	assertEquals(2, detail.getTemperatureHistory().length);
+	assertEquals(1, detail.getTemperatureHistory().length);
 	assertNotNull(detail.getTemperatureHistory()[0].getValues());
 	assertEquals(0, detail.getTemperatureHistory()[0].getValues().length);
-	assertNotNull(detail.getTemperatureHistory()[1].getValues());
-	assertEquals(0, detail.getTemperatureHistory()[1].getValues().length);
     }
 
     @Test
@@ -345,13 +343,11 @@ public class RoomsDAOImplTestCase {
 	RoomDetail detail = dao.get(ROOM_NAME);
 	checkDetail(detail);
 	assertNotNull(detail.getTemperatureHistory());
-	assertEquals(2, detail.getTemperatureHistory().length);
+	assertEquals(1, detail.getTemperatureHistory().length);
 	assertNotNull(detail.getTemperatureHistory()[0].getValues());
 	assertEquals(1, detail.getTemperatureHistory()[0].getValues().length);
 	assertEquals(2, detail.getTemperatureHistory()[0].getValues()[0].length);
 	assertEquals(28., (double) detail.getTemperatureHistory()[0].getValues()[0][1], 0.001);
-	assertNotNull(detail.getTemperatureHistory()[1].getValues());
-	assertEquals(0, detail.getTemperatureHistory()[1].getValues().length);
     }
 
     @Test(expected = RoomsDAOException.class)

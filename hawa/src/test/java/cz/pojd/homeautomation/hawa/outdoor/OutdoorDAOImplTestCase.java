@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import cz.pojd.homeautomation.hawa.MockControl;
 import cz.pojd.homeautomation.hawa.MockObservableSensor;
 import cz.pojd.homeautomation.hawa.outdoor.factory.OutdoorFactory;
+import cz.pojd.homeautomation.hawa.refresh.Refresher;
 import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
 import cz.pojd.rpi.State;
 import cz.pojd.rpi.controls.Control;
@@ -30,14 +31,18 @@ import cz.pojd.rpi.sensors.Sensor;
 
 public class OutdoorDAOImplTestCase {
 
+    private static final String INSERT_SQL_STATEMENT = "insert SQL statement";
+
     private OutdoorDAOImpl dao;
 
     @Mocked
     private JdbcTemplate jdbcTemplate;
     private List<Sensor> sensors;
-
     @Mocked
     private Sensor sensor, sensor2;
+
+    @Mocked
+    private Refresher refresher;
 
     private Outdoor outdoor;
     private OutdoorDetail detail;
@@ -71,6 +76,7 @@ public class OutdoorDAOImplTestCase {
 	    }
 	}, new OutdoorSpecification());
 	dao.setJdbcTemplate(jdbcTemplate);
+	dao.setRefresher(refresher);
     }
 
     @Test
@@ -90,7 +96,7 @@ public class OutdoorDAOImplTestCase {
 
 	new NonStrictExpectations() {
 	    {
-		jdbcTemplate.batchUpdate(withSubstring("insert into outdoor(name, at, reading)"), withArgThat(new BaseMatcher<List<Object[]>>() {
+		jdbcTemplate.batchUpdate(withEqual(INSERT_SQL_STATEMENT), withArgThat(new BaseMatcher<List<Object[]>>() {
 		    @Override
 		    public boolean matches(Object item) {
 			@SuppressWarnings("unchecked")
@@ -124,6 +130,7 @@ public class OutdoorDAOImplTestCase {
 	    }
 	};
 
+	dao.setInsertSql(INSERT_SQL_STATEMENT);
 	dao.saveState(new Date());
     }
 
@@ -244,6 +251,6 @@ public class OutdoorDAOImplTestCase {
 	// fact the below is protected
 	dao.detectState();
     }
-    
+
     // TODO add tests to cover get with history
 }
