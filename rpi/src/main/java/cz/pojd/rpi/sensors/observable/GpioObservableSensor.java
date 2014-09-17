@@ -12,6 +12,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
@@ -32,6 +33,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 
     private final GpioPinDigitalInput gpioInputPin;
     private final String name;
+    private final boolean highIsOff;
 
     @Inject
     public GpioObservableSensor(Gpio gpio, String name, Pin pin) {
@@ -40,7 +42,27 @@ public class GpioObservableSensor extends BaseObservableSensor {
 
     @Inject
     public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin) {
+	this(gpio, provider, name, pin, false);
+    }
+
+    /**
+     * Create new instance of this observable sensor
+     * 
+     * @param gpio
+     *            gpio reference to use for accessing GPIO
+     * @param provider
+     *            the provider to use for this sensor
+     * @param name
+     *            the name of this sensor
+     * @param pin
+     *            the pin to connct to
+     * @param highIsOff
+     *            if true, then HIGH PinState is treated as OFF, otherwise is treated as on
+     */
+    @Inject
+    public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin, boolean highIsOff) {
 	this.name = name;
+	this.highIsOff = highIsOff;
 	LOG.info("Creating " + this + " connected to pin " + pin);
 	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
 	setupListener();
@@ -54,7 +76,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
     @Override
     public Reading read() {
 	if (isInitiated()) {
-	    return Reading.newBuilder().type(Type.generic).doubleValue(gpioInputPin.getState().getValue()).build();
+	    return Reading.newBuilder().type(Type.generic).doubleValue(translate(gpioInputPin.getState()).getValue()).build();
 	} else {
 	    LOG.warn(this + ": init failed before, returning invalid value in read().");
 	    return Reading.invalid(Type.generic);
@@ -69,7 +91,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 		    if (LOG.isDebugEnabled()) {
 			LOG.debug(this + ": detected change on pin " + event.getPin() + ". Value = " + event.getState());
 		    }
-		    notifyObservers(event.getState());
+		    notifyObservers(translate(event.getState()));
 		}
 	    });
 	} else {
@@ -85,5 +107,13 @@ public class GpioObservableSensor extends BaseObservableSensor {
     @Override
     public String toString() {
 	return "GpioObservableSensor [name=" + name + "]";
+    }
+
+    private PinState translate(PinState detected) {
+	if (highIsOff) {
+	    return PinState.HIGH == detected ? PinState.LOW : PinState.HIGH;
+	} else {
+	    return detected;
+	}
     }
 }

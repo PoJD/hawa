@@ -68,7 +68,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	// create a new copy here - we do not want to store all the below data to memory now...
 	OutdoorDetail detail = new OutdoorDetail(get());
 	// TODO does the color really belong here?
-	detail.setOutdoorHistory(new GraphData[] { getGraphData("Temperature °C", Type.temperatureB, "#700"),
+	detail.setOutdoorHistory(new GraphData[] { getGraphData("Temperature °C", Type.temperature, "#700"),
 		getGraphData("Humidity %", Type.humidity, "#007"), getGraphData("Pressure hPa", Type.pressure, "#070") });
 	return detail;
     }
@@ -135,9 +135,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	result.setKey(key);
 	result.setColor(color);
 	result.setValues(list.toArray(new Object[][] {}));
-	
-	result.setValues(new Object[][] { { new Date(), 154} });
-	
+		
 	return result;
     }
 }

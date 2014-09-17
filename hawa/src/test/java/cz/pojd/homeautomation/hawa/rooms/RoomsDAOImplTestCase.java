@@ -228,7 +228,7 @@ public class RoomsDAOImplTestCase {
 	createDAO(new RoomSpecification[] { RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP, RoomSpecification.WC_BEDROOM },
 		new ObservableSensor[] { mockedTemperatureSensor, mockedTemperatureSensor, new MockObservableSensor() {
 		    public Reading read() {
-			return Reading.invalid(Type.temperatureB);
+			return Reading.invalid(Type.temperature);
 		    }
 		} });
 

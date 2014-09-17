@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.pi4j.io.gpio.GpioProvider;
+import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
 import cz.pojd.homeautomation.hawa.rooms.Floor;
@@ -75,6 +76,7 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	room.setTemperatureSensor(new Ds18B20TemperatureSensor(getRuntimeExecutor(), roomSpecification.getTemperatureID()));
 	room.setFloor(roomSpecification.getFloor() != null ? roomSpecification.getFloor() : Floor.BASEMENT);
 
+	@SuppressWarnings("unused")
 	GpioProvider switchProvider = null, controlProvider = null;
 	if (Floor.BASEMENT.equals(room.getFloor())) {
 	    switchProvider = getBasementFloorLightSwitches();
@@ -84,8 +86,13 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	    controlProvider = getFirstFloorLightControls();
 	}
 
-	enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
-		roomSpecification.getLightPin());
+	// TODO temporary until the app is deployed to real house
+	if (RoomSpecification.HALL_DOWN.equals(roomSpecification)) {
+	    enrichLight(room, getGpio(), getGpio().getDefaultProvider(), getGpio().getDefaultProvider(), RaspiPin.GPIO_04, RaspiPin.GPIO_05,
+		    RaspiPin.GPIO_06);  
+	}
+	//enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
+	//	roomSpecification.getLightPin());
 
 	LOG.info("New room created: " + room);
 	return room;

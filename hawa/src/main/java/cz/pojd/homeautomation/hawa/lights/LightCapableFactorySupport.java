@@ -15,7 +15,7 @@ public abstract class LightCapableFactorySupport {
 	    Pin lightSwitchPin, Pin lightControlPin) {
 	lightCapable.setLightControl(new GpioControl(gpio, controlProvider, lightCapable.getName() + " light control", lightControlPin));
 
-	lightCapable.setLightSwitch(new GpioObservableSensor(gpio, switchProvider, lightCapable.getName() + " light switch", lightSwitchPin));
+	lightCapable.setLightSwitch(new GpioObservableSensor(gpio, switchProvider, lightCapable.getName() + " light switch", lightSwitchPin, true));
 	lightCapable.getLightSwitch().addObserver(new ControlObserver(lightCapable.getLightControl()));
 
 	if (motionSensorPin != null) {

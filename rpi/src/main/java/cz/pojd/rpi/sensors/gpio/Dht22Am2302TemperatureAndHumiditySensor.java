@@ -53,7 +53,6 @@ public class Dht22Am2302TemperatureAndHumiditySensor extends AbstractSensor impl
 	if (isInitiated()) {
 	    double[] numbers = executeNative(gpioPin);
 	    if (numbers != null && numbers.length == 2) {
-		result.add(Reading.newBuilder().type(Type.temperatureD).doubleValue(numbers[0]).units("°C").build());
 		result.add(Reading.newBuilder().type(Type.humidity).doubleValue(numbers[1]).units("%").build());
 	    } else {
 		LOG.warn("Some error ocurred when attempting to read the values from the sensor. Output: " + Arrays.asList(numbers));

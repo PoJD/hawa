@@ -93,10 +93,10 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 	    if (isFixErrorValues() && (temperature < 1. || temperature > 40.)) {
 		LOG.warn("Error temperature read from the sensor '" + id + "': " + temperature + ". Ignoring this output.");
 	    } else {
-		return Reading.newBuilder().type(Type.temperatureB).doubleValue(temperature).build();
+		return Reading.newBuilder().type(Type.temperature).doubleValue(temperature).build();
 	    }
 	}
-	return Reading.invalid(Type.temperatureB);
+	return Reading.invalid(Type.temperature);
     }
 
     @Override
