@@ -39,6 +39,10 @@ public class Room extends LightCapable {
 	this.floor = floor;
     }
 
+    public RoomDetail getLastDetail() {
+	return (RoomDetail) super.getLastDetail();
+    }
+
     @Override
     public String toString() {
 	return "Room [getName()=" + getName() + ", getTemperatureSensor()=" + getTemperatureSensor() + ", getFloor()=" + getFloor()

@@ -59,16 +59,18 @@ public class OutdoorDAOImplTestCase {
 	sensors = new ArrayList<>();
 	sensors.add(sensor);
 
+	detail = new OutdoorDetail();
+	detail.setMotionSensor(State.newBuilder().build());
+	detail.setLightControl(State.newBuilder().build());
+	detail.setLightSwitch(State.newBuilder().build());
+
+
 	outdoor = new Outdoor();
 	outdoor.setSensors(sensors);
 	outdoor.setMotionSensor(mockedMotionSensor);
 	outdoor.setLightControl(mockControl);
 	outdoor.setLightSwitch(mockedLightSwitch);
-
-	detail = new OutdoorDetail();
-	detail.setMotionSensor(State.newBuilder().build());
-	detail.setLightControl(State.newBuilder().build());
-	detail.setLightSwitch(State.newBuilder().build());
+	outdoor.setLastDetail(detail);
 
 	dao = new OutdoorDAOImpl(new OutdoorFactory() {
 	    public Outdoor create(OutdoorSpecification outdoorSpecification) {

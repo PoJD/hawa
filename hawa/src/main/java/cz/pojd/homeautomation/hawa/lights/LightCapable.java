@@ -14,9 +14,10 @@ public abstract class LightCapable {
     private ObservableSensor motionSensor;
     private ObservableSensor lightSwitch;
     private Control lightControl;
+    private LightCapableDetail lastDetail;
 
     public abstract String getName();
-    
+
     public ObservableSensor getMotionSensor() {
 	return motionSensor;
     }
@@ -41,6 +42,14 @@ public abstract class LightCapable {
 	this.lightControl = lightControl;
     }
 
+    public LightCapableDetail getLastDetail() {
+	return lastDetail;
+    }
+
+    public void setLastDetail(LightCapableDetail lastDetail) {
+	this.lastDetail = lastDetail;
+    }
+
     public void resetFrom(LightCapableDetail detail) {
 	if (getMotionSensor() != null) {
 	    getMotionSensor().resetFrom(detail.getMotionSensor());
@@ -51,5 +60,6 @@ public abstract class LightCapable {
 	if (getLightControl() != null) {
 	    getLightControl().resetFrom(detail.getLightControl());
 	}
+	setLastDetail(detail);
     }
 }

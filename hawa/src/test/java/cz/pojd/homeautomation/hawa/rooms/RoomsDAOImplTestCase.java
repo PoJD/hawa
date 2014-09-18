@@ -76,12 +76,6 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
-    public void testGetAllNoDetectStateCalledShouldReturnEmptyList() {
-	List<RoomDetail> result = dao.query();
-	assertTrue(result.isEmpty());
-    }
-
-    @Test
     public void testGetAllDetectStateCalledShouldReturnValidList() {
 	detectState();
 
@@ -90,6 +84,12 @@ public class RoomsDAOImplTestCase {
 
 	RoomDetail detail = result.get(0);
 	checkDetail(detail);
+    }
+
+    @Test
+    public void testGetAllNoDetectStateCalledShouldReturnValidListToo() {
+	List<RoomDetail> result = dao.query();
+	assertEquals(1, result.size());
     }
 
     @Test
@@ -299,8 +299,8 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
-    public void testGetNoDetectRoomReturnsNull() {
-	assertNull(dao.get(ROOM_NAME));
+    public void testGetNoDetectRoomDoesNotReturnsNull() {
+	assertNotNull(dao.get(ROOM_NAME));
     }
 
     @Test
@@ -408,6 +408,7 @@ public class RoomsDAOImplTestCase {
 		result.setLightControl(mockControl);
 		result.setLightSwitch(mockedLightSwitch);
 		result.setTemperatureSensor(temperatureSensor != null ? temperatureSensor[index++] : mockedTemperatureSensor);
+		result.setLastDetail(detail);
 		return result;
 	    }
 	}, rooms, runtimeExecutor);

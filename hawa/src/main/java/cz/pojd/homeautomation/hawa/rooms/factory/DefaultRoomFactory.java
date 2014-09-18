@@ -9,8 +9,10 @@ import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
+import cz.pojd.homeautomation.hawa.outdoor.OutdoorDetail;
 import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.Room;
+import cz.pojd.homeautomation.hawa.rooms.RoomDetail;
 import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
@@ -93,6 +95,8 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	}
 	//enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
 	//	roomSpecification.getLightPin());
+
+	room.setLastDetail(new RoomDetail(room));
 
 	LOG.info("New room created: " + room);
 	return room;

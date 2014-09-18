@@ -27,16 +27,32 @@ public class State {
 	return initiated;
     }
 
+    public void setInitiated(boolean initiated) {
+	this.initiated = initiated;
+    }
+
     public boolean isEnabled() {
 	return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+	this.enabled = enabled;
     }
 
     public boolean isSwitchedOn() {
 	return switchedOn;
     }
 
+    public void setSwitchedOn(boolean switchedOn) {
+	this.switchedOn = switchedOn;
+    }
+
     public boolean isSwitchable() {
 	return switchable;
+    }
+
+    public void setSwitchable(boolean switchable) {
+	this.switchable = switchable;
     }
 
     @Override

@@ -9,13 +9,17 @@ public abstract class LightCapableDetail {
     }
 
     protected LightCapableDetail(LightCapable lightCapable) {
-	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().getState() : null);
-	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().getState() : null);
-	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().getState() : null);
+	resetFrom(lightCapable);
     }
 
     protected LightCapableDetail(LightCapableDetail detail) {
 	resetFrom(detail);
+    }
+
+    protected void resetFrom(LightCapable lightCapable) {
+	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().getState() : null);
+	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().getState() : null);
+	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().getState() : null);
     }
 
     public void resetFrom(LightCapableDetail detail) {

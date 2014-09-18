@@ -25,7 +25,6 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     private static final int DAYS_BACK_HISTORY = 7;
 
     private Outdoor outdoor;
-    private OutdoorDetail outdoorDetail = new OutdoorDetail();
 
     @Value("${sql.outdoorDAO.insert}")
     private String insertSql;
@@ -60,7 +59,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     public OutdoorDetail get() {
-	return outdoorDetail;
+	return outdoor.getLastDetail();
     }
 
     @Override
@@ -76,7 +75,6 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     public void save(OutdoorDetail outdoorDetail) {
 	this.outdoor.resetFrom(outdoorDetail);
-	this.outdoorDetail.resetFrom(outdoorDetail);
     }
 
     /*
@@ -118,7 +116,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     }
 
     private void resetState(OutdoorDetail outdoorDetail) {
-	this.outdoorDetail = outdoorDetail;
+	this.outdoor.setLastDetail(outdoorDetail);
     }
 
     private GraphData getGraphData(String key, Type type, String color) {
@@ -135,7 +133,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	result.setKey(key);
 	result.setColor(color);
 	result.setValues(list.toArray(new Object[][] {}));
-		
+
 	return result;
     }
 }

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
 import cz.pojd.homeautomation.hawa.outdoor.Outdoor;
+import cz.pojd.homeautomation.hawa.outdoor.OutdoorDetail;
 import cz.pojd.homeautomation.hawa.spring.OutdoorSpecification;
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.gpio.Dht22Am2302TemperatureAndHumiditySensor;
@@ -44,6 +45,8 @@ public class DefaultOutdoorFactory extends LightCapableFactorySupport implements
 	enrichLight(outdoor, getGpio(), outdoorSpecification.getGpioProvider(), outdoorSpecification.getGpioProvider(),
 		outdoorSpecification.getMotionSensorPin(), outdoorSpecification.getLightSwitchPin(), outdoorSpecification.getLightControlPin());
 
+	outdoor.setLastDetail(new OutdoorDetail(outdoor));
+	
 	LOG.info("New outdoor created: " + outdoor);
 	return outdoor;
     }
