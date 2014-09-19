@@ -66,9 +66,8 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     public OutdoorDetail getWithHistory() {
 	// create a new copy here - we do not want to store all the below data to memory now...
 	OutdoorDetail detail = new OutdoorDetail(get());
-	// TODO does the color really belong here?
-	detail.setOutdoorHistory(new GraphData[] { getGraphData("Temperature °C", Type.temperature, "#700"),
-		getGraphData("Humidity %", Type.humidity, "#007"), getGraphData("Pressure hPa", Type.pressure, "#070") });
+	detail.setOutdoorHistory(new GraphData[] { getGraphData("Temperature °C", Type.temperature), getGraphData("Humidity %", Type.humidity),
+		getGraphData("Pressure hPa", Type.pressure) });
 	return detail;
     }
 
@@ -119,7 +118,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	this.outdoor.setLastDetail(outdoorDetail);
     }
 
-    private GraphData getGraphData(String key, Type type, String color) {
+    private GraphData getGraphData(String key, Type type) {
 	List<Object[]> list = new ArrayList<>();
 	try {
 	    for (Map<String, Object> row : getJdbcTemplate().queryForList(outdoorHistorySql, new Object[] { type.toString(), DAYS_BACK_HISTORY })) {
@@ -131,7 +130,6 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
 	GraphData result = new GraphData();
 	result.setKey(key);
-	result.setColor(color);
 	result.setValues(list.toArray(new Object[][] {}));
 
 	return result;

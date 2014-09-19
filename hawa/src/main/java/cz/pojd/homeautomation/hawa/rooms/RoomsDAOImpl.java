@@ -96,8 +96,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	if (room != null) {
 	    // create a new copy here - we do not want to store all the below data to memory now...
 	    RoomDetail detail = new RoomDetail(room.getLastDetail());
-	    // TODO does the color really belong here?
-	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Temperature", "#700", roomName) });
+	    detail.setTemperatureHistory(new GraphData[] { getGraphData("Temperature °C", roomName) });
 	    return detail;
 	} else {
 	    LOG.warn("Unable to find roomDetail by name " + roomName + ". Returning null in method get().");
@@ -143,7 +142,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      * Other stuff
      */
 
-    private GraphData getGraphData(String key, String color, String roomName) {
+    private GraphData getGraphData(String key, String roomName) {
 	List<Object[]> list = new ArrayList<>();
 	try {
 	    for (Map<String, Object> row : getJdbcTemplate().queryForList(temperatureHistorySql, new Object[] { roomName, DAYS_BACK_HISTORY })) {
@@ -155,8 +154,8 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
 	GraphData result = new GraphData();
 	result.setKey(key);
-	result.setColor(color);
 	result.setValues(list.toArray(new Object[][] {}));
+	
 	return result;
     }
 }

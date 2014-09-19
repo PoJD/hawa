@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class GraphData {
 
     private String key;
-    private String color;
     private Object[][] values;
 
     public String getKey() {
@@ -23,14 +22,6 @@ public class GraphData {
 
     public void setKey(String key) {
 	this.key = key;
-    }
-
-    public String getColor() {
-	return color;
-    }
-
-    public void setColor(String color) {
-	this.color = color;
     }
 
     public Object[][] getValues() {
@@ -43,6 +34,6 @@ public class GraphData {
 
     @Override
     public String toString() {
-	return "GraphData [key=" + key + ", color=" + color + ", values=" + Arrays.toString(values) + "]";
+	return "GraphData [key=" + key + ", values=" + Arrays.toString(values) + "]";
     }
 }

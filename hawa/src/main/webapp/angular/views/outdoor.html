@@ -1,18 +1,30 @@
 <div class="page-header">
-	<h1 ng-show="outdoorHistory==undefined">Loading...</h1>
+	<h1 ng-show="temperatureHistory==undefined">Loading...</h1>
 	<h1>Outdoor state</h1>
 </div>
 
 <div class="row full">
 	<div class="col-md-6">
-
-		<nvd3-stacked-area-chart ng-show="outdoorHistory"
-			data="outdoorHistory" id="outdoorHistory" width="600" height="400"
+		<nvd3-stacked-area-chart ng-show="temperatureHistory"
+			data="temperatureHistory" id="temperatureHistory" width="500"
+			height="200" margin="0" xAxisTickFormat="xAxisTickFormat()"
+			showXAxis="true" showYAxis="true"
+			noData="No data found for last week!" showLegend="true"
+			interactive="true" tooltips="true" useInteractiveGuideLine="true">
+		</nvd3-stacked-area-chart>
+		<nvd3-stacked-area-chart ng-show="humidityHistory"
+			data="humidityHistory" id="humidityHistory" width="500" height="200"
 			margin="0" xAxisTickFormat="xAxisTickFormat()" showXAxis="true"
 			showYAxis="true" noData="No data found for last week!"
 			showLegend="true" interactive="true" tooltips="true"
-			useInteractiveGuideLine="true"> <svg></svg>
-		</nvd3-stacked-area-chart>
+			useInteractiveGuideLine="true"> </nvd3-stacked-area-chart>
+		<nvd3-line-chart ng-show="pressureHistory"
+			data="pressureHistory" id="pressureHistory" width="500" height="200"
+			margin="0" xAxisTickFormat="xAxisTickFormat()" showXAxis="true"
+			showYAxis="true" forceY="[1000,1030]"
+			noData="No data found for last week!" showLegend="true"
+			interactive="true" tooltips="true" useInteractiveGuideLine="true">
+		</nvd3-line-chart>
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">

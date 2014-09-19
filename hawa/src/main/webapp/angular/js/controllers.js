@@ -69,7 +69,14 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update = function() {
 				    $scope.outdoorDetail = outdoor.get({ type: 'withHistory' }, function(outdoorDetail) {
 				    	// after load, avoid having the history in the outdoorDetail object directly - otherwise save would always send it back to the server, which is unnecessary
-				        $scope.outdoorHistory = outdoorDetail.outdoorHistory;
+				        $scope.temperatureHistory = [ outdoorDetail.outdoorHistory[0] ];
+				        $scope.humidityHistory = [ outdoorDetail.outdoorHistory[1] ];
+				        $scope.pressureHistory = [ outdoorDetail.outdoorHistory[2] ];
+				        
+				        $scope.temperatureHistory[0].color = '#E64B53';
+				        $scope.humidityHistory[0].color = '#4B81E6';
+				        $scope.pressureHistory[0].color = '#4BE68C';
+				        
 				        outdoorDetail.outdoorHistory = undefined;
 				    });
 				};
@@ -85,6 +92,7 @@ angular.module('homeAutomation.controllers', [])
 				    $scope.roomDetail = rooms.get({ roomName: $routeParams.roomName }, function(roomDetail) {
 				    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
 				        $scope.temperatureHistory = roomDetail.temperatureHistory;
+				        $scope.temperatureHistory[0].color = '#E64B53';
 				        roomDetail.temperatureHistory = undefined;
 				    });
 				};
