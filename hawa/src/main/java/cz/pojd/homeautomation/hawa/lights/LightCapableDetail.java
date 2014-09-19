@@ -16,7 +16,7 @@ public abstract class LightCapableDetail {
 	resetFrom(detail);
     }
 
-    protected void resetFrom(LightCapable lightCapable) {
+    public void resetFrom(LightCapable lightCapable) {
 	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().getState() : null);
 	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().getState() : null);
 	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().getState() : null);
