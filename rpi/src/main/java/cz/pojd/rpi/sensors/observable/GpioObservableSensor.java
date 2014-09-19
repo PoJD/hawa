@@ -91,7 +91,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 		    if (LOG.isDebugEnabled()) {
 			LOG.debug(this + ": detected change on pin " + event.getPin() + ". Value = " + event.getState());
 		    }
-		    notifyObservers(translate(event.getState()));
+		    notifyObservers(translate(event.getState()).isHigh());
 		}
 	    });
 	} else {

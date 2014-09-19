@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.hawa;
+package cz.pojd.rpi;
 
 import java.util.List;
 

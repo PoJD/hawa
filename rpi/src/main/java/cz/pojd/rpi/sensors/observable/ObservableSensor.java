@@ -1,9 +1,6 @@
 package cz.pojd.rpi.sensors.observable;
 
-import java.util.Observer;
-
-import com.pi4j.io.gpio.PinState;
-
+import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Sensor;
 
@@ -31,10 +28,10 @@ public interface ObservableSensor extends Sensor, Control {
     public void addObserver(Observer o);
 
     /**
-     * Notify the observers about a change - new pinState of this observable sensors
+     * Notify the observers about a change - switched on or off
      * 
-     * @param pinState
-     *            new value of this sensor' state
+     * @param switchedOn
+     *            true if the sensor just switched on, false if it just switched off
      */
-    public void notifyObservers(PinState pinState);
+    public void notifyObservers(boolean switchedOn);
 }

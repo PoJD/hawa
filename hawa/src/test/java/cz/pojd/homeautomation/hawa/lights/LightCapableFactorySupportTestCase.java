@@ -8,9 +8,8 @@ import org.junit.Test;
 
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinState;
 
-import cz.pojd.homeautomation.hawa.MockObservableSensor;
+import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
@@ -93,14 +92,14 @@ public class LightCapableFactorySupportTestCase {
 	    {
 		lightCapable.getLightSwitch();
 		result = lightSwitchsensor;
-		
+
 		lightCapable.getLightControl();
 		result = mockControl;
 
 		lightCapable.getLastDetail();
 		result = detail;
-		
-		mockControl.switchOn();
+
+		mockControl.setSwitchedOn(withEqual(Boolean.TRUE));
 		times = 1;
 
 		detail.resetFrom(withEqual(lightCapable));
@@ -109,9 +108,9 @@ public class LightCapableFactorySupportTestCase {
 	};
 
 	support.enrichLight(lightCapable, gpio, provider, provider, null, pin, pin);
-	lightSwitchsensor.notifyObservers(PinState.HIGH);
+	lightSwitchsensor.notifyObservers(true);
     }
-    
+
     @Test
     public void testMotionSensorFireLowSwitchesOffControlAndChangesDetails() {
 	final MockObservableSensor motionSensor = new MockObservableSensor();
@@ -123,25 +122,24 @@ public class LightCapableFactorySupportTestCase {
 
 		lightCapable.getMotionSensor();
 		result = motionSensor;
-		
+
 		lightCapable.getLightControl();
 		result = mockControl;
 
 		lightCapable.getLastDetail();
 		result = detail;
 
-		mockControl.switchOff();
+		mockControl.setSwitchedOn(withEqual(Boolean.FALSE));
 		times = 1;
-		
+
 		detail.resetFrom(withEqual(lightCapable));
 		times = 1;
 	    }
 	};
 
 	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin);
-	motionSensor.notifyObservers(PinState.LOW);
+	motionSensor.notifyObservers(false);
     }
-    
 
     @Test
     public void testMotionSensorFireLowLighSwitchIsOnDoesNotChangeControlButChangesDetails() {
@@ -151,31 +149,31 @@ public class LightCapableFactorySupportTestCase {
 	    {
 		lightCapable.getLightSwitch();
 		result = mockSensor;
-		
+
 		mockSensor.isSwitchedOn();
 		result = true;
-		
+
 		mockSensor.isEnabled();
 		result = true;
 
 		lightCapable.getMotionSensor();
 		result = motionSensor;
-		
+
 		lightCapable.getLightControl();
 		result = mockControl;
 
 		lightCapable.getLastDetail();
 		result = detail;
 
-		mockControl.switchOff();
+		mockControl.setSwitchedOn(anyBoolean);
 		maxTimes = 0;
-		
+
 		detail.resetFrom(withEqual(lightCapable));
 		times = 1;
 	    }
 	};
 
 	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin);
-	motionSensor.notifyObservers(PinState.LOW);
+	motionSensor.notifyObservers(false);
     }
 }

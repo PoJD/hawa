@@ -1,31 +1,23 @@
 package cz.pojd.rpi.controllers;
 
-import java.util.Observable;
-
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pi4j.io.gpio.PinState;
-
+import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.controls.Control;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 public class ControlObserverTestCase {
 
-    private Observable sensor;
+    private ObservableSensor sensor;
     private @Mocked Control control;
 
     @Before
     public void setup() {
-	sensor = new Observable() {
-	    @Override
-	    public void notifyObservers(Object arg) {
-		setChanged();
-		super.notifyObservers(arg);
-	    }
-	};
+	sensor = new MockObservableSensor();
 	sensor.addObserver(new ControlObserver(control));
     }
 
@@ -33,21 +25,21 @@ public class ControlObserverTestCase {
     public void testUpdateLightControlSwitchedOn() {
 	new NonStrictExpectations() {
 	    {
-		control.switchOn();
+		control.setSwitchedOn(true);
 		times = 1;
 	    }
 	};
-	sensor.notifyObservers(PinState.HIGH);
+	sensor.notifyObservers(true);
     }
 
     @Test
     public void testUpdateLightControlSwitchedOff() {
 	new NonStrictExpectations() {
 	    {
-		control.switchOff();
+		control.setSwitchedOn(false);
 		times = 1;
 	    }
 	};
-	sensor.notifyObservers(PinState.LOW);
+	sensor.notifyObservers(false);
     }
 }

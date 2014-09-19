@@ -1,7 +1,5 @@
 package cz.pojd.rpi.controllers;
 
-import java.util.Observable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,12 +24,12 @@ public class ControlDependentObserver extends ControlObserver {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void switched(ObservableSensor sensor, boolean switchedOn) {
 	if (!dependentSensor.isEnabled() || !dependentSensor.isSwitchedOn()) {
-	    super.update(o, arg);
+	    super.switched(sensor, switchedOn);
 	} else if (LOG.isDebugEnabled()) {
-	    LOG.debug("Dependent sensor is enabled and switched on: " + dependentSensor + ". Therefore ignoring the update called on this observer: "
-		    + arg);
+	    LOG.debug("Dependent sensor is enabled and switched on: " + dependentSensor
+		    + ". Therefore ignoring the switched call on this observer with switchedOn: " + switchedOn);
 	}
     }
 }

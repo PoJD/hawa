@@ -9,7 +9,6 @@ import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.homeautomation.hawa.lights.LightCapableFactorySupport;
-import cz.pojd.homeautomation.hawa.outdoor.OutdoorDetail;
 import cz.pojd.homeautomation.hawa.rooms.Floor;
 import cz.pojd.homeautomation.hawa.rooms.Room;
 import cz.pojd.homeautomation.hawa.rooms.RoomDetail;

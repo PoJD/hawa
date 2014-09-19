@@ -23,11 +23,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cz.pojd.homeautomation.hawa.MockControl;
-import cz.pojd.homeautomation.hawa.MockObservableSensor;
 import cz.pojd.homeautomation.hawa.refresh.Refresher;
 import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.hawa.spring.RoomSpecification;
+import cz.pojd.rpi.MockControl;
+import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.State;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;

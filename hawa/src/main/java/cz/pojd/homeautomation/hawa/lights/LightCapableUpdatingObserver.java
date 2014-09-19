@@ -1,7 +1,7 @@
 package cz.pojd.homeautomation.hawa.lights;
 
-import java.util.Observable;
-import java.util.Observer;
+import cz.pojd.rpi.controllers.Observer;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
  * Observer simply updating the light capable detail from the light capable instance each time it is invoked.
@@ -18,7 +18,7 @@ public class LightCapableUpdatingObserver implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void switched(ObservableSensor sensor, boolean switchedOn) {
 	if (lightCapable.getLastDetail() != null) {
 	    lightCapable.getLastDetail().resetFrom(lightCapable);
 	}

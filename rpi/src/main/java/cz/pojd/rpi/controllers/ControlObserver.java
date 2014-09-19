@@ -1,19 +1,16 @@
 package cz.pojd.rpi.controllers;
 
-import java.util.Observable;
-import java.util.Observer;
-
-import com.pi4j.io.gpio.PinState;
-
 import cz.pojd.rpi.controls.Control;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
- * ControlObserver is a special observer switching on the control anytime it is updated
+ * ControlObserver is a special observer switching on the control anytime this observer is notified
  *
  * @author Lubos Housa
  * @since Sep 9, 2014 7:50:49 PM
  */
 public class ControlObserver implements Observer {
+
     private final Control control;
 
     public ControlObserver(Control control) {
@@ -25,12 +22,7 @@ public class ControlObserver implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-	PinState state = (PinState) arg;
-	if (state.isHigh()) {
-	    getControl().switchOn();
-	} else {
-	    getControl().switchOff();
-	}
+    public void switched(ObservableSensor sensor, boolean switchedOn) {
+	getControl().setSwitchedOn(switchedOn);
     }
 }
