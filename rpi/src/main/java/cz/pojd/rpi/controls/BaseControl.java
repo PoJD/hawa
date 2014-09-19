@@ -1,8 +1,12 @@
 package cz.pojd.rpi.controls;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import cz.pojd.rpi.State;
 
 public abstract class BaseControl extends ControllableBase implements Control {
+    private static final Log LOG = LogFactory.getLog(BaseControl.class);
 
     @Override
     public void disable() {
@@ -26,7 +30,11 @@ public abstract class BaseControl extends ControllableBase implements Control {
 
     @Override
     public State getState() {
-	return State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).switchedOn(isSwitchedOn()).switchable(isSwitchable()).build();
+	State result = State.newBuilder().initiated(isInitiated()).enabled(isEnabled()).switchedOn(isSwitchedOn()).switchable(isSwitchable()).build();
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug(this + " getState: " + result);
+	}
+	return result;
     }
 
     @Override

@@ -154,14 +154,8 @@ public class GpioControlTestCase {
 		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
-		output.setMode(withEqual(PinMode.DIGITAL_INPUT));
-		times = 1;
-
 		output.isHigh();
 		result = false;
-
-		output.setMode(withEqual(PinMode.DIGITAL_OUTPUT));
-		times = 1;
 	    }
 	};
 	control = new GpioControl(gpio, "testControl", pin);
@@ -178,14 +172,8 @@ public class GpioControlTestCase {
 		output.high();
 		times = 1;
 
-		output.setMode(withEqual(PinMode.DIGITAL_INPUT));
-		times = 1;
-
 		output.isHigh();
 		result = true;
-
-		output.setMode(withEqual(PinMode.DIGITAL_OUTPUT));
-		times = 1;
 	    }
 	};
 	control = new GpioControl(gpio, "testControl", pin);
@@ -200,14 +188,8 @@ public class GpioControlTestCase {
 		gpio.provisionDigitalMultipurposePin(null, withEqual(pin), withEqual(PinMode.DIGITAL_OUTPUT));
 		result = output;
 
-		output.setMode(withEqual(PinMode.DIGITAL_INPUT));
-		times = 1;
-
 		output.isHigh();
 		result = new RuntimeException("Some bad GPIO error here ");
-
-		output.setMode(withEqual(PinMode.DIGITAL_OUTPUT));
-		times = 1;
 	    }
 	};
 	control = new GpioControl(gpio, "testControl", pin);

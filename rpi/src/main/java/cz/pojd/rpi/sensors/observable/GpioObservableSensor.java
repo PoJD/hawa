@@ -110,10 +110,6 @@ public class GpioObservableSensor extends BaseObservableSensor {
     }
 
     private PinState translate(PinState detected) {
-	if (highIsOff) {
-	    return PinState.HIGH == detected ? PinState.LOW : PinState.HIGH;
-	} else {
-	    return detected;
-	}
+	return highIsOff ? PinState.getInverseState(detected) : detected;
     }
 }

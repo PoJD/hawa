@@ -1,6 +1,7 @@
 package cz.pojd.rpi.sensors.observable;
 
-import java.util.Observable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 import com.pi4j.io.gpio.PinState;
@@ -8,20 +9,19 @@ import com.pi4j.io.gpio.PinState;
 import cz.pojd.rpi.controls.BaseControl;
 
 /**
- * ObservableSensor base implementation
+ * ObservableSensor base implementation. Notifies the observers exactly in the order they where added to this observable sensor
  *
  * @author Lubos Housa
  * @since Sep 13, 2014 9:30:33 PM
  */
 public abstract class BaseObservableSensor extends BaseControl implements ObservableSensor {
 
-    private Observable observable = new Observable() {
-	@Override
-	public void notifyObservers(Object arg) {
-	    setChanged();
-	    super.notifyObservers(arg);
-	}
-    };
+    /* 
+     * Use our own observer list, avoid using java.util.Observable since:
+     * 1) it is following reverse order when notifying (did not want to rely on that implementation detail)
+     * 2) we don't need that complexity anyway
+     */
+    private List<Observer> observers = new ArrayList<>();
 
     @Override
     public boolean isSwitchedOn() {
@@ -49,12 +49,14 @@ public abstract class BaseObservableSensor extends BaseControl implements Observ
     }
 
     @Override
-    public void addObserver(Observer o) {
-	observable.addObserver(o);
+    public synchronized void addObserver(Observer o) {
+	observers.add(o);
     }
 
     @Override
     public void notifyObservers(PinState pinState) {
-	observable.notifyObservers(pinState);
+	for (Observer observer : observers) {
+	    observer.update(null, pinState);
+	}
     }
 }

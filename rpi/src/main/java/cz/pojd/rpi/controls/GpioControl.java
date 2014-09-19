@@ -69,14 +69,11 @@ public class GpioControl extends BaseControl implements Control {
     }
 
     @Override
-    public synchronized boolean isSwitchedOn() {
+    public boolean isSwitchedOn() {
 	if (isInitiated()) {
-	    try {
-		gpioPin.setMode(PinMode.DIGITAL_INPUT);
-		return gpioPin.isHigh();
-	    } finally {
-		gpioPin.setMode(PinMode.DIGITAL_OUTPUT);
-	    }
+	    // no need to change mode to input as it seems to work fine without anyway and with it, it didn't seem reliable (maybe some delays might
+	    // be needed then)
+	    return gpioPin.isHigh();
 	} else {
 	    logWarnNoInit();
 	    return false;
@@ -88,7 +85,7 @@ public class GpioControl extends BaseControl implements Control {
 	return gpioPin != null;
     }
 
-    private synchronized boolean runOperation(Runnable runnable, String operationName) {
+    private boolean runOperation(Runnable runnable, String operationName) {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug(this + " operation: " + operationName);
 	}
