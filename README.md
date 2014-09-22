@@ -31,7 +31,6 @@ This project was originally based on angular-seed project https://github.com/ang
 * Right click on hawa -> Configure -> Convert to AngularJS project
 * Right click on hawa -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
 * Edit your maven settings.xml and add a definition of a server, call it TomcatServer and add your username and password you setup in your maven manager app (or change pom.xml accordingly if you use a different container
-* Copy over the pi4j jar (see maven dependency of rpi project) into web app shared lib (needed since it is using JNI and needs to be in tomcat system classloader, otherwise redeploys fail). This path would be e.g. /usr/share/tomcat-7/lib/ on gentoo. See more here: http://wiki.apache.org/tomcat/HowTo#I.27m_encountering_classloader_problems_when_using_JNI_under_Tomcat. Without it Tomcat was failing with errors "already loaded in another classloader" when redeploying this webapp...
 * Deploy hawa on a local server and enjoy!
 * To deploy latest version on Rpi (assuming you run on tomcat): mvn clean install tomcat7:redeploy -Prpi
 

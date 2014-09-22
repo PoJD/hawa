@@ -81,10 +81,7 @@ public class RpiConfig {
     @Bean
     public Gpio gpio() {
 	try {
-	    Gpio result = new GpioImpl(GpioFactory.getInstance());
-	    // try to cleanup first
-	    result.unexportAll();
-	    return result;
+	    return new GpioImpl(GpioFactory.getInstance());
 	} catch (UnsatisfiedLinkError e) {
 	    LOG.error("Unable to create the GPIO controller. Using a mock one instead.", e);
 	    return new MockGpio();
