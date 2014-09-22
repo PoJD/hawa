@@ -8,11 +8,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.pi4j.util.NativeLibraryLoader;
+
 import cz.pojd.rpi.sensors.AbstractSensor;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
-import cz.pojd.rpi.util.NativeUtils;
 
 /**
  * Sensor implementation for DHT22/AM2302 Digital Temperature And Humidity Sensor. Implemented using Adafruit Python library installed on Pi.
@@ -28,7 +29,7 @@ public class Dht22Am2302TemperatureAndHumiditySensor extends AbstractSensor impl
 
     static {
 	try {
-	    NativeUtils.loadLibraryFromJar("/libdht.so");
+	    NativeLibraryLoader.loadLibraryFromClasspath("/libdht.so");
 	} catch (UnsatisfiedLinkError | IOException e) {
 	    LOG.error("Unable to load the shared library dht", e);
 	    initiated = false;
