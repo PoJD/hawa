@@ -9,6 +9,7 @@ import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
+import com.pi4j.io.gpio.PinState;
 
 import cz.pojd.rpi.sensors.gpio.Gpio;
 
@@ -36,6 +37,8 @@ public class GpioControl extends BaseControl implements Control {
 	this.name = name;
 	LOG.info("Creating " + this + " connected to pin " + pin);
 	this.gpioPin = gpio.provisionDigitalMultipurposePin(provider, pin, PinMode.DIGITAL_OUTPUT);
+	setupPin();
+
 	this.low = new Runnable() {
 	    public void run() {
 		gpioPin.low();
@@ -83,6 +86,14 @@ public class GpioControl extends BaseControl implements Control {
     @Override
     public boolean isInitiated() {
 	return gpioPin != null;
+    }
+
+    private void setupPin() {
+	if (isInitiated()) {
+	    gpioPin.setShutdownOptions(true, PinState.LOW);
+	} else {
+	    LOG.warn(this + ": init failed before, not setting up any shutdown options.");
+	}
     }
 
     private boolean runOperation(Runnable runnable, String operationName) {

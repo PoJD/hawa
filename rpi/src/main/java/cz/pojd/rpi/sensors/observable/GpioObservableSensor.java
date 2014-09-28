@@ -65,7 +65,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 	this.highIsOff = highIsOff;
 	LOG.info("Creating " + this + " connected to pin " + pin);
 	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
-	setupListener();
+	setupPin();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 	}
     }
 
-    private void setupListener() {
+    private void setupPin() {
 	if (isInitiated()) {
 	    gpioInputPin.addListener(new GpioPinListenerDigital() {
 		@Override
@@ -94,8 +94,10 @@ public class GpioObservableSensor extends BaseObservableSensor {
 		    notifyObservers(translate(event.getState()).isHigh());
 		}
 	    });
+	    
+	    gpioInputPin.setShutdownOptions(true);
 	} else {
-	    LOG.warn(this + ": init failed before, not setting up any GPIO listener.");
+	    LOG.warn(this + ": init failed before, not setting up any GPIO listener nor any shutdown options.");
 	}
     }
 
