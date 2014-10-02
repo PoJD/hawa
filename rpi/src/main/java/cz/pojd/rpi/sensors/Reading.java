@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Reading {
 
     public enum Type {
-	temperature, temperatureD, pressure, humidity, generic
+	temperature, temperatureD, pressure, humidity, light, generic
     }
 
     public static final class Builder {

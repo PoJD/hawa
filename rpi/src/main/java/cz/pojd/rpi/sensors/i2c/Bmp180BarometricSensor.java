@@ -7,11 +7,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CDevice;
-import com.pi4j.io.i2c.I2CFactory;
-
-import cz.pojd.rpi.sensors.AbstractSensor;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
@@ -24,12 +19,10 @@ import cz.pojd.rpi.sensors.Sensor;
  * 
  * Reads temperature and pressure at sea level in this order.
  * 
- * TODO extract I2C stuff out
- * 
  * @author Lubos Housa
  * @since Aug 2, 2014 12:34:56 AM
  */
-public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
+public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
 
     private static final Log LOG = LogFactory.getLog(Bmp180BarometricSensor.class);
 
@@ -57,97 +50,30 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
     private final static int BMP180_READTEMPCMD = 0x2E;
     private final static int BMP180_READPRESSURECMD = 0x34;
 
-    private int cal_AC1 = 0;
-    private int cal_AC2 = 0;
-    private int cal_AC3 = 0;
-    private int cal_AC4 = 0;
-    private int cal_AC5 = 0;
-    private int cal_AC6 = 0;
-    private int cal_B1 = 0;
-    private int cal_B2 = 0;
-    private int cal_MB = 0;
-    private int cal_MC = 0;
-    private int cal_MD = 0;
+    private int cal_AC1;
+    private int cal_AC2;
+    private int cal_AC3;
+    private int cal_AC4;
+    private int cal_AC5;
+    private int cal_AC6;
+    private int cal_B1;
+    private int cal_B2;
+    private int cal_MB;
+    private int cal_MC;
+    private int cal_MD;
 
-    private I2CBus bus;
-    private I2CDevice bmp180;
     private int mode = BMP180_ULTRAHIGHRES;
 
-    private boolean initiated;
     private int altitude;
 
     public Bmp180BarometricSensor(boolean newRasPI, int altitude) {
-	LOG.info("Attempt to start up the barometric sensor. newRasPI=" + newRasPI + ". altitude=" + altitude);
+	super(newRasPI, BMP180_ADDRESS, false);
 	this.altitude = altitude;
-
-	try {
-	    // Get i2c bus
-	    bus = I2CFactory.getInstance(newRasPI ? I2CBus.BUS_1 : I2CBus.BUS_0);
-	    if (LOG.isInfoEnabled())
-		LOG.info("Connected to I2C Bus. OK.");
-
-	    // Get device itself
-	    bmp180 = bus.getDevice(BMP180_ADDRESS);
-	    if (LOG.isInfoEnabled())
-		LOG.info("Connected to I2C Device. OK.");
-
-	    initiated = true;
-	} catch (Exception | UnsatisfiedLinkError e) {
-	    // UnsatisfiedLinkError is caught here too to be able to start this up on any device, not just RasPi
-	    LOG.error("Error connecting to the device via I2C", e);
-	}
-
-	if (isInitiated()) {
-	    try {
-		readCalibrationData();
-	    } catch (Exception e) {
-		LOG.error("Error reading calibration data from the device", e);
-	    }
-	}
     }
 
-    /**
-     * Read an unsigned byte from the I2C device
-     * 
-     * @param reg
-     * @return
-     */
-    private int readU8(int reg) {
-	int result = 0;
-	try {
-	    result = bmp180.read(reg);
-	    if (LOG.isDebugEnabled())
-		LOG.debug("I2C: Device " + BMP180_ADDRESS + " returned " + result + " from reg " + reg);
-	} catch (Exception e) {
-	    LOG.error("Error reading byte from the device", e);
-	}
-	return result;
-    }
-
-    /**
-     * Reads a signed byte from the I2C device
-     * 
-     * @param reg
-     * @return
-     */
-    private int readS8(int reg) {
-	int result = readU8(reg);
-	if (result > 127) {
-	    result -= 256;
-	}
-	return result;
-    }
-
-    private int readU16(int register) {
-	int hi = readU8(register);
-	int lo = readU8(register + 1);
-	return (hi << 8) + lo;
-    }
-
-    private int readS16(int register) {
-	int hi = readS8(register);
-	int lo = readU8(register + 1);
-	return (hi << 8) + lo;
+    @Override
+    protected void setupSensor() {
+	readCalibrationData();
     }
 
     /**
@@ -165,8 +91,9 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	cal_MB = readS16(BMP180_CAL_MB); // INT16
 	cal_MC = readS16(BMP180_CAL_MC); // INT16
 	cal_MD = readS16(BMP180_CAL_MD); // INT16
-	if (LOG.isDebugEnabled())
+	if (LOG.isDebugEnabled()) {
 	    showCalibrationData();
+	}
     }
 
     /**
@@ -193,7 +120,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
      * @throws IOException
      */
     private int readRawTemp() throws IOException {
-	bmp180.write(BMP180_CONTROL, (byte) BMP180_READTEMPCMD);
+	device.write(BMP180_CONTROL, (byte) BMP180_READTEMPCMD);
 	waitfor(5); // Wait 5ms
 	int raw = readU16(BMP180_TEMPDATA);
 	if (LOG.isDebugEnabled())
@@ -208,7 +135,7 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
      * @throws IOException
      */
     private int readRawPressure() throws IOException {
-	bmp180.write(BMP180_CONTROL, (byte) (BMP180_READPRESSURECMD + (mode << 6)));
+	device.write(BMP180_CONTROL, (byte) (BMP180_READPRESSURECMD + (mode << 6)));
 	if (mode == BMP180_ULTRALOWPOWER)
 	    waitfor(5);
 	else if (mode == BMP180_HIGHRES)
@@ -217,9 +144,9 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	    waitfor(26);
 	else
 	    waitfor(8);
-	int msb = bmp180.read(BMP180_PRESSUREDATA);
-	int lsb = bmp180.read(BMP180_PRESSUREDATA + 1);
-	int xlsb = bmp180.read(BMP180_PRESSUREDATA + 2);
+	int msb = device.read(BMP180_PRESSUREDATA);
+	int lsb = device.read(BMP180_PRESSUREDATA + 1);
+	int xlsb = device.read(BMP180_PRESSUREDATA + 2);
 	int raw = ((msb << 16) + (lsb << 8) + xlsb) >> (8 - mode);
 	if (LOG.isDebugEnabled())
 	    LOG.debug("Raw Pressure: " + (raw & 0xFFFF) + ", " + raw);
@@ -369,10 +296,5 @@ public class Bmp180BarometricSensor extends AbstractSensor implements Sensor {
 	} else {
 	    return Reading.invalid(Type.temperature);
 	}
-    }
-
-    @Override
-    public boolean isInitiated() {
-	return initiated;
     }
 }
