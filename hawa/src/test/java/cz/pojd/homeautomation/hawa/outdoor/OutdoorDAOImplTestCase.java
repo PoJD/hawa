@@ -7,7 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -63,7 +65,6 @@ public class OutdoorDAOImplTestCase {
 	detail.setMotionSensor(State.newBuilder().build());
 	detail.setLightControl(State.newBuilder().build());
 	detail.setLightSwitch(State.newBuilder().build());
-
 
 	outdoor = new Outdoor();
 	outdoor.setSensors(sensors);
@@ -240,6 +241,58 @@ public class OutdoorDAOImplTestCase {
 	assertEquals(true, dao.get().getLightSwitch().isEnabled());
     }
 
+    @Test
+    public void testGetWithHistoryNoGraphData() {
+	detectState();
+
+	new NonStrictExpectations() {
+	    {
+		jdbcTemplate.queryForList(anyString, any);
+		result = new ArrayList<>();
+	    }
+	};
+	OutdoorDetail detail = dao.getWithHistory();
+	assertNotNull(detail.getOutdoorHistory());
+	assertEquals(3, detail.getOutdoorHistory().length);
+	assertNotNull(detail.getOutdoorHistory()[0].getValues());
+	assertEquals(0, detail.getOutdoorHistory()[0].getValues().length);
+    }
+
+    @Test
+    public void testGetWithHistorySomeGraphData() {
+	detectState();
+
+	final Map<String, Object> row = new HashMap<String, Object>();
+	row.put("at", new Date());
+	row.put("reading", 28.);
+	new NonStrictExpectations() {
+	    {
+		jdbcTemplate.queryForList(anyString, (Object[]) any);
+		returns(Collections.singletonList(row), new ArrayList<>());
+	    }
+	};
+	OutdoorDetail detail = dao.getWithHistory();
+	assertNotNull(detail.getOutdoorHistory());
+	assertEquals(3, detail.getOutdoorHistory().length);
+	assertNotNull(detail.getOutdoorHistory()[0].getValues());
+	assertEquals(1, detail.getOutdoorHistory()[0].getValues().length);
+	assertEquals(2, detail.getOutdoorHistory()[0].getValues()[0].length);
+	assertEquals(28., (double) detail.getOutdoorHistory()[0].getValues()[0][1], 0.001);
+    }
+
+    @Test(expected = OutdoorDAOException.class)
+    public void testGetWithHistoryGraphDataSqlError() {
+	detectState();
+
+	new NonStrictExpectations() {
+	    {
+		jdbcTemplate.queryForList(anyString, (Object[]) any);
+		result = new RuntimeException("Some error ocurred while calling JDBC here...");
+	    }
+	};
+	dao.getWithHistory();
+    }
+
     private void detectState() {
 	new NonStrictExpectations() {
 	    {
@@ -253,6 +306,4 @@ public class OutdoorDAOImplTestCase {
 	// fact the below is protected
 	dao.detectState();
     }
-
-    // TODO add tests to cover get with history
 }
