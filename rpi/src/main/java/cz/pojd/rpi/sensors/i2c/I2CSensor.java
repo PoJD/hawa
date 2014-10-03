@@ -53,6 +53,7 @@ public abstract class I2CSensor extends AbstractSensor implements Sensor {
 		setupSensor();
 	    } catch (Exception e) {
 		LOG.error("Error setting up the device", e);
+		initiated = false;
 	    }
 	}
     }

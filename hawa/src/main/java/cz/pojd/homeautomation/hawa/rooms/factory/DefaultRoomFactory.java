@@ -21,6 +21,7 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 
     private static final Log LOG = LogFactory.getLog(DefaultRoomFactory.class);
     private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches, firstFloorLightControls;
+    private final boolean newRaspi;
 
     @Inject
     private Gpio gpio;
@@ -29,11 +30,12 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
     private RuntimeExecutor runtimeExecutor;
 
     public DefaultRoomFactory(GpioProvider basementFloorLightSwitches, GpioProvider basementFloorLightControls, GpioProvider firstFloorLightSwitches,
-	    GpioProvider firstFloorLightControls) {
+	    GpioProvider firstFloorLightControls, boolean newRaspi) {
 	this.basementFloorLightSwitches = basementFloorLightSwitches;
 	this.basementFloorLightControls = basementFloorLightControls;
 	this.firstFloorLightSwitches = firstFloorLightSwitches;
 	this.firstFloorLightControls = firstFloorLightControls;
+	this.newRaspi = newRaspi;
     }
 
     public Gpio getGpio() {
@@ -90,10 +92,10 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	// TODO temporary until the app is deployed to real house
 	if (RoomSpecification.HALL_DOWN.equals(roomSpecification)) {
 	    enrichLight(room, getGpio(), getGpio().getDefaultProvider(), getGpio().getDefaultProvider(), RaspiPin.GPIO_04, RaspiPin.GPIO_05,
-		    RaspiPin.GPIO_06);  
+		    RaspiPin.GPIO_06, newRaspi, roomSpecification.getLightLevelSensorAddress(), roomSpecification.getLightLevelTreshold());
 	}
 	//enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
-	//	roomSpecification.getLightPin());
+		//roomSpecification.getLightPin(), newRaspi, roomSpecification.getLightLevelSensorAddress(), roomSpecification.getLightLevelTreshold());
 
 	room.setLastDetail(new RoomDetail(room));
 

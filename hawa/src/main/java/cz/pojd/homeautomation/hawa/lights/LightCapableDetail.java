@@ -1,9 +1,11 @@
 package cz.pojd.homeautomation.hawa.lights;
 
 import cz.pojd.rpi.State;
+import cz.pojd.rpi.sensors.Reading;
 
 public abstract class LightCapableDetail {
     private State motionSensor, lightSwitch, lightControl;
+    private Reading lightLevel;
 
     protected LightCapableDetail() {
     }
@@ -20,12 +22,14 @@ public abstract class LightCapableDetail {
 	setMotionSensor(lightCapable.getMotionSensor() != null ? lightCapable.getMotionSensor().getState() : null);
 	setLightSwitch(lightCapable.getLightSwitch() != null ? lightCapable.getLightSwitch().getState() : null);
 	setLightControl(lightCapable.getLightControl() != null ? lightCapable.getLightControl().getState() : null);
+	setLightLevel(lightCapable.getLightLevelSensor() != null ? lightCapable.getLightLevelSensor().read() : null);
     }
 
     public void resetFrom(LightCapableDetail detail) {
 	setMotionSensor(detail.getMotionSensor());
 	setLightSwitch(detail.getLightSwitch());
 	setLightControl(detail.getLightControl());
+	setLightLevel(detail.getLightLevel());
     }
 
     public State getMotionSensor() {
@@ -50,5 +54,13 @@ public abstract class LightCapableDetail {
 
     public void setLightControl(State lightControl) {
 	this.lightControl = lightControl;
+    }
+
+    public Reading getLightLevel() {
+	return lightLevel;
+    }
+
+    public void setLightLevel(Reading lightLevel) {
+	this.lightLevel = lightLevel;
     }
 }

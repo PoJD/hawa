@@ -15,6 +15,14 @@
 				<td><ha-state entity="entity" state="entity.lightControl"
 						should-switch-off-when-disabled="true" /></td>
 			</tr>
+			<tr>
+				<th>Light Level</th>
+				<td>
+					<div ng-show="entity.lightLevel==undefined"
+						class="label label-default">Unknown</div>
+					<div ng-show="entity.lightLevel!=undefined">{{entity.lightLevel.stringValue}}</div>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>

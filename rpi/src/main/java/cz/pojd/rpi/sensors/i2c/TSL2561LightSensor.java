@@ -83,13 +83,13 @@ public class TSL2561LightSensor extends I2CSensor implements Sensor, DisposableB
      * Device lux range 0.1 - 40,000+ see https://learn.adafruit.com/tsl2561/overview
      */
     private double readLux() throws IOException {
-	int ambient = readFull();
-	int ir = readIR();
+	double ambient = readFull();
+	double ir = readIR();
 
 	if (ambient >= 0xffff || ir >= 0xffff) // value(s) exceed(s) datarange
 	    throw new IOException("Gain too high. Values exceed range.");
 
-	double ratio = (ir / (float) ambient);
+	double ratio = ir / ambient;
 
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("IR Result:" + ir);

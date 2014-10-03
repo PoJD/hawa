@@ -47,6 +47,6 @@ public class Room extends LightCapable {
     public String toString() {
 	return "Room [getName()=" + getName() + ", getTemperatureSensor()=" + getTemperatureSensor() + ", getFloor()=" + getFloor()
 		+ ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl()
-		+ "]";
+		+ ", getLightLevelSensor()=" + getLightLevelSensor() + "]";
     }
 }

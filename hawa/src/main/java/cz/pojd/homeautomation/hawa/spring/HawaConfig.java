@@ -19,6 +19,7 @@ import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
 import cz.pojd.homeautomation.hawa.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.hawa.rooms.factory.DefaultRoomFactory;
 import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
+import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
 import cz.pojd.rpi.spring.RpiConfig;
 
 /**
@@ -44,7 +45,7 @@ public class HawaConfig {
     public RoomFactory roomFactory() {
 	// each floor lights input, then output
 	return new DefaultRoomFactory(rpiConfig.getMCP23017Provider(0x20), rpiConfig.getMCP23017Provider(0x21), rpiConfig.getMCP23017Provider(0x22),
-		rpiConfig.getMCP23017Provider(0x23));
+		rpiConfig.getMCP23017Provider(0x23), rpiConfig.newRasPI());
     }
 
     @Bean
@@ -72,6 +73,8 @@ public class HawaConfig {
 	result.setMotionSensorPin(RaspiPin.GPIO_00);
 	result.setLightSwitchPin(RaspiPin.GPIO_01);
 	result.setLightControlPin(RaspiPin.GPIO_02);
+	result.setLightLevelSensorAddress(TSL2561LightSensor.TSL2561_ADDRESS_FLOAT);
+	result.setLightLevelTreshold(500); // TODO should be higher once outside?
 	return result;
     }
 

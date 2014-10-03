@@ -35,7 +35,7 @@ public class Outdoor extends LightCapable {
     @Override
     public String toString() {
 	return "Outdoor [getSensors()=" + getSensors() + ", getName()=" + getName() + ", getMotionSensor()=" + getMotionSensor()
-		+ ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + ", getLastDetail()=" + getLastDetail()
-		+ "]";
+		+ ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + ", getLightLevelSensor()="
+		+ getLightLevelSensor() + "]";
     }
 }

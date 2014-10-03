@@ -55,6 +55,6 @@ public class OutdoorDetail extends RefreshedLightCapableDetail {
     public String toString() {
 	return "OutdoorDetail [getSensorReadings()=" + getSensorReadings() + ", getOutdoorHistory()=" + Arrays.toString(getOutdoorHistory())
 		+ ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
-		+ ", getLightControl()=" + getLightControl() + "]";
+		+ ", getLightControl()=" + getLightControl() + ", getLightLevel()=" + getLightLevel() + "]";
     }
 }

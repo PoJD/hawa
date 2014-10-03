@@ -1,6 +1,7 @@
 package cz.pojd.homeautomation.hawa.lights;
 
 import cz.pojd.rpi.controls.Control;
+import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
@@ -14,6 +15,7 @@ public abstract class LightCapable {
     private ObservableSensor motionSensor;
     private ObservableSensor lightSwitch;
     private Control lightControl;
+    private Sensor lightLevelSensor;
     private LightCapableDetail lastDetail;
 
     public abstract String getName();
@@ -40,6 +42,14 @@ public abstract class LightCapable {
 
     public void setLightControl(Control lightControl) {
 	this.lightControl = lightControl;
+    }
+
+    public Sensor getLightLevelSensor() {
+	return lightLevelSensor;
+    }
+
+    public void setLightLevelSensor(Sensor lightLevelSensor) {
+	this.lightLevelSensor = lightLevelSensor;
     }
 
     public LightCapableDetail getLastDetail() {

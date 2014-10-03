@@ -10,6 +10,8 @@ public class OutdoorSpecification {
     private int dhtSensorSysClassPin;
     private Pin motionSensorPin;
     private Pin lightSwitchPin, lightControlPin;
+    private int lightLevelSensorAddress;
+    private double lightLevelTreshold;
     private GpioProvider gpioProvider;
 
     public boolean isNewRaspi() {
@@ -60,6 +62,22 @@ public class OutdoorSpecification {
 	this.lightControlPin = lightControlPin;
     }
 
+    public int getLightLevelSensorAddress() {
+	return lightLevelSensorAddress;
+    }
+
+    public void setLightLevelSensorAddress(int lightLevelSensorAddress) {
+	this.lightLevelSensorAddress = lightLevelSensorAddress;
+    }
+
+    public double getLightLevelTreshold() {
+	return lightLevelTreshold;
+    }
+
+    public void setLightLevelTreshold(double lightLevelTreshold) {
+	this.lightLevelTreshold = lightLevelTreshold;
+    }
+
     public GpioProvider getGpioProvider() {
 	return gpioProvider;
     }
@@ -72,6 +90,7 @@ public class OutdoorSpecification {
     public String toString() {
 	return "OutdoorSpecification [newRaspi=" + newRaspi + ", altitude=" + altitude + ", dhtSensorSysClassPin=" + dhtSensorSysClassPin
 		+ ", motionSensorPin=" + motionSensorPin + ", lightSwitchPin=" + lightSwitchPin + ", lightControlPin=" + lightControlPin
-		+ ", gpioProvider=" + gpioProvider + "]";
+		+ ", lightLevelSensorAddress=" + lightLevelSensorAddress + ", lightLevelTreshold=" + lightLevelTreshold + ", gpioProvider="
+		+ gpioProvider + "]";
     }
 }

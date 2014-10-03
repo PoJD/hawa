@@ -32,7 +32,7 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 	setTemperature(copy.getTemperature());
 	setTemperatureHistory(copy.getTemperatureHistory());
     }
-    
+
     public RoomDetail(Room room) {
 	super(room);
 	setName(room.getName());
@@ -78,9 +78,9 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 
     @Override
     public String toString() {
-	return "RoomDetail [getName()=" + getName() + ", getFloor()=" + getFloor() + ", getLastUpdate()=" + getLastUpdate() + ", getTemperature()="
-		+ getTemperature() + ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()="
-		+ Arrays.toString(getTemperatureHistory()) + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
-		+ ", getLightControl()=" + getLightControl() + "]";
+	return "RoomDetail [getName()=" + getName() + ", getFloor()=" + getFloor() + ", getTemperature()=" + getTemperature()
+		+ ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()=" + Arrays.toString(getTemperatureHistory())
+		+ ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
+		+ ", getLightControl()=" + getLightControl() + ", getLightLevel()=" + getLightLevel() + "]";
     }
 }

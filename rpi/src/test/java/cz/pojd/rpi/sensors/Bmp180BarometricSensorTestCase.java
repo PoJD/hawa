@@ -23,11 +23,11 @@ import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
 public class Bmp180BarometricSensorTestCase {
 
     @Mocked
-    I2CFactory i2cFactory;
+    private I2CFactory i2cFactory;
     @Mocked
-    I2CBus i2cBus;
+    private I2CBus i2cBus;
     @Mocked
-    I2CDevice device;
+    private I2CDevice device;
 
     @Test
     public void testBmp180BarometricSensorNewRaspi() throws IOException {
