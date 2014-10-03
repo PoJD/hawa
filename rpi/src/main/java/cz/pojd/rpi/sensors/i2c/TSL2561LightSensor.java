@@ -22,9 +22,9 @@ public class TSL2561LightSensor extends I2CSensor implements Sensor, DisposableB
 
     private static final Log LOG = LogFactory.getLog(TSL2561LightSensor.class);
 
-    public final static int TSL2561_ADDRESS_LOW = 0x29;
-    public final static int TSL2561_ADDRESS_FLOAT = 0x39;
-    public final static int TSL2561_ADDRESS_HIGH = 0x49;
+    public final static int TSL2561_ADDRESS_LOW = 0x29; // address pin connected to ground
+    public final static int TSL2561_ADDRESS_FLOAT = 0x39; // nothing attached to address pin
+    public final static int TSL2561_ADDRESS_HIGH = 0x49; // address pin connected to 3.3v
 
     private final static int TSL2561_COMMAND_BIT = 0x80;
     private final static byte TSL2561_CONTROL_POWERON = 0x03;
