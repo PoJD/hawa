@@ -34,10 +34,16 @@ public class RoomDetail extends RefreshedLightCapableDetail {
     }
 
     public RoomDetail(Room room) {
+	this(room, true);
+    }
+
+    public RoomDetail(Room room, boolean readTemperature) {
 	super(room);
 	setName(room.getName());
 	setFloor(room.getFloor());
-	setTemperature(room.getTemperatureSensor().read());
+	if (readTemperature) {
+	    setTemperature(room.getTemperatureSensor().read());
+	}
     }
 
     public String getName() {

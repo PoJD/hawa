@@ -97,7 +97,8 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	//enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
 		//roomSpecification.getLightPin(), newRaspi, roomSpecification.getLightLevelSensorAddress(), roomSpecification.getLightLevelTreshold());
 
-	room.setLastDetail(new RoomDetail(room));
+	// #21 avoid reading temperature now on room creation
+	room.setLastDetail(new RoomDetail(room, false));
 
 	LOG.info("New room created: " + room);
 	return room;
