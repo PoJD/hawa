@@ -76,3 +76,8 @@ html, body {
 	height: 300px;
 	overflow: auto;	
 }
+
+.power {
+	width: 30px;
+	height: 30px;		
+}

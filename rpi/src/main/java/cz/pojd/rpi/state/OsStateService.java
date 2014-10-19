@@ -51,4 +51,9 @@ public interface OsStateService {
      * @return string representation of the application log (last x rows)
      */
     List<String> getApplicationLog();
+
+    /**
+     * Shutdown the whole system
+     */
+    void shutdown();
 }

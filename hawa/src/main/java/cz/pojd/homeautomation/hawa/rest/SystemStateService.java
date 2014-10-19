@@ -2,6 +2,7 @@ package cz.pojd.homeautomation.hawa.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -61,6 +62,12 @@ public class SystemStateService {
 	    LOG.debug("System state detected.");
 	}
 	return result;
+    }
+
+    @PUT
+    public void shutdown() {
+	LOG.info("Shutting down the system...");
+	osStateService.shutdown();
     }
 
     private SystemState getState() {

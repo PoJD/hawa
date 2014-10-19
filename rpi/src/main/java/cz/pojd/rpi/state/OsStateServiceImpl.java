@@ -26,6 +26,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String SWAP_LABEL = "Swap";
 
     private static final String SYSTEM_LOG_COMMAND = "dmesg | tail -100";
+    private static final String SHUTDOWN_COMMAND = "shutdown -h now";
 
     private static final String FILESYSTEM_COMMAND = "df FS --block-size=1 --output=avail | tail -1 && df FS --block-size=1 --output=size | tail -1";
     private static final Pattern pattern = Pattern.compile("FS");
@@ -111,5 +112,10 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	int percentage = (int) (total > 0 ? (100 * used / total) : 0);
 	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90)
 		.textValue(doubles2Range(used, total)).build();
+    }
+
+    @Override
+    public void shutdown() {
+	getRuntimeExecutor().executeNoReturn(SHUTDOWN_COMMAND);
     }
 }

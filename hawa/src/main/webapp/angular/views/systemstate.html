@@ -2,14 +2,24 @@
 	<div class="col-md-9 col-xs-6">
 		<div class="panel panel-primary">
 			<div class="panel-heading">System Log</div>
-			<div class="panel-body log"><pre>{{logSystem}}</pre></div>
+			<div class="panel-body log">
+				<pre>{{logSystem}}</pre>
+			</div>
 		</div>
 		<div class="panel panel-primary">
-			<div class="panel-heading">System Log</div>
-			<div class="panel-body log"><pre>{{logApplication}}</pre></div>
+			<div class="panel-heading">Application Log</div>
+			<div class="panel-body log">
+				<pre>{{logApplication}}</pre>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-3 col-xs-6">
+		<div class="panel panel-info">
+			<div class="panel-heading">System Actions</div>
+			<div class="panel-body">
+				<img class="power cursor" title="Shutdown the system" src="img/shutdown.png" ng-click="shutdown()">
+			</div>
+		</div>
 		<ha-system-panels state="systemState" />
 	</div>
 </div>

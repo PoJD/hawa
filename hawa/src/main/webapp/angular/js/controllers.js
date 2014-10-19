@@ -100,6 +100,10 @@ angular.module('homeAutomation.controllers', [])
 				        systemState.logApplication = undefined;
 				    });
 				};
+				
+				$scope.shutdown = function() {
+					systemState.shutdown();
+				};
 
 				$scope.update();
 			} ])
