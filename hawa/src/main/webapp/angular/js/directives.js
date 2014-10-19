@@ -77,4 +77,14 @@ angular.module('homeAutomation.directives', [])
 		},
 		templateUrl : 'angular/components/property.html'
 	};
+} ])
+
+.directive('haSystemPanels', [ function() {
+	return {
+		restrict : 'E',
+		scope : {
+			state : '=',
+		},
+		templateUrl : 'angular/components/systemPanels.html'
+	};
 } ]);

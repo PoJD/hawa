@@ -11,11 +11,8 @@ import java.util.List;
  */
 public class SystemState {
     private final List<PropertyValue> values = new ArrayList<>();
-    private final String lastUpdate;
-
-    public SystemState(String lastUpdate) {
-	this.lastUpdate = lastUpdate;
-    }
+    private String lastUpdate;
+    private List<String> logSystem, logApplication;
 
     public void addValue(PropertyValue value) {
 	if (value != null) {
@@ -31,8 +28,29 @@ public class SystemState {
 	return lastUpdate;
     }
 
+    public void setLastUpdate(String lastUpdate) {
+	this.lastUpdate = lastUpdate;
+    }
+
+    public List<String> getLogSystem() {
+	return logSystem;
+    }
+
+    public void setLogSystem(List<String> logSystem) {
+	this.logSystem = logSystem;
+    }
+
+    public List<String> getLogApplication() {
+	return logApplication;
+    }
+
+    public void setLogApplication(List<String> logApplication) {
+	this.logApplication = logApplication;
+    }
+
     @Override
     public String toString() {
-	return "SystemState [values=" + values + ", lastUpdate=" + lastUpdate + "]";
+	return "SystemState [values=" + values + ", lastUpdate=" + lastUpdate + ", logSystem=" + logSystem + ", logApplication=" + logApplication
+		+ "]";
     }
 }

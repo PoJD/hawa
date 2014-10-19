@@ -17,7 +17,16 @@ public interface RuntimeExecutor {
      *            command to execute
      * @return list of double integers
      */
-    public List<Double> execute(String command);
+    public List<Double> executeDouble(String command);
+
+    /**
+     * Execute the command and return the String representation of the output (each line separate)
+     * 
+     * @param command
+     *            command to execute
+     * @return string output from the command
+     */
+    public List<String> executeString(String command);
 
     /**
      * Execute the command, validate the output of the command (e.g. error stream) and exit

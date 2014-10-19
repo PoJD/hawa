@@ -37,7 +37,34 @@ public class SystemStateService {
     @Produces(MediaType.APPLICATION_JSON)
     public SystemState get() {
 	LOG.info("Detecting current state of the JVM and the OS...");
-	SystemState result = new SystemState(refresher.getLastUpdate());
+	SystemState result = getState();
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("System state: " + result);
+	}
+	return result;
+    }
+
+    @GET
+    @Path("/withDetails")
+    @Produces(MediaType.APPLICATION_JSON)
+    public SystemState getWithDetails() {
+	LOG.info("Detecting current state of the JVM and the OS and logs...");
+	SystemState result = getState();
+
+	result.setLogSystem(osStateService.getSystemLog());
+	result.setLogApplication(osStateService.getApplicationLog());
+
+	if (LOG.isTraceEnabled()) {
+	    LOG.trace("System state: " + result);
+	}
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("System state detected.");
+	}
+	return result;
+    }
+
+    private SystemState getState() {
+	SystemState result = new SystemState();
 	result.addValue(vmStateService.getHeap());
 	result.addValue(vmStateService.getProcessors());
 	result.addValue(osStateService.getCpu());
@@ -46,9 +73,7 @@ public class SystemStateService {
 	for (PropertyValue value : osStateService.getFileSystems()) {
 	    result.addValue(value);
 	}
-	if (LOG.isDebugEnabled()) {
-	    LOG.debug("System state: " + result);
-	}
+	result.setLastUpdate(refresher.getLastUpdate());
 	return result;
     }
 }

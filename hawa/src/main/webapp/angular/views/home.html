@@ -30,29 +30,7 @@
 			</table>
 		</div>
 
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				Home Automation <span ha-app-version></span><span
-					class="glyphicon glyphicon-heart right"></span>
-			</div>
-			<div class="panel-body">
-				<div class="row"
-					ng-repeat="property in systemState.values | filter: { type: 'jvm' }">
-					<ha-property property="property" />
-				</div>
-			</div>
-		</div>
+		<ha-system-panels state="systemState" />
 
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				Operating System<span class="glyphicon glyphicon-hdd right"></span>
-			</div>
-			<div class="panel-body">
-				<div class="row"
-					ng-repeat="property in systemState.values | filter: { type: 'os' }">
-					<ha-property property="property" />
-				</div>
-			</div>
-		</div>
 	</div>
 </div>

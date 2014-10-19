@@ -86,7 +86,7 @@ public class Ds18B20TemperatureSensor extends AbstractSensor implements Sensor {
 
     @Override
     public Reading read() {
-	List<Double> result = getRuntimeExecutor().execute(command);
+	List<Double> result = getRuntimeExecutor().executeDouble(command);
 	if (result.size() == 1) {
 	    // the output from command line is 1000 * temperature
 	    double temperature = result.get(0) / 1000;

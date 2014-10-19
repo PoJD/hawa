@@ -83,6 +83,27 @@ angular.module('homeAutomation.controllers', [])
 
 				$scope.update();
 			} ])
+			
+			
+.controller(
+		'SystemStateController',
+		[ '$scope', '$controller', 'systemState', function($scope, $controller, systemState) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+
+				$scope.update = function() {
+				    $scope.systemState = systemState.get({ type: 'withDetails' }, function(systemState) {
+				    	// after load, avoid having the log in the systemState object directly - otherwise save would always send it back to the server, which is unnecessary
+				        $scope.logSystem = systemState.logSystem.join("\n"); //system log does not have new lines wherease below app log does...
+				        $scope.logApplication = systemState.logApplication.join("");
+				        
+				        systemState.logSystem = undefined;
+				        systemState.logApplication = undefined;
+				    });
+				};
+
+				$scope.update();
+			} ])
+						
 
 .controller('RoomController', 
 		[ '$scope', '$controller', '$routeParams', 'rooms', function($scope, $controller, $routeParams, rooms) {

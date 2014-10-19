@@ -79,7 +79,7 @@ public class RuntimeExecutorImplTestCase {
 		returns(null, "12345", null);
 	    }
 	};
-	List<Double> result = runtimeExecutor.execute("Some command");
+	List<Double> result = runtimeExecutor.executeDouble("Some command");
 	assertNotNull(result);
 	Iterator<Double> it = result.iterator();
 	assertTrue(it.hasNext());
@@ -97,7 +97,7 @@ public class RuntimeExecutorImplTestCase {
 		returns(null, "1", "2", "3.23", null);
 	    }
 	};
-	List<Double> result = runtimeExecutor.execute("Some command");
+	List<Double> result = runtimeExecutor.executeDouble("Some command");
 	assertNotNull(result);
 	Iterator<Double> it = result.iterator();
 	assertTrue(it.hasNext());
@@ -119,7 +119,7 @@ public class RuntimeExecutorImplTestCase {
 	};
 
 	// error returned should force not to fail, but return empty list instead
-	List<Double> result = runtimeExecutor.execute("Some command");
+	List<Double> result = runtimeExecutor.executeDouble("Some command");
 	assertTrue(result.isEmpty());
     }
 }

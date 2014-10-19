@@ -25,6 +25,8 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String SWAP_COMMAND = "free -b | grep Swap | sed 's/.* \\([^ ]*\\)/\\1/' && free -b | grep Swap: | sed 's/Swap: *\\([^ ]*\\).*/\\1/'";
     private static final String SWAP_LABEL = "Swap";
 
+    private static final String SYSTEM_LOG_COMMAND = "dmesg | tail -100";
+
     private static final String FILESYSTEM_COMMAND = "df FS --block-size=1 --output=avail | tail -1 && df FS --block-size=1 --output=size | tail -1";
     private static final Pattern pattern = Pattern.compile("FS");
 
@@ -76,7 +78,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 
     @Override
     public PropertyValue getCpu() {
-	List<Double> currentLoad = getRuntimeExecutor().execute(CPU_COMMAND);
+	List<Double> currentLoad = getRuntimeExecutor().executeDouble(CPU_COMMAND);
 	if (currentLoad.isEmpty()) {
 	    return null;
 	}
@@ -86,8 +88,19 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 		.textValue(String.format("%.2f%%", percentage)).build();
     }
 
+    @Override
+    public List<String> getSystemLog() {
+	return getRuntimeExecutor().executeString(SYSTEM_LOG_COMMAND);
+    }
+
+    @Override
+    public List<String> getApplicationLog() {
+	// TODO just static access for now
+	return InMemoryAppender.getLog();
+    }
+
     private PropertyValue getRangeValue(String label, String command) {
-	List<Double> range = getRuntimeExecutor().execute(command);
+	List<Double> range = getRuntimeExecutor().executeDouble(command);
 	if (range.size() < 2) {
 	    return null;
 	}

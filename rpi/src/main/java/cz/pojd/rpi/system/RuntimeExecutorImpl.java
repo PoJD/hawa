@@ -46,17 +46,30 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
     }
 
     @Override
-    public List<Double> execute(String commandSimple) {
+    public List<Double> executeDouble(String command) {
 	List<Double> output = new ArrayList<>();
+	for (String s : execute(command)) {
+	    output.add(Double.parseDouble(s));
+	}
+	return output;
+    }
+
+    @Override
+    public List<String> executeString(String command) {
+	return execute(command);
+    }
+
+    private List<String> execute(String command) {
+	List<String> output = new ArrayList<>();
 	try {
-	    Process process = executeCommand(commandSimple);
+	    Process process = executeCommand(command);
 	    if (process != null) {
 		for (String s : getOutput(process.getInputStream())) {
-		    output.add(Double.parseDouble(s));
+		    output.add(s);
 		}
 	    }
 	} catch (IOException e) {
-	    LOG.error("Unable to parse output of system command " + commandSimple, e);
+	    LOG.error("Unable to parse output of system command " + command, e);
 	}
 	return output;
     }
@@ -83,7 +96,7 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
 	return null;
     }
 
-    private Collection<String> getOutput(InputStream inputStream) throws IOException {
+    private List<String> getOutput(InputStream inputStream) throws IOException {
 	List<String> output = new ArrayList<>();
 	try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 	    String line = null;
