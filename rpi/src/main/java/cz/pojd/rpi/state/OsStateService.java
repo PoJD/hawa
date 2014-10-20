@@ -53,6 +53,13 @@ public interface OsStateService {
     List<String> getApplicationLog();
 
     /**
+     * Detects whether the underlying database is running or not
+     * 
+     * @return true if so, false otherwise
+     */
+    boolean isDbRunning();
+
+    /**
      * Shutdown the whole system
      */
     void shutdown();

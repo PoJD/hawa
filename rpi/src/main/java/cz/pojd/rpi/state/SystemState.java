@@ -13,6 +13,7 @@ public class SystemState {
     private final List<PropertyValue> values = new ArrayList<>();
     private String lastUpdate;
     private List<String> logSystem, logApplication;
+    private boolean dbRunning;
 
     public void addValue(PropertyValue value) {
 	if (value != null) {
@@ -48,9 +49,17 @@ public class SystemState {
 	this.logApplication = logApplication;
     }
 
+    public boolean isDbRunning() {
+	return dbRunning;
+    }
+
+    public void setDbRunning(boolean dbRunning) {
+	this.dbRunning = dbRunning;
+    }
+
     @Override
     public String toString() {
 	return "SystemState [values=" + values + ", lastUpdate=" + lastUpdate + ", logSystem=" + logSystem + ", logApplication=" + logApplication
-		+ "]";
+		+ ", dbRunning=" + dbRunning + "]";
     }
 }

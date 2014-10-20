@@ -81,6 +81,7 @@ public class SystemStateService {
 	    result.addValue(value);
 	}
 	result.setLastUpdate(refresher.getLastUpdate());
+	result.setDbRunning(osStateService.isDbRunning());
 	return result;
     }
 }

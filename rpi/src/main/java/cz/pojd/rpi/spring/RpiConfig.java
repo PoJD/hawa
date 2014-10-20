@@ -54,6 +54,17 @@ public class RpiConfig {
 	return fileSystems;
     }
 
+    /**
+     * This command should detect whether the underlying database on the RPi is running or not. This command should either return true or false
+     * 
+     * @return String command to invoke at runtime to detect whether the DB is running or not. The command should return String 'true', if DB is
+     *         running, or 'false' otherwise
+     */
+    @Bean
+    public String detectDbIsRunningCommand() {
+	return "if [ `/etc/init.d/mysql status | tail -1 | sed 's/.*: \\(\\w*\\)/\\1/'` = 'started' ]; then echo 'true'; else echo 'false'; fi;";
+    }
+
     @Bean
     public Runtime runtime() {
 	return Runtime.getRuntime();

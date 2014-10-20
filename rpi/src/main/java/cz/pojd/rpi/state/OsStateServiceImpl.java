@@ -26,6 +26,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String SWAP_LABEL = "Swap";
 
     private static final String SYSTEM_LOG_COMMAND = "dmesg | tail -100";
+
     private static final String SHUTDOWN_COMMAND = "shutdown -h now";
 
     private static final String FILESYSTEM_COMMAND = "df FS --block-size=1 --output=avail | tail -1 && df FS --block-size=1 --output=size | tail -1";
@@ -34,16 +35,11 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     @Resource(name = "fileSystems")
     private List<String> fileSystemsNames;
 
+    @Resource(name = "detectDbIsRunningCommand")
+    private String detectDbCommand;
+
     @Inject
     private RuntimeExecutor runtimeExecutor;
-
-    public RuntimeExecutor getRuntimeExecutor() {
-	return runtimeExecutor;
-    }
-
-    public void setRuntimeExecutor(RuntimeExecutor runtimeExecutor) {
-	this.runtimeExecutor = runtimeExecutor;
-    }
 
     public List<String> getFileSystemsNames() {
 	return fileSystemsNames;
@@ -51,6 +47,22 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 
     public void setFileSystemsNames(List<String> fileSystemsNames) {
 	this.fileSystemsNames = fileSystemsNames;
+    }
+
+    public String getDetectDbCommand() {
+	return detectDbCommand;
+    }
+
+    public void setDetectDbCommand(String detectDbCommand) {
+	this.detectDbCommand = detectDbCommand;
+    }
+
+    public RuntimeExecutor getRuntimeExecutor() {
+	return runtimeExecutor;
+    }
+
+    public void setRuntimeExecutor(RuntimeExecutor runtimeExecutor) {
+	this.runtimeExecutor = runtimeExecutor;
     }
 
     @Override
@@ -117,5 +129,15 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     @Override
     public void shutdown() {
 	getRuntimeExecutor().executeNoReturn(SHUTDOWN_COMMAND);
+    }
+
+    @Override
+    public boolean isDbRunning() {
+	List<String> result = getRuntimeExecutor().executeString(detectDbCommand);
+	if (result.size() == 1) {
+	    return Boolean.valueOf(result.get(0));
+	} else {
+	    return false;
+	}
     }
 }
