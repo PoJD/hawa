@@ -60,18 +60,15 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
     }
 
     private List<String> execute(String command) {
-	List<String> output = new ArrayList<>();
 	try {
 	    Process process = executeCommand(command);
 	    if (process != null) {
-		for (String s : getOutput(process.getInputStream())) {
-		    output.add(s);
-		}
+		return getOutput(process.getInputStream());
 	    }
 	} catch (IOException e) {
 	    LOG.error("Unable to parse output of system command " + command, e);
 	}
-	return output;
+	return new ArrayList<>();
     }
 
     private Process executeCommand(String commandSimple) {
