@@ -4,14 +4,19 @@
 </div>
 
 <div class="row full">
-	<div class="col-md-6">
-		<nvd3-stacked-area-chart ng-show="temperatureHistory"
-			data="temperatureHistory" id="temperatureHistory" width="600"
-			height="400" margin="0" xAxisTickFormat="xAxisTickFormat()"
-			showXAxis="true" showYAxis="true" forceY="[0,40]"
-			noData="No data found for last week!" showLegend="true"
-			interactive="true" tooltips="true" useInteractiveGuideLine="true">
-		</nvd3-stacked-area-chart>
+	<div class="col-md-9">
+		<div class="col-md-10">
+			<nvd3-stacked-area-chart ng-show="temperatureHistory"
+				data="temperatureHistory" id="temperatureHistory" width="600"
+				height="400" margin="0" xAxisTickFormat="xAxisTickFormat()"
+				showXAxis="true" showYAxis="true" forceY="[0,40]"
+				noData="No data found for last week!" showLegend="true"
+				interactive="true" tooltips="true" useInteractiveGuideLine="true">
+			</nvd3-stacked-area-chart>
+		</div>
+		<div class="col-md-1 right">
+			<ha-graphs-switch data="[temperatureHistory]" />
+		</div>
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">

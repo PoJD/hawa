@@ -87,4 +87,57 @@ angular.module('homeAutomation.directives', [])
 		},
 		templateUrl : 'angular/components/systemPanels.html'
 	};
+} ])
+
+.directive('haGraphsSwitch', [ function() {
+	return {
+		restrict : 'E',
+		scope : {
+			data : '='
+		},
+		templateUrl : 'angular/components/graphsSwitch.html',
+		link: function (scope) {
+	        scope.switchGraphs = function(days) {
+    			// data has all the graphs, so we need to loop through all of them and cut the data
+	        	// each element is a series of data, so bidimensional array here...
+	        	for (var i = 0; i < scope.data.length; i++) {
+	        		var graphSeries = scope.data[i];
+	        		for (var j = 0; j < graphSeries.length; j++) {
+	        			var graph = graphSeries[j];
+
+	        			// first store the current values (assuming first load gets all the data)
+	    	        	if (!graph.originalValues) {
+	    	        		graph.originalValues = graph.values.slice(0);
+	        			}
+	    	        	// now reset to original data (we may have cut the values before)
+	    	        	graph.values = graph.originalValues;
+
+	        			if (graph.values.length > 0) {
+		        			var beginIndex = scope.findBeginIndex(graph.values, days);
+		        			graph.values = graph.values.slice(beginIndex);
+	        			}
+	        		}
+	        	}
+	        	
+	        	// now refresh all graphs
+	            for (var i = 0; i < nv.graphs.length; i++) {
+	            	nv.graphs[i].update();
+	            }
+			};
+			
+			scope.findBeginIndex = function(values, days) {
+				var firstDate = new Date(values[0][0]);
+				var lastDate = new Date(values[values.length-1][0]);
+				
+				// if the diff between the above is pretty much a week, then take the appropriate index...
+				if (lastDate.getDate() - firstDate.getDate() == 7) {
+					var result = Math.round( values.length - 1 - ( days * values.length / 7 ) );
+					return result >= 0 ? result : 0;
+				}
+				
+				// otherwise just return 0, do not attempt any lucky or smart guess..
+				return 0;
+			};
+	    }
+	};
 } ]);
