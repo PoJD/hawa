@@ -18,6 +18,11 @@
 			<artifactId>rpi</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>cz.pojd.security</groupId>
+			<artifactId>security</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>hawa</finalName>

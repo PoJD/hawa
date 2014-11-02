@@ -21,6 +21,7 @@ import cz.pojd.homeautomation.hawa.rooms.factory.DefaultRoomFactory;
 import cz.pojd.homeautomation.hawa.rooms.factory.RoomFactory;
 import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
 import cz.pojd.rpi.spring.RpiConfig;
+import cz.pojd.security.spring.SecurityConfig;
 
 /**
  * Main configuration for spring
@@ -29,7 +30,7 @@ import cz.pojd.rpi.spring.RpiConfig;
  * @since Jul 23, 2014 2:34:22 AM
  */
 @Configuration
-@Import(RpiConfig.class)
+@Import({ RpiConfig.class, SecurityConfig.class })
 @EnableScheduling
 public class HawaConfig {
 
