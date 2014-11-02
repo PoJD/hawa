@@ -11,9 +11,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO;
-import cz.pojd.homeautomation.hawa.outdoor.OutdoorDAOException;
-import cz.pojd.homeautomation.hawa.outdoor.OutdoorDetail;
+import cz.pojd.homeautomation.model.outdoor.OutdoorDAO;
+import cz.pojd.homeautomation.model.outdoor.OutdoorDAOException;
+import cz.pojd.homeautomation.model.outdoor.OutdoorDetail;
 
 /**
  * OutdoorService detects the current weather conditions and allows to control outdoor gadgets

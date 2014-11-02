@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.refresh.Refresher;
+import cz.pojd.homeautomation.model.refresh.Refresher;
 import cz.pojd.rpi.state.OsStateService;
 import cz.pojd.rpi.state.PropertyValue;
 import cz.pojd.rpi.state.SystemState;

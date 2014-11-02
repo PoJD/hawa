@@ -14,9 +14,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.hawa.rooms.RoomDetail;
-import cz.pojd.homeautomation.hawa.rooms.RoomsDAO;
-import cz.pojd.homeautomation.hawa.rooms.RoomsDAOException;
+import cz.pojd.homeautomation.model.rooms.RoomDetail;
+import cz.pojd.homeautomation.model.rooms.RoomsDAO;
+import cz.pojd.homeautomation.model.rooms.RoomsDAOException;
 
 @Path("/rooms")
 public class RoomsService {

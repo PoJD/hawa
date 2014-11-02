@@ -14,13 +14,18 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>cz.pojd.rpi</groupId>
-			<artifactId>rpi</artifactId>
+			<groupId>cz.pojd.homeautomation</groupId>
+			<artifactId>model</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>cz.pojd.security</groupId>
 			<artifactId>security</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>cz.pojd.rpi</groupId>
+			<artifactId>rpi</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
