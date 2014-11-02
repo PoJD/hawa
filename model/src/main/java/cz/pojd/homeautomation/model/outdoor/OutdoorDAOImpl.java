@@ -59,7 +59,12 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     public OutdoorDetail get() {
-	return outdoor.getLastDetail();
+	return getOutdoor().getLastDetail();
+    }
+
+    @Override
+    public Outdoor getOutdoor() {
+	return outdoor;
     }
 
     @Override
@@ -73,7 +78,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     public void save(OutdoorDetail outdoorDetail) {
-	this.outdoor.resetFrom(outdoorDetail);
+	getOutdoor().resetFrom(outdoorDetail);
     }
 
     /*
@@ -83,11 +88,11 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     @Override
     protected void detectState() {
 	List<Reading> readings = new ArrayList<>();
-	for (Sensor sensor : outdoor.getSensors()) {
+	for (Sensor sensor : getOutdoor().getSensors()) {
 	    readings.addAll(sensor.readAll());
 	}
 
-	OutdoorDetail detail = new OutdoorDetail(outdoor);
+	OutdoorDetail detail = new OutdoorDetail(getOutdoor());
 	detail.setSensorReadings(readings);
 	detail.setLastUpdate(getRefresher().getLastUpdate());
 
@@ -115,7 +120,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     }
 
     private void resetState(OutdoorDetail outdoorDetail) {
-	this.outdoor.setLastDetail(outdoorDetail);
+	getOutdoor().setLastDetail(outdoorDetail);
     }
 
     private GraphData getGraphData(String key, Type type) {

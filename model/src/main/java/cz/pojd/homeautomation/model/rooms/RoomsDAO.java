@@ -3,6 +3,7 @@ package cz.pojd.homeautomation.model.rooms;
 import java.util.List;
 
 import cz.pojd.homeautomation.model.refresh.Refreshable;
+import cz.pojd.homeautomation.model.spring.RoomSpecification;
 
 /**
  * DAO for Rooms
@@ -35,4 +36,12 @@ public interface RoomsDAO extends Refreshable {
      * @return
      */
     RoomDetail get(String roomName);
+
+    /**
+     * Get the room by its name
+     * 
+     * @param roomSpecification
+     * @return room
+     */
+    Room getRoom(RoomSpecification roomSpecification);
 }

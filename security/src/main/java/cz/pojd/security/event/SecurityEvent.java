@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 public class SecurityEvent {
     private Type type;
     private String where;
-    private DateTime when = new DateTime();
+    private final DateTime when = new DateTime();
     private Path filePath;
 
     public Type getType() {
@@ -34,10 +34,6 @@ public class SecurityEvent {
 
     public DateTime getWhen() {
 	return when;
-    }
-
-    public void setWhen(DateTime when) {
-	this.when = when;
     }
 
     public Path getFilePath() {

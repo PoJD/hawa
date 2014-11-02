@@ -91,6 +91,11 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
+    public Room getRoom(RoomSpecification roomSpecification) {
+	return rooms.get(roomSpecification.getName());
+    }
+
+    @Override
     public RoomDetail get(String roomName) {
 	Room room = rooms.get(roomName);
 	if (room != null) {
@@ -155,7 +160,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	GraphData result = new GraphData();
 	result.setKey(key);
 	result.setValues(list.toArray(new Object[][] {}));
-	
+
 	return result;
     }
 }
