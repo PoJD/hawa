@@ -18,7 +18,7 @@ import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
 import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
-import cz.pojd.security.motion.MotionSensorTrigger;
+import cz.pojd.security.motion.MotionSensorSecurityTrigger;
 
 /**
  * Main configuration for spring in security project
@@ -55,8 +55,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public MotionSensorTrigger motionSensorTrigger() {
-	return new MotionSensorTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
+    public MotionSensorSecurityTrigger motionSensorTrigger() {
+	return new MotionSensorSecurityTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
     }
 
     @Bean

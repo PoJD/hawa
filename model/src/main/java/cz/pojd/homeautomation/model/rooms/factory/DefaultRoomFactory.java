@@ -8,7 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
 
-import cz.pojd.homeautomation.model.lights.LightCapableFactorySupport;
+import cz.pojd.homeautomation.model.lights.MotionSensorLightDetails;
+import cz.pojd.homeautomation.model.lights.MotionSensorLightTrigger;
 import cz.pojd.homeautomation.model.rooms.Floor;
 import cz.pojd.homeautomation.model.rooms.Room;
 import cz.pojd.homeautomation.model.rooms.RoomDetail;
@@ -17,25 +18,24 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
-public class DefaultRoomFactory extends LightCapableFactorySupport implements RoomFactory {
+public class DefaultRoomFactory implements RoomFactory {
 
     private static final Log LOG = LogFactory.getLog(DefaultRoomFactory.class);
     private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches, firstFloorLightControls;
-    private final boolean newRaspi;
 
     @Inject
     private Gpio gpio;
-
     @Inject
     private RuntimeExecutor runtimeExecutor;
+    @Inject
+    private MotionSensorLightTrigger lightTrigger;
 
     public DefaultRoomFactory(GpioProvider basementFloorLightSwitches, GpioProvider basementFloorLightControls, GpioProvider firstFloorLightSwitches,
-	    GpioProvider firstFloorLightControls, boolean newRaspi) {
+	    GpioProvider firstFloorLightControls) {
 	this.basementFloorLightSwitches = basementFloorLightSwitches;
 	this.basementFloorLightControls = basementFloorLightControls;
 	this.firstFloorLightSwitches = firstFloorLightSwitches;
 	this.firstFloorLightControls = firstFloorLightControls;
-	this.newRaspi = newRaspi;
     }
 
     public Gpio getGpio() {
@@ -52,6 +52,14 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 
     public void setRuntimeExecutor(RuntimeExecutor runtimeExecutor) {
 	this.runtimeExecutor = runtimeExecutor;
+    }
+
+    public MotionSensorLightTrigger getLightTrigger() {
+	return lightTrigger;
+    }
+
+    public void setLightTrigger(MotionSensorLightTrigger lightTrigger) {
+	this.lightTrigger = lightTrigger;
     }
 
     public GpioProvider getBasementFloorLightSwitches() {
@@ -89,13 +97,20 @@ public class DefaultRoomFactory extends LightCapableFactorySupport implements Ro
 	    controlProvider = getFirstFloorLightControls();
 	}
 
-	// TODO temporary until the app is deployed to real house
+	// TODO temporary until the app is deployed to real house, then change below to real switch and control providers found above and use motion
+	// sensor pin and light pins from roomspecifications too
 	if (RoomSpecification.HALL_DOWN.equals(roomSpecification)) {
-	    enrichLight(room, getGpio(), getGpio().getDefaultProvider(), getGpio().getDefaultProvider(), RaspiPin.GPIO_04, RaspiPin.GPIO_05,
-		    RaspiPin.GPIO_06, newRaspi, roomSpecification.getLightLevelSensorAddress(), roomSpecification.getLightLevelTreshold());
+	    lightTrigger.setup(MotionSensorLightDetails.newBuilder()
+		    .lightCapable(room)
+		    .switchProvider(getGpio().getDefaultProvider())
+		    .controlProvider(getGpio().getDefaultProvider())
+		    .motionSensorPin(RaspiPin.GPIO_04)
+		    .lightSwitchPin(RaspiPin.GPIO_05)
+		    .lightControlPin(RaspiPin.GPIO_06)
+		    .lightLevelSensorAddress(roomSpecification.getLightLevelSensorAddress())
+		    .lightLevelTreshold(roomSpecification.getLightLevelTreshold())
+		    .build());
 	}
-	//enrichLight(room, getGpio(), switchProvider, controlProvider, roomSpecification.getMotionSensorPin(), roomSpecification.getLightPin(),
-		//roomSpecification.getLightPin(), newRaspi, roomSpecification.getLightLevelSensorAddress(), roomSpecification.getLightLevelTreshold());
 
 	// #21 avoid reading temperature now on room creation
 	room.setLastDetail(new RoomDetail(room, false));

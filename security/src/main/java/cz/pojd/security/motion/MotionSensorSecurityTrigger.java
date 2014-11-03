@@ -15,10 +15,10 @@ import cz.pojd.security.controller.Controller;
  * @author Lubos Housa
  * @since Nov 3, 2014 12:00:29 AM
  */
-public class MotionSensorTrigger {
-    private static final Log LOG = LogFactory.getLog(MotionSensorTrigger.class);
+public class MotionSensorSecurityTrigger {
+    private static final Log LOG = LogFactory.getLog(MotionSensorSecurityTrigger.class);
 
-    public MotionSensorTrigger(RoomsDAO roomsDAO, OutdoorDAO outdoorDAO, Controller controller) {
+    public MotionSensorSecurityTrigger(RoomsDAO roomsDAO, OutdoorDAO outdoorDAO, Controller controller) {
 	LOG.info("Hooking up motion sensors to the security system...");
 
 	setupMotionSensor(roomsDAO.getRoom(RoomSpecification.HALL_DOWN), RoomSpecification.HALL_DOWN.getName(), controller);

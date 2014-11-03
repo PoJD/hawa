@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.pi4j.io.gpio.RaspiPin;
 
+import cz.pojd.homeautomation.model.lights.DefaultMotionSensorLightTrigger;
 import cz.pojd.homeautomation.model.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.model.outdoor.OutdoorDAOImpl;
 import cz.pojd.homeautomation.model.outdoor.factory.DefaultOutdoorFactory;
@@ -42,8 +43,13 @@ public class ModelConfig {
     @Bean
     public RoomFactory roomFactory() {
 	// each floor lights input, then output
-	return new DefaultRoomFactory(rpiConfig.getMCP23017Provider(0x20), rpiConfig.getMCP23017Provider(0x21), rpiConfig.getMCP23017Provider(0x22),
-		rpiConfig.getMCP23017Provider(0x23), rpiConfig.newRasPI());
+	return new DefaultRoomFactory(rpiConfig.gpio().getDefaultProvider(), rpiConfig.gpio().getDefaultProvider(), rpiConfig.gpio()
+		.getDefaultProvider(), rpiConfig.gpio().getDefaultProvider());
+
+	// TODO uncomment below once deployed to real house
+	// return new DefaultRoomFactory(rpiConfig.getMCP23017Provider(0x20), rpiConfig.getMCP23017Provider(0x21),
+	// rpiConfig.getMCP23017Provider(0x22),
+	// rpiConfig.getMCP23017Provider(0x23));
     }
 
     @Bean
@@ -74,6 +80,11 @@ public class ModelConfig {
 	result.setLightLevelSensorAddress(TSL2561LightSensor.TSL2561_ADDRESS_FLOAT);
 	result.setLightLevelTreshold(500); // TODO should be higher once outside?
 	return result;
+    }
+
+    @Bean
+    public DefaultMotionSensorLightTrigger motionSensorLightTrigger() {
+	return new DefaultMotionSensorLightTrigger(rpiConfig.gpio(), rpiConfig.newRasPI());
     }
 
     @Bean

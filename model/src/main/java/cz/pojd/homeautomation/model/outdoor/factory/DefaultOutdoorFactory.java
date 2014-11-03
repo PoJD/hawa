@@ -8,7 +8,8 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.model.lights.LightCapableFactorySupport;
+import cz.pojd.homeautomation.model.lights.MotionSensorLightDetails;
+import cz.pojd.homeautomation.model.lights.MotionSensorLightTrigger;
 import cz.pojd.homeautomation.model.outdoor.Outdoor;
 import cz.pojd.homeautomation.model.outdoor.OutdoorDetail;
 import cz.pojd.homeautomation.model.spring.OutdoorSpecification;
@@ -17,12 +18,14 @@ import cz.pojd.rpi.sensors.gpio.Dht22Am2302TemperatureAndHumiditySensor;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.i2c.Bmp180BarometricSensor;
 
-public class DefaultOutdoorFactory extends LightCapableFactorySupport implements OutdoorFactory {
+public class DefaultOutdoorFactory implements OutdoorFactory {
 
     private static final Log LOG = LogFactory.getLog(DefaultOutdoorFactory.class);
 
     @Inject
     private Gpio gpio;
+    @Inject
+    private MotionSensorLightTrigger lightTrigger;
 
     public Gpio getGpio() {
 	return gpio;
@@ -30,6 +33,14 @@ public class DefaultOutdoorFactory extends LightCapableFactorySupport implements
 
     public void setGpio(Gpio gpio) {
 	this.gpio = gpio;
+    }
+
+    public MotionSensorLightTrigger getLightTrigger() {
+	return lightTrigger;
+    }
+
+    public void setLightTrigger(MotionSensorLightTrigger lightTrigger) {
+	this.lightTrigger = lightTrigger;
     }
 
     @Override
@@ -42,9 +53,16 @@ public class DefaultOutdoorFactory extends LightCapableFactorySupport implements
 	sensors.add(new Dht22Am2302TemperatureAndHumiditySensor(outdoorSpecification.getDhtSensorSysClassPin()));
 	outdoor.setSensors(sensors);
 
-	enrichLight(outdoor, getGpio(), outdoorSpecification.getGpioProvider(), outdoorSpecification.getGpioProvider(),
-		outdoorSpecification.getMotionSensorPin(), outdoorSpecification.getLightSwitchPin(), outdoorSpecification.getLightControlPin(),
-		outdoorSpecification.isNewRaspi(), outdoorSpecification.getLightLevelSensorAddress(), outdoorSpecification.getLightLevelTreshold());
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder()
+		.lightCapable(outdoor)
+		.switchProvider(outdoorSpecification.getGpioProvider())
+		.controlProvider(outdoorSpecification.getGpioProvider())
+		.motionSensorPin(outdoorSpecification.getMotionSensorPin())
+		.lightSwitchPin(outdoorSpecification.getLightSwitchPin())
+		.lightControlPin(outdoorSpecification.getLightControlPin())
+		.lightLevelSensorAddress(outdoorSpecification.getLightLevelSensorAddress())
+		.lightLevelTreshold(outdoorSpecification.getLightLevelTreshold())
+		.build());
 
 	outdoor.setLastDetail(new OutdoorDetail(outdoor));
 

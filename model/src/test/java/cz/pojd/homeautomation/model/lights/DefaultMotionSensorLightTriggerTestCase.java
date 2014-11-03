@@ -14,18 +14,15 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
-import cz.pojd.homeautomation.model.lights.LightCapable;
-import cz.pojd.homeautomation.model.lights.LightCapableDetail;
-import cz.pojd.homeautomation.model.lights.LightCapableFactorySupport;
 import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
-public class LightCapableFactorySupportTestCase {
+public class DefaultMotionSensorLightTriggerTestCase {
 
-    private LightCapableFactorySupport support;
+    private DefaultMotionSensorLightTrigger lightTrigger;
 
     @Mocked
     private LightCapable lightCapable;
@@ -43,18 +40,17 @@ public class LightCapableFactorySupportTestCase {
     private ObservableSensor mockSensor;
     @Mocked
     private Control mockControl;
-    
+
     @Mocked
     private I2CFactory i2cFactory;
     @Mocked
     private I2CBus i2cBus;
     @Mocked
     private I2CDevice device;
-    
+
     @Before
     public void setup() throws IOException {
-	support = new LightCapableFactorySupport() {
-	};
+	lightTrigger = new DefaultMotionSensorLightTrigger(gpio, true);
 	new NonStrictExpectations() {
 	    {
 		I2CFactory.getInstance(withEqual(I2CBus.BUS_1));
@@ -84,7 +80,8 @@ public class LightCapableFactorySupportTestCase {
 	    }
 	};
 
-	support.enrichLight(lightCapable, gpio, provider, provider, null, pin, pin, true, 0, 0);
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).build());
     }
 
     @Test
@@ -108,7 +105,8 @@ public class LightCapableFactorySupportTestCase {
 	    }
 	};
 
-	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin, true, 0, 0);
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).build());
     }
 
     @Test
@@ -133,8 +131,9 @@ public class LightCapableFactorySupportTestCase {
 		times = 1;
 	    }
 	};
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).build());
 
-	support.enrichLight(lightCapable, gpio, provider, provider, null, pin, pin, true, 0, 0);
 	lightSwitchsensor.notifyObservers(true);
     }
 
@@ -170,7 +169,8 @@ public class LightCapableFactorySupportTestCase {
 	    }
 	};
 
-	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin, true, 0, 60);
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60).build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -206,7 +206,8 @@ public class LightCapableFactorySupportTestCase {
 	    }
 	};
 
-	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin, true, 0, 60);
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60).build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -242,7 +243,8 @@ public class LightCapableFactorySupportTestCase {
 	    }
 	};
 
-	support.enrichLight(lightCapable, gpio, provider, provider, pin, pin, pin, true, 0, 0);
+	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).build());
 	motionSensor.notifyObservers(false);
     }
 }
