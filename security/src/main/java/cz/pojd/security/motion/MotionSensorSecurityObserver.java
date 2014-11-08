@@ -4,6 +4,7 @@ import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.SecurityEvent;
+import cz.pojd.security.event.Source;
 import cz.pojd.security.event.Type;
 
 /**
@@ -14,20 +15,20 @@ import cz.pojd.security.event.Type;
  */
 public class MotionSensorSecurityObserver implements Observer {
 
-    private final String where;
+    private final Source source;
     private final Controller securityController;
 
-    public MotionSensorSecurityObserver(String where, Controller securityController) {
-	this.where = where;
+    public MotionSensorSecurityObserver(Source source, Controller securityController) {
+	this.source = source;
 	this.securityController = securityController;
     }
 
     @Override
-    public void switched(ObservableSensor source, boolean switchedOn) {
+    public void switched(ObservableSensor obserableSensorSource, boolean switchedOn) {
 	if (switchedOn) {
 	    SecurityEvent event = new SecurityEvent();
 	    event.setType(Type.sensorMotionDetected);
-	    event.setWhere(where);
+	    event.setSource(source);
 
 	    securityController.handle(event);
 	}

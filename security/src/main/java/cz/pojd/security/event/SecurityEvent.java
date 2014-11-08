@@ -2,6 +2,8 @@ package cz.pojd.security.event;
 
 import java.nio.file.Path;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
 /**
@@ -11,8 +13,10 @@ import org.joda.time.DateTime;
  * @since Nov 2, 2014 7:47:45 PM
  */
 public class SecurityEvent {
+    private static final Log LOG = LogFactory.getLog(SecurityEvent.class);
+
     private Type type;
-    private String where;
+    private Source source;
     private final DateTime when = new DateTime();
     private Path filePath;
 
@@ -24,12 +28,12 @@ public class SecurityEvent {
 	this.type = type;
     }
 
-    public String getWhere() {
-	return where;
+    public Source getSource() {
+	return source;
     }
 
-    public void setWhere(String where) {
-	this.where = where;
+    public void setSource(Source source) {
+	this.source = source;
     }
 
     public DateTime getWhen() {
@@ -44,8 +48,22 @@ public class SecurityEvent {
 	this.filePath = filePath;
     }
 
+    /**
+     * Dispose this security event and any resources it may have allocated
+     */
+    public void dispose() {
+	// only attempt deleting the file if exists..
+	if (filePath != null) {
+	    try {
+		filePath.toFile().delete();
+	    } catch (Exception e) {
+		LOG.error("Unable to delete the file at path: " + filePath, e);
+	    }
+	}
+    }
+
     @Override
     public String toString() {
-	return "SecurityEvent [type=" + type + ", where=" + where + ", when=" + when + ", filePath=" + filePath + "]";
+	return "SecurityEvent [type=" + type + ", source=" + source + ", when=" + when + ", filePath=" + filePath + "]";
     }
 }

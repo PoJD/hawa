@@ -1,6 +1,9 @@
 package cz.pojd.security.controller;
 
+import java.util.Set;
+
 import cz.pojd.security.event.SecurityEvent;
+import cz.pojd.security.rules.Rule;
 
 /**
  * Core of the security module. Provides API for various sources to fire security events and manages processing of such security events.
@@ -17,4 +20,27 @@ public interface Controller {
      *            event to handle
      */
     void handle(SecurityEvent securityEvent);
+
+    /**
+     * Change the current security mode
+     * 
+     * @param newMode
+     *            new mode to set the controller to
+     */
+    void switchMode(SecurityMode newMode);
+
+    /**
+     * Register new security rule
+     * 
+     * @param rule
+     *            new rule to register
+     */
+    void registerRule(Rule rule);
+
+    /**
+     * Get all registered rules
+     * 
+     * @return set of all registered rules
+     */
+    Set<Rule> getRegisteredRules();
 }

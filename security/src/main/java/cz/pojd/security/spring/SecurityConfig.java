@@ -18,7 +18,9 @@ import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
 import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
+import cz.pojd.security.handler.EmailSender;
 import cz.pojd.security.motion.MotionSensorSecurityTrigger;
+import cz.pojd.security.rules.halls.MotionInHallsFiresAlarm;
 
 /**
  * Main configuration for spring in security project
@@ -61,6 +63,8 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	return new DefaultSecurityController();
+	Controller controller = new DefaultSecurityController(new EmailSender());
+	controller.registerRule(new MotionInHallsFiresAlarm());
+	return controller;
     }
 }
