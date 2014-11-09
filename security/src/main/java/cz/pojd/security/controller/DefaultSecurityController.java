@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
@@ -23,10 +24,12 @@ public class DefaultSecurityController implements Controller {
     private final List<SecurityHandler> securityHandlers;
 
     private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
+    private RoomsDAO roomsDAO;
 
     @Inject
-    public DefaultSecurityController(RulesDAO rulesDao, SecurityHandler... securityHandlers) {
+    public DefaultSecurityController(RoomsDAO roomsDAO, RulesDAO rulesDao, SecurityHandler... securityHandlers) {
 	LOG.info("Initating DefaultSecurityController...");
+	this.roomsDAO = roomsDAO;
 	for (Rule rule : rulesDao.queryAllRules()) {
 	    registerRule(rule);
 	}
@@ -87,6 +90,11 @@ public class DefaultSecurityController implements Controller {
     public void switchMode(SecurityMode newMode) {
 	LOG.info("Switching the securityMode to " + newMode);
 	this.securityMode = newMode;
+	
+	// TODO does this belong here?
+	if (SecurityMode.EMPTY_HOUSE == securityMode) {
+	    roomsDAO.switchOffAllLights();
+	}
     }
 
     @Override

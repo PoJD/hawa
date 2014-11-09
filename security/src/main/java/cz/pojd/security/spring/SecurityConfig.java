@@ -69,7 +69,7 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	return new DefaultSecurityController(rulesDAO(), new EmailSender());
+	return new DefaultSecurityController(modelConfig.roomsDAO(), rulesDAO(), new EmailSender());
     }
 
     @Bean

@@ -8,6 +8,7 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
+import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
@@ -17,7 +18,9 @@ public class DefaultSecurityControllerTestCase {
 
     private DefaultSecurityController controller;
     @Mocked
-    private RulesDAO rulesDao;
+    private RulesDAO rulesDAO;
+    @Mocked
+    private RoomsDAO roomsDAO;
     @Mocked
     private Rule rule, rule2, rule3;
     @Mocked
@@ -50,12 +53,12 @@ public class DefaultSecurityControllerTestCase {
 		rule3.isEnabled();
 		result = false;
 
-		rulesDao.queryAllRules();
+		rulesDAO.queryAllRules();
 		result = Arrays.asList(rule, rule2, rule3);
 	    }
 	};
 
-	controller = new DefaultSecurityController(rulesDao, securityHandler);
+	controller = new DefaultSecurityController(roomsDAO, rulesDAO, securityHandler);
     }
 
     @Test
