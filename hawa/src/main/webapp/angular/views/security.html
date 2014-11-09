@@ -2,23 +2,31 @@
 	<div class="col-md-8">AGENDA with all events</div>
 	<div class="col-md-4">
 		<div class="panel panel-info">
-			<div class="panel-heading">Security Setup</div>
+			<div class="panel-heading">Security Mode</div>
+			<div class="panel-body">
+				<div class="radio center">
+					<label> <input type="radio"
+						ng-model="securityStatus.securityMode" ng-click="changed=true"
+						value="FULL_HOUSE">Full House </input>
+					</label> <label> <input type="radio"
+						ng-model="securityStatus.securityMode" ng-click="changed=true"
+						value="EMPTY_HOUSE">Empty House</input>
+					</label> <label> <input type="radio"
+						ng-model="securityStatus.securityMode" ng-click="changed=true"
+						value="OFF">Off</input>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">Security Rules</div>
 			<table class="table">
 				<tbody>
-					<tr>
-						<td colspan="2" align="center"><input type="radio"
-							ng-model="securityStatus.securityMode" ng-click="changed=true"
-							value="FULL_HOUSE">Full House </input> <input type="radio"
-							ng-model="securityStatus.securityMode" ng-click="changed=true"
-							value="EMPTY_HOUSE">Empty House </input> <input type="radio"
-							ng-model="securityStatus.securityMode" ng-click="changed=true"
-							value="OFF">Security Off </input></td>
-					</tr>
 					<tr ng-repeat="rule in securityStatus.rules">
 						<th>{{rule.description}}</th>
 						<td><toggle-switch class="switch-state" model="rule.enabled"
-								on-label="Enabled" off-label="Disabled" ng-click="$parent.changed=true">
-							</toggle-switch></td>
+								on-label="Enabled" off-label="Disabled"
+								ng-click="$parent.changed=true"> </toggle-switch></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center">

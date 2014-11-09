@@ -26,6 +26,15 @@ html, body {
 	float: right;
 }
 
+.table tr td.middle,
+.table tr th.middle {
+	vertical-align: middle;
+}
+
+.center {
+	text-align: center;
+}
+
 .label-state {
 	margin-top: 3px;
 	display: block;
