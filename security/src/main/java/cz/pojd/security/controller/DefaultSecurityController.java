@@ -19,6 +19,7 @@ public class DefaultSecurityController implements Controller {
 
     private final List<Rule> fullHouseRules = new ArrayList<>();
     private final List<Rule> emptyHouseRules = new ArrayList<>();
+    private final List<Rule> offRules = new ArrayList<>();
     private final List<SecurityHandler> securityHandlers;
 
     private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
@@ -41,6 +42,9 @@ public class DefaultSecurityController implements Controller {
 	if (rule.isApplicable(SecurityMode.EMPTY_HOUSE)) {
 	    emptyHouseRules.add(rule);
 	}
+	if (rule.isApplicable(SecurityMode.OFF)) { // something is working all the time (e.g. temperature)
+	    offRules.add(rule);
+	}
     }
 
     @Override
@@ -58,7 +62,7 @@ public class DefaultSecurityController implements Controller {
 		fireRules(emptyHouseRules, securityEvent);
 		break;
 	    case OFF:
-		LOG.debug("Ignoring security event since the security mode is off");
+		fireRules(offRules, securityEvent);
 	    }
 	} finally {
 	    if (LOG.isDebugEnabled()) {

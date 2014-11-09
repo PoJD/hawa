@@ -1,0 +1,23 @@
+package cz.pojd.security.rules.impl;
+
+import cz.pojd.security.controller.SecurityMode;
+import cz.pojd.security.event.SecurityEvent;
+import cz.pojd.security.event.Type;
+
+public class HighTemperature extends AbstractRule {
+
+    @Override
+    public boolean isSecurityBreach(SecurityEvent event) {
+	return Type.highTemperature == event.getType();
+    }
+
+    @Override
+    public boolean isApplicable(SecurityMode securityMode) {
+	return true;
+    }
+
+    @Override
+    public String getDescription() {
+	return "Temperature is too high";
+    }
+}

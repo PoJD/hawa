@@ -7,5 +7,5 @@ package cz.pojd.security.event;
  * @since Nov 2, 2014 7:52:25 PM
  */
 public enum Type {
-    sensorMotionDetected, cameraMotionDetected, doorOpened, windowOpened
+    sensorMotionDetected, cameraMotionDetected, doorOpened, garageOpened, windowOpened, highTemperature
 }

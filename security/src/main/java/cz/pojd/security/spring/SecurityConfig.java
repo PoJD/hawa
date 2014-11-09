@@ -22,7 +22,11 @@ import cz.pojd.security.handler.EmailSender;
 import cz.pojd.security.motion.MotionSensorSecurityTrigger;
 import cz.pojd.security.rules.RulesDAO;
 import cz.pojd.security.rules.RulesDAOImpl;
-import cz.pojd.security.rules.impl.MotionInHallsFiresAlarm;
+import cz.pojd.security.rules.impl.BasementWindowOpenedWhenHouseIsFull;
+import cz.pojd.security.rules.impl.DoorOrGarageOpened;
+import cz.pojd.security.rules.impl.HighTemperature;
+import cz.pojd.security.rules.impl.MotionInHallsWhenHouseIsEmpty;
+import cz.pojd.security.rules.impl.WindowOpened;
 
 /**
  * Main configuration for spring in security project
@@ -70,6 +74,7 @@ public class SecurityConfig {
 
     @Bean
     public RulesDAO rulesDAO() {
-	return new RulesDAOImpl(new MotionInHallsFiresAlarm());
+	return new RulesDAOImpl(new HighTemperature(), new MotionInHallsWhenHouseIsEmpty(), new WindowOpened(), new DoorOrGarageOpened(),
+		new BasementWindowOpenedWhenHouseIsFull());
     }
 }
