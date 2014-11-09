@@ -123,4 +123,23 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
+} ])
+
+.controller('SecurityController', 
+		[ '$scope', '$controller', 'security', function($scope, $controller, security) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				
+				$scope.update = function() {
+				    $scope.securityStatus = security.get();
+					$scope.changed = false;
+				};
+
+				$scope.apply = function() {
+					$scope.securityStatus.$save();
+					$scope.changed = false;
+				};
+
+				$scope.changed = false;
+				$scope.update();
 } ]);
+

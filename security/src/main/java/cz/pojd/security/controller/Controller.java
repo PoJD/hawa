@@ -25,4 +25,11 @@ public interface Controller {
      *            new mode to set the controller to
      */
     void switchMode(SecurityMode newMode);
+
+    /**
+     * Detects current security mode of thie controller
+     * 
+     * @return current security mode
+     */
+    SecurityMode getMode();
 }

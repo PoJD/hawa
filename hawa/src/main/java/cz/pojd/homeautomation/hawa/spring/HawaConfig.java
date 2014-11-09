@@ -2,7 +2,6 @@ package cz.pojd.homeautomation.hawa.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import cz.pojd.homeautomation.model.spring.ModelConfig;
 import cz.pojd.rpi.spring.RpiConfig;
@@ -16,6 +15,5 @@ import cz.pojd.security.spring.SecurityConfig;
  */
 @Configuration
 @Import({ ModelConfig.class, RpiConfig.class, SecurityConfig.class })
-@EnableScheduling
 public class HawaConfig {
 }

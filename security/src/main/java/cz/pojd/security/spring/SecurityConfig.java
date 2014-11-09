@@ -20,8 +20,8 @@ import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
 import cz.pojd.security.handler.EmailSender;
 import cz.pojd.security.motion.MotionSensorSecurityTrigger;
-import cz.pojd.security.rules.RulesDao;
-import cz.pojd.security.rules.RulesDaoImpl;
+import cz.pojd.security.rules.RulesDAO;
+import cz.pojd.security.rules.RulesDAOImpl;
 import cz.pojd.security.rules.impl.MotionInHallsFiresAlarm;
 
 /**
@@ -65,11 +65,11 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	return new DefaultSecurityController(rulesDao(), new EmailSender());
+	return new DefaultSecurityController(rulesDAO(), new EmailSender());
     }
 
     @Bean
-    public RulesDao rulesDao() {
-	return new RulesDaoImpl(new MotionInHallsFiresAlarm());
+    public RulesDAO rulesDAO() {
+	return new RulesDAOImpl(new MotionInHallsFiresAlarm());
     }
 }

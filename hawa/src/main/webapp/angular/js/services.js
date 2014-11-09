@@ -22,4 +22,8 @@ var services = angular.module('homeAutomation.services', [ 'ngResource' ])
 
 .factory('liveview', [ '$resource', function($resource) {
 	return $resource('rest/liveview');
+} ])
+
+.factory('security', [ '$resource', function($resource) {
+	return $resource('rest/security');
 } ]);

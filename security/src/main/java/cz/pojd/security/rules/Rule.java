@@ -32,16 +32,31 @@ public interface Rule {
     boolean isApplicable(SecurityMode securityMode);
 
     /**
-     * Get human readable description of this rule
+     * Detects whether this rule is enabled or not
      * 
-     * @return description of this rule
+     * @return true if so, false otherwise
+     */
+    boolean isEnabled();
+
+    /**
+     * Get human readable description of this rule. It should be a unique string compared to all other rules
+     * 
+     * @return unique description of this rule
      */
     String getDescription();
 
     /**
-     * Gets ID of this Rule
+     * Gets Unique ID of this Rule
      * 
      * @return integer identification of this rule
      */
-    int getID();
+    int getId();
+
+    /**
+     * Update this rule based on the in-passed rule detail (e.g. whether it is enabled, etc)
+     * 
+     * @param ruleDetail
+     *            rule detail to use to update this rule
+     */
+    void updateFrom(RuleDetail ruleDetail);
 }

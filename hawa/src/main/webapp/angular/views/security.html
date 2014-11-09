@@ -1,0 +1,33 @@
+<div class="row full">
+	<div class="col-md-8">AGENDA with all events</div>
+	<div class="col-md-4">
+		<div class="panel panel-info">
+			<div class="panel-heading">Security Setup</div>
+			<table class="table">
+				<tbody>
+					<tr>
+						<td colspan="2" align="center"><input type="radio"
+							ng-model="securityStatus.securityMode" ng-click="changed=true"
+							value="FULL_HOUSE">Full House </input> <input type="radio"
+							ng-model="securityStatus.securityMode" ng-click="changed=true"
+							value="EMPTY_HOUSE">Empty House </input> <input type="radio"
+							ng-model="securityStatus.securityMode" ng-click="changed=true"
+							value="OFF">Security Off </input></td>
+					</tr>
+					<tr ng-repeat="rule in securityStatus.rules">
+						<th>{{rule.description}}</th>
+						<td><toggle-switch class="switch-state" model="rule.enabled"
+								on-label="Enabled" off-label="Disabled" ng-click="$parent.changed=true">
+							</toggle-switch></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<button type="button" class="btn btn-default"
+								ng-disabled="!changed" ng-click="apply()">Apply changes</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

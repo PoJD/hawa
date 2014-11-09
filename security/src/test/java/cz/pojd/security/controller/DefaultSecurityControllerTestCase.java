@@ -11,15 +11,15 @@ import org.junit.Test;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
-import cz.pojd.security.rules.RulesDao;
+import cz.pojd.security.rules.RulesDAO;
 
 public class DefaultSecurityControllerTestCase {
 
     private DefaultSecurityController controller;
     @Mocked
-    private RulesDao rulesDao;
+    private RulesDAO rulesDao;
     @Mocked
-    private Rule rule, rule2;
+    private Rule rule, rule2, rule3;
     @Mocked
     private SecurityHandler securityHandler;
     @Mocked
@@ -33,14 +33,25 @@ public class DefaultSecurityControllerTestCase {
 		result = true;
 		rule.isApplicable(SecurityMode.EMPTY_HOUSE);
 		result = true;
+		rule.isEnabled();
+		result = true;
 
 		rule2.isApplicable(SecurityMode.FULL_HOUSE);
 		result = true;
 		rule2.isApplicable(SecurityMode.EMPTY_HOUSE);
 		result = false;
+		rule2.isEnabled();
+		result = true;
 
-		rulesDao.getAll();
-		result = Arrays.asList(rule, rule2);
+		rule3.isApplicable(SecurityMode.FULL_HOUSE);
+		result = true;
+		rule3.isApplicable(SecurityMode.EMPTY_HOUSE);
+		result = true;
+		rule3.isEnabled();
+		result = false;
+
+		rulesDao.queryAllRules();
+		result = Arrays.asList(rule, rule2, rule3);
 	    }
 	};
 
@@ -80,6 +91,18 @@ public class DefaultSecurityControllerTestCase {
 	controller.handle(securityEvent);
     }
 
+    @Test
+    public void testHandleDoesNotFireDisabledRule() {
+	new NonStrictExpectations() {
+	    {
+		rule3.isSecurityBreach(securityEvent);
+		maxTimes = 0;
+	    }
+	};
+	controller.switchMode(SecurityMode.EMPTY_HOUSE);
+	controller.handle(securityEvent);
+    }
+    
     @Test
     public void testHandleRuleFiresBreachTriggersHandler() {
 	new NonStrictExpectations() {

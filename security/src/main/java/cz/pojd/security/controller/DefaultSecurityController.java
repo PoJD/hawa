@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
-import cz.pojd.security.rules.RulesDao;
+import cz.pojd.security.rules.RulesDAO;
 
 public class DefaultSecurityController implements Controller {
     private static final Log LOG = LogFactory.getLog(DefaultSecurityController.class);
@@ -24,9 +24,9 @@ public class DefaultSecurityController implements Controller {
     private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
 
     @Inject
-    public DefaultSecurityController(RulesDao rulesDao, SecurityHandler... securityHandlers) {
+    public DefaultSecurityController(RulesDAO rulesDao, SecurityHandler... securityHandlers) {
 	LOG.info("Initating DefaultSecurityController...");
-	for (Rule rule : rulesDao.getAll()) {
+	for (Rule rule : rulesDao.queryAllRules()) {
 	    registerRule(rule);
 	}
 	this.securityHandlers = Arrays.asList(securityHandlers);
@@ -74,7 +74,7 @@ public class DefaultSecurityController implements Controller {
 		LOG.debug("Processing " + securityEvent + " by rule " + rule);
 	    }
 
-	    if (rule.isSecurityBreach(securityEvent)) {
+	    if (rule.isEnabled() && rule.isSecurityBreach(securityEvent)) {
 		if (LOG.isInfoEnabled()) {
 		    LOG.info("Security breach detected: " + securityEvent + ". Rule firing this breach: " + rule + ". Security mode: " + securityMode);
 		    LOG.info("Firing security breach handlers and skipping next rules...");
@@ -89,6 +89,12 @@ public class DefaultSecurityController implements Controller {
 
     @Override
     public void switchMode(SecurityMode newMode) {
+	LOG.info("Switching the securityMode to " + newMode);
 	this.securityMode = newMode;
+    }
+
+    @Override
+    public SecurityMode getMode() {
+	return securityMode;
     }
 }
