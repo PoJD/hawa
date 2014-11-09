@@ -2,7 +2,9 @@ package cz.pojd.security.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -17,9 +19,7 @@ import cz.pojd.security.rules.RulesDAO;
 public class DefaultSecurityController implements Controller {
     private static final Log LOG = LogFactory.getLog(DefaultSecurityController.class);
 
-    private final List<Rule> fullHouseRules = new ArrayList<>();
-    private final List<Rule> emptyHouseRules = new ArrayList<>();
-    private final List<Rule> offRules = new ArrayList<>();
+    private final Map<SecurityMode, List<Rule>> rulesByMode = new HashMap<SecurityMode, List<Rule>>();
     private final List<SecurityHandler> securityHandlers;
 
     private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
@@ -36,14 +36,15 @@ public class DefaultSecurityController implements Controller {
 
     private void registerRule(Rule rule) {
 	LOG.info("Registering rule: " + rule);
-	if (rule.isApplicable(SecurityMode.FULL_HOUSE)) {
-	    fullHouseRules.add(rule);
-	}
-	if (rule.isApplicable(SecurityMode.EMPTY_HOUSE)) {
-	    emptyHouseRules.add(rule);
-	}
-	if (rule.isApplicable(SecurityMode.OFF)) { // something is working all the time (e.g. temperature)
-	    offRules.add(rule);
+	for (SecurityMode securityMode : SecurityMode.values()) {
+	    List<Rule> rules = rulesByMode.get(securityMode);
+	    if (rules == null) {
+		rules = new ArrayList<>();
+		rulesByMode.put(securityMode, rules);
+	    }
+	    if (rule.isApplicable(securityMode)) {
+		rules.add(rule);
+	    }
 	}
     }
 
@@ -54,16 +55,7 @@ public class DefaultSecurityController implements Controller {
 	}
 
 	try {
-	    switch (securityMode) {
-	    case FULL_HOUSE:
-		fireRules(fullHouseRules, securityEvent);
-		break;
-	    case EMPTY_HOUSE:
-		fireRules(emptyHouseRules, securityEvent);
-		break;
-	    case OFF:
-		fireRules(offRules, securityEvent);
-	    }
+	    fireRules(securityEvent);
 	} finally {
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Disposing security event: " + securityEvent);
@@ -72,8 +64,8 @@ public class DefaultSecurityController implements Controller {
 	}
     }
 
-    private void fireRules(List<Rule> rules, SecurityEvent securityEvent) {
-	for (Rule rule : rules) {
+    private void fireRules(SecurityEvent securityEvent) {
+	for (Rule rule : rulesByMode.get(securityMode)) {
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Processing " + securityEvent + " by rule " + rule);
 	    }
