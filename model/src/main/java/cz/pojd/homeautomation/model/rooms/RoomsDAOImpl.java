@@ -109,6 +109,13 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	return null;
     }
 
+    @Override
+    public void switchOffAllLights() {
+	for (Room room : rooms.values()) {
+	    room.switchOffLight();
+	}
+    }
+
     /*
      * Scheduler logic
      */

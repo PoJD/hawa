@@ -13,7 +13,9 @@ var services = angular.module('homeAutomation.services', [ 'ngResource' ])
 } ])
 
 .factory('rooms', [ '$resource', function($resource) {
-	return $resource('rest/rooms/:roomName');
+	return $resource('rest/rooms/:detail', null, {
+        'switchOffLights': { method:'POST', url: 'rest/rooms/control/switchOffLights' }
+    });
 } ])
 
 .factory('outdoor', [ '$resource', function($resource) {

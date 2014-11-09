@@ -1,6 +1,7 @@
 package cz.pojd.homeautomation.model.rooms;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,11 +25,6 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cz.pojd.homeautomation.model.refresh.Refresher;
-import cz.pojd.homeautomation.model.rooms.Floor;
-import cz.pojd.homeautomation.model.rooms.Room;
-import cz.pojd.homeautomation.model.rooms.RoomDetail;
-import cz.pojd.homeautomation.model.rooms.RoomsDAOException;
-import cz.pojd.homeautomation.model.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.rpi.MockControl;
@@ -377,6 +373,16 @@ public class RoomsDAOImplTestCase {
 	assertNotNull(roomDetail.getMotionSensor());
 	assertNotNull(roomDetail.getLightControl());
 	assertNotNull(roomDetail.getLightSwitch());
+    }
+
+    @Test
+    public void testSwitchOfAllLightsSwitchesOffAllLights() {
+	mockControl.switchOn();
+	detail.getLightControl().setSwitchedOn(true);
+
+	dao.switchOffAllLights();
+	assertFalse(mockControl.isSwitchedOn());
+	assertFalse(detail.getLightControl().isSwitchedOn());
     }
 
     private void detectState() {

@@ -59,4 +59,11 @@ public class RoomsService {
 	    throw e;
 	}
     }
+
+    @POST
+    @Path("/control/switchOffLights")
+    public void switchOffAllLights() {
+	LOG.info("About to switch of all lights.");
+	roomsDAO.switchOffAllLights();
+    }
 }

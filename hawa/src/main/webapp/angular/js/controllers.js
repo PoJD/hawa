@@ -49,6 +49,16 @@ angular.module('homeAutomation.controllers', [])
 					$scope.rooms = rooms.query();
 					$scope.outdoor = outdoor.get();
 				};
+				
+				$scope.switchOffLights = function() {
+					rooms.switchOffLights();
+		        	for (var i = 0; i < $scope.rooms.length; i++) {
+		        		var room = $scope.rooms[i];
+		        		if (room.lightControl) {
+		        			room.lightControl.switchedOn = false;
+		        		}
+		        	}
+				};
 
 				$scope.update();
 			} ])
@@ -114,7 +124,7 @@ angular.module('homeAutomation.controllers', [])
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 				
 				$scope.update = function() {
-				    $scope.roomDetail = rooms.get({ roomName: $routeParams.roomName }, function(roomDetail) {
+				    $scope.roomDetail = rooms.get({ detail: $routeParams.roomName }, function(roomDetail) {
 				    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
 				        $scope.temperatureHistory = roomDetail.temperatureHistory;
 				        $scope.temperatureHistory[0].color = '#E64B53';

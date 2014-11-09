@@ -30,6 +30,11 @@ public interface RoomsDAO extends Refreshable {
     void save(RoomDetail roomDetail);
 
     /**
+     * Switches of all lights of all rooms
+     */
+    void switchOffAllLights();
+
+    /**
      * Get the detail of the in passed room
      * 
      * @param roomName

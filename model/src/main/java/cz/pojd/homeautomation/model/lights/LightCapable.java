@@ -60,6 +60,15 @@ public abstract class LightCapable {
 	this.lastDetail = lastDetail;
     }
 
+    public void switchOffLight() {
+	if (getLightControl() != null) {
+	    getLightControl().switchOff();
+	    if (getLastDetail() != null) {
+		getLastDetail().resetFrom(this);
+	    }
+	}
+    }
+
     public void resetFrom(LightCapableDetail detail) {
 	if (getMotionSensor() != null) {
 	    getMotionSensor().resetFrom(detail.getMotionSensor());
