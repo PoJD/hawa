@@ -37,4 +37,11 @@ public interface Rule {
      * @return description of this rule
      */
     String getDescription();
+
+    /**
+     * Gets ID of this Rule
+     * 
+     * @return integer identification of this rule
+     */
+    int getID();
 }

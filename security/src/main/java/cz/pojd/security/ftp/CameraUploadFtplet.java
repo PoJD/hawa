@@ -56,16 +56,18 @@ public class CameraUploadFtplet extends DefaultFtplet {
 	    Path path = Paths.get(rootPath, request.getArgument()).toAbsolutePath();
 	    // top directory is "camera" directory inside is the camera name
 	    if (path.getNameCount() > 1) {
-		LOG.debug("Request matches watched path, firing security event...");
 		Path cameraDirectory = path.getParent();
-		String filename = path.getFileName().toString();
-		if (filename.endsWith(".part")) { // workaround the fact we have only part file at this very moment
-		    Path fullPath = cameraDirectory.resolve(filename.substring(0, filename.length() - 5));
+		String fileName = path.getFileName().toString();
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Request matches watched path '" + watchPath + "', camera directory: '" + cameraDirectory + "' fileName: '" + fileName);
+		}
+		if (fileName.endsWith(".part")) { // workaround the fact we have only part file at this very moment
+		    Path fullPath = cameraDirectory.resolve(fileName.substring(0, fileName.length() - 5));
 		    SecurityEvent event = new SecurityEvent();
 		    event.setFilePath(fullPath);
 		    event.setType(Type.cameraMotionDetected);
 		    event.setSource(Source.parse(cameraDirectory.getFileName().toString()));
-		    
+
 		    getSecurityController().handle(event);
 		}
 	    } else {

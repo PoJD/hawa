@@ -1,7 +1,10 @@
 package cz.pojd.security.controller;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,29 +12,35 @@ import org.apache.commons.logging.LogFactory;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
+import cz.pojd.security.rules.RulesDao;
 
 public class DefaultSecurityController implements Controller {
     private static final Log LOG = LogFactory.getLog(DefaultSecurityController.class);
 
+    private final List<Rule> fullHouseRules = new ArrayList<>();
+    private final List<Rule> emptyHouseRules = new ArrayList<>();
+    private final List<SecurityHandler> securityHandlers;
+
     private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
-    private final Set<Rule> fullHouseRules = new LinkedHashSet<>();
-    private final Set<Rule> emptyHouseRules = new LinkedHashSet<>();
-    private final Set<Rule> rules = new LinkedHashSet<>();
-    private Set<SecurityHandler> securityHandlers;
 
-    public DefaultSecurityController(SecurityHandler... securityHandlers) {
-	this.securityHandlers = new LinkedHashSet<>();
-	for (SecurityHandler securityHandler : securityHandlers) {
-	    this.securityHandlers.add(securityHandler);
+    @Inject
+    public DefaultSecurityController(RulesDao rulesDao, SecurityHandler... securityHandlers) {
+	LOG.info("Initating DefaultSecurityController...");
+	for (Rule rule : rulesDao.getAll()) {
+	    registerRule(rule);
 	}
+	this.securityHandlers = Arrays.asList(securityHandlers);
+	LOG.info("Init done.");
     }
 
-    public Set<SecurityHandler> getSecurityHandlers() {
-	return securityHandlers;
-    }
-
-    public void setSecurityHandlers(Set<SecurityHandler> securityHandlers) {
-	this.securityHandlers = securityHandlers;
+    private void registerRule(Rule rule) {
+	LOG.info("Registering rule: " + rule);
+	if (rule.isApplicable(SecurityMode.FULL_HOUSE)) {
+	    fullHouseRules.add(rule);
+	}
+	if (rule.isApplicable(SecurityMode.EMPTY_HOUSE)) {
+	    emptyHouseRules.add(rule);
+	}
     }
 
     @Override
@@ -59,14 +68,13 @@ public class DefaultSecurityController implements Controller {
 	}
     }
 
-    private void fireRules(Set<Rule> rules, SecurityEvent securityEvent) {
+    private void fireRules(List<Rule> rules, SecurityEvent securityEvent) {
 	for (Rule rule : rules) {
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Processing " + securityEvent + " by rule " + rule);
 	    }
 
-	    boolean isSecurityBreach = rule.isSecurityBreach(securityEvent);
-	    if (isSecurityBreach) {
+	    if (rule.isSecurityBreach(securityEvent)) {
 		if (LOG.isInfoEnabled()) {
 		    LOG.info("Security breach detected: " + securityEvent + ". Rule firing this breach: " + rule + ". Security mode: " + securityMode);
 		    LOG.info("Firing security breach handlers and skipping next rules...");
@@ -77,23 +85,6 @@ public class DefaultSecurityController implements Controller {
 		return;
 	    }
 	}
-    }
-
-    @Override
-    public void registerRule(Rule rule) {
-	LOG.info("Registering rule: " + rule);
-	rules.add(rule);
-	if (rule.isApplicable(SecurityMode.FULL_HOUSE)) {
-	    fullHouseRules.add(rule);
-	}
-	if (rule.isApplicable(SecurityMode.EMPTY_HOUSE)) {
-	    emptyHouseRules.add(rule);
-	}
-    }
-
-    @Override
-    public Set<Rule> getRegisteredRules() {
-	return rules;
     }
 
     @Override
