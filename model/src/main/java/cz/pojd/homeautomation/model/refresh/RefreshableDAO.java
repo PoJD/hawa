@@ -3,13 +3,12 @@ package cz.pojd.homeautomation.model.refresh;
 import java.util.Date;
 
 import javax.inject.Inject;
-import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
+
+import cz.pojd.homeautomation.model.DAOImpl;
 
 /**
  * Generic refreshable DAO.
@@ -17,24 +16,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author Lubos Housa
  * @since Aug 20, 2014 10:10:33 PM
  */
-public abstract class RefreshableDAO implements Refreshable {
+public abstract class RefreshableDAO extends DAOImpl implements Refreshable {
 
     private static final Log LOG = LogFactory.getLog(RefreshableDAO.class);
-    private JdbcTemplate jdbcTemplate;
-
     private Refresher refresher;
-    @Value("${jdbc.driverClassName}")
-    private String jdbcDriver;
-    @Value("${jdbc.url}")
-    private String jdbcUrl;
-
-    @Inject
-    public void setDataSource(DataSource dataSource) {
-	if (LOG.isInfoEnabled()) {
-	    LOG.info("Using datasource: " + dataSource + " and JDBC Driver: '" + jdbcDriver + "' and jdbc URL: '" + jdbcUrl + "'.");
-	}
-	this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Inject
     public void setRefresher(Refresher refresher) {
@@ -44,19 +29,6 @@ public abstract class RefreshableDAO implements Refreshable {
 
     public Refresher getRefresher() {
 	return refresher;
-    }
-
-    public JdbcTemplate getJdbcTemplate() {
-	return jdbcTemplate;
-    }
-
-    /**
-     * Sets the JDBC template of this DAO. Either use this one directly or the setDataSource instead
-     * 
-     * @param jdbcTemplate
-     */
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-	this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

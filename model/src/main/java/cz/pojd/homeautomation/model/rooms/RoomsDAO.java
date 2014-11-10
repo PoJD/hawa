@@ -1,7 +1,8 @@
 package cz.pojd.homeautomation.model.rooms;
 
-import java.util.List;
+import java.util.Collection;
 
+import cz.pojd.homeautomation.model.DAO;
 import cz.pojd.homeautomation.model.refresh.Refreshable;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 
@@ -11,14 +12,14 @@ import cz.pojd.homeautomation.model.spring.RoomSpecification;
  * @author Lubos Housa
  * @since Jul 27, 2014 6:21:24 PM
  */
-public interface RoomsDAO extends Refreshable {
+public interface RoomsDAO extends Refreshable, DAO {
 
     /**
      * Get all rooms
      * 
-     * @return list of all rooms
+     * @return collection of all rooms
      */
-    List<RoomDetail> query();
+    Collection<RoomDetail> query();
 
     /**
      * Save the room
@@ -28,11 +29,6 @@ public interface RoomsDAO extends Refreshable {
      * @return true if the save was successful
      */
     void save(RoomDetail roomDetail);
-
-    /**
-     * Switches of all lights of all rooms
-     */
-    void switchOffAllLights();
 
     /**
      * Get the detail of the in passed room
@@ -49,4 +45,9 @@ public interface RoomsDAO extends Refreshable {
      * @return room
      */
     Room getRoom(RoomSpecification roomSpecification);
+
+    /**
+     * Switches of all lights of all rooms
+     */
+    void switchOffAllLights();
 }

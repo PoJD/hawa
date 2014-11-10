@@ -12,6 +12,12 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * RulesDAO implementation
+ *
+ * @author Lubos Housa
+ * @since Nov 10, 2014 1:40:42 PM
+ */
 public class RulesDAOImpl implements RulesDAO {
     private static final Log LOG = LogFactory.getLog(RulesDAOImpl.class);
 
@@ -29,12 +35,12 @@ public class RulesDAOImpl implements RulesDAO {
     }
 
     @Override
-    public Collection<Rule> queryAllRules() {
+    public Collection<Rule> queryRules() {
 	return rules.values();
     }
 
     @Override
-    public Collection<RuleDetail> queryAllRuleDetails() {
+    public Collection<RuleDetail> query() {
 	List<RuleDetail> result = new ArrayList<>();
 	for (Rule rule : rules.values()) {
 	    result.add(new RuleDetail(rule));

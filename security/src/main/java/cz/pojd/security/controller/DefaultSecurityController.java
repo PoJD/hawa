@@ -30,7 +30,7 @@ public class DefaultSecurityController implements Controller {
     public DefaultSecurityController(RoomsDAO roomsDAO, RulesDAO rulesDao, SecurityHandler... securityHandlers) {
 	LOG.info("Initating DefaultSecurityController...");
 	this.roomsDAO = roomsDAO;
-	for (Rule rule : rulesDao.queryAllRules()) {
+	for (Rule rule : rulesDao.queryRules()) {
 	    registerRule(rule);
 	}
 	this.securityHandlers = Arrays.asList(securityHandlers);
@@ -79,7 +79,12 @@ public class DefaultSecurityController implements Controller {
 		    LOG.info("Firing security breach handlers and skipping next rules...");
 		}
 		for (SecurityHandler securityHandler : securityHandlers) {
-		    securityHandler.handleSecurityBreach(securityEvent);
+		    try {
+			securityHandler.handleSecurityBreach(securityEvent);
+		    } catch (Exception e) {
+			LOG.error("Some error occured while processing security event breach " + securityEvent + " by security handler "
+				+ securityHandler, e);
+		    }
 		}
 		return;
 	    }
@@ -90,7 +95,7 @@ public class DefaultSecurityController implements Controller {
     public void switchMode(SecurityMode newMode) {
 	LOG.info("Switching the securityMode to " + newMode);
 	this.securityMode = newMode;
-	
+
 	// TODO does this belong here?
 	if (SecurityMode.EMPTY_HOUSE == securityMode) {
 	    roomsDAO.switchOffAllLights();

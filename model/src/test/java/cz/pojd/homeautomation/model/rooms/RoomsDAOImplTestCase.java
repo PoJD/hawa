@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -80,17 +81,22 @@ public class RoomsDAOImplTestCase {
     public void testGetAllDetectStateCalledShouldReturnValidList() {
 	detectState();
 
-	List<RoomDetail> result = dao.query();
-	assertEquals(1, result.size());
+	Iterator<RoomDetail> it = dao.query().iterator();
 
-	RoomDetail detail = result.get(0);
+	assertTrue(it.hasNext());
+	RoomDetail detail = it.next();
+	assertFalse(it.hasNext());
+
 	checkDetail(detail);
     }
 
     @Test
     public void testGetAllNoDetectStateCalledShouldReturnValidListToo() {
-	List<RoomDetail> result = dao.query();
-	assertEquals(1, result.size());
+	Iterator<RoomDetail> it = dao.query().iterator();
+
+	assertTrue(it.hasNext());
+	it.next();
+	assertFalse(it.hasNext());
     }
 
     @Test
@@ -99,9 +105,13 @@ public class RoomsDAOImplTestCase {
 	detail.setMotionSensor(State.newBuilder().enabled(false).build());
 	dao.save(detail);
 
-	List<RoomDetail> list = dao.query();
-	assertEquals(1, list.size());
-	assertEquals(false, list.get(0).getMotionSensor().isEnabled());
+	Iterator<RoomDetail> it = dao.query().iterator();
+
+	assertTrue(it.hasNext());
+	RoomDetail detail = it.next();
+	assertFalse(it.hasNext());
+
+	assertEquals(false, detail.getMotionSensor().isEnabled());
     }
 
     @Test
@@ -110,9 +120,13 @@ public class RoomsDAOImplTestCase {
 	detail.setMotionSensor(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
-	List<RoomDetail> list = dao.query();
-	assertEquals(1, list.size());
-	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
+	Iterator<RoomDetail> it = dao.query().iterator();
+
+	assertTrue(it.hasNext());
+	RoomDetail detail = it.next();
+	assertFalse(it.hasNext());
+
+	assertEquals(true, detail.getMotionSensor().isEnabled());
     }
 
     @Test
@@ -123,13 +137,17 @@ public class RoomsDAOImplTestCase {
 	detail.setLightSwitch(State.newBuilder().enabled(true).build());
 	dao.save(detail);
 
-	List<RoomDetail> list = dao.query();
-	assertEquals(1, list.size());
-	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
-	assertEquals(true, list.get(0).getLightControl().isEnabled());
+	Iterator<RoomDetail> it = dao.query().iterator();
+
+	assertTrue(it.hasNext());
+	RoomDetail detail = it.next();
+	assertFalse(it.hasNext());
+
+	assertEquals(true, detail.getMotionSensor().isEnabled());
+	assertEquals(true, detail.getLightControl().isEnabled());
 	// for light control we are storing state too, not only enabling/disabling
-	assertEquals(true, list.get(0).getLightControl().isSwitchedOn());
-	assertEquals(true, list.get(0).getLightSwitch().isEnabled());
+	assertEquals(true, detail.getLightControl().isSwitchedOn());
+	assertEquals(true, detail.getLightSwitch().isEnabled());
     }
 
     @Test
@@ -144,13 +162,17 @@ public class RoomsDAOImplTestCase {
 	// we now mimic another detect state - yet the above should still be stored (we know it is done via saving to room dirctly)
 	detectState();
 
-	List<RoomDetail> list = dao.query();
-	assertEquals(1, list.size());
-	assertEquals(true, list.get(0).getMotionSensor().isEnabled());
-	assertEquals(true, list.get(0).getLightControl().isEnabled());
+	Iterator<RoomDetail> it = dao.query().iterator();
+
+	assertTrue(it.hasNext());
+	RoomDetail detail = it.next();
+	assertFalse(it.hasNext());
+
+	assertEquals(true, detail.getMotionSensor().isEnabled());
+	assertEquals(true, detail.getLightControl().isEnabled());
 	// for light control we are storing state too, not only enabling/disabling
-	assertEquals(true, list.get(0).getLightControl().isSwitchedOn());
-	assertEquals(true, list.get(0).getLightSwitch().isSwitchedOn());
+	assertEquals(true, detail.getLightControl().isSwitchedOn());
+	assertEquals(true, detail.getLightSwitch().isSwitchedOn());
     }
 
     @Test

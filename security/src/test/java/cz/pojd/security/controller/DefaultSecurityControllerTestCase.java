@@ -53,7 +53,7 @@ public class DefaultSecurityControllerTestCase {
 		rule3.isEnabled();
 		result = false;
 
-		rulesDAO.queryAllRules();
+		rulesDAO.queryRules();
 		result = Arrays.asList(rule, rule2, rule3);
 	    }
 	};

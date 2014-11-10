@@ -22,7 +22,6 @@ import cz.pojd.rpi.sensors.Sensor;
 public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     private static final Log LOG = LogFactory.getLog(OutdoorDAOImpl.class);
-    private static final int DAYS_BACK_HISTORY = 7;
 
     private Outdoor outdoor;
 

@@ -1,6 +1,7 @@
 package cz.pojd.homeautomation.model.rooms;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,7 +30,6 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
-    private static final int DAYS_BACK_HISTORY = 7;
 
     private final Map<String, Room> rooms;
 
@@ -69,7 +69,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
-    public List<RoomDetail> query() {
+    public Collection<RoomDetail> query() {
 	// no synchronization needed, since we just built a list populated from the rooms, in worst case (if just in the middle of refresh, we might
 	// be getting older details here, but these should be updated anyway, so no net effect really)
 	List<RoomDetail> result = new ArrayList<>();

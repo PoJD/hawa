@@ -16,16 +16,21 @@ import org.springframework.context.annotation.Configuration;
 import cz.pojd.homeautomation.model.spring.ModelConfig;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
+import cz.pojd.security.event.SecurityEventDAO;
+import cz.pojd.security.event.SecurityEventDAOImpl;
 import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
 import cz.pojd.security.handler.EmailSender;
+import cz.pojd.security.handler.SecurityEventStorer;
 import cz.pojd.security.motion.MotionSensorSecurityTrigger;
+import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
 import cz.pojd.security.rules.RulesDAOImpl;
 import cz.pojd.security.rules.impl.BasementWindowOpenedWhenHouseIsFull;
 import cz.pojd.security.rules.impl.DoorOrGarageOpened;
 import cz.pojd.security.rules.impl.HighTemperature;
 import cz.pojd.security.rules.impl.MotionInHallsWhenHouseIsEmpty;
+import cz.pojd.security.rules.impl.MotionOutside;
 import cz.pojd.security.rules.impl.WindowOpened;
 
 /**
@@ -63,18 +68,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    public MotionSensorSecurityTrigger motionSensorTrigger() {
-	return new MotionSensorSecurityTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
-    }
-
-    @Bean
-    public Controller securityController() {
-	return new DefaultSecurityController(modelConfig.roomsDAO(), rulesDAO(), new EmailSender());
+    public Rule[] rules() {
+	return new Rule[] { new HighTemperature(), new MotionInHallsWhenHouseIsEmpty(), new WindowOpened(), new DoorOrGarageOpened(),
+		new MotionOutside(), new BasementWindowOpenedWhenHouseIsFull() };
     }
 
     @Bean
     public RulesDAO rulesDAO() {
-	return new RulesDAOImpl(new HighTemperature(), new MotionInHallsWhenHouseIsEmpty(), new WindowOpened(), new DoorOrGarageOpened(),
-		new BasementWindowOpenedWhenHouseIsFull());
+	return new RulesDAOImpl(rules());
+    }
+
+    @Bean
+    public SecurityEventDAO securityEventDAO() {
+	return new SecurityEventDAOImpl();
+    }
+
+    @Bean
+    public Controller securityController() {
+	return new DefaultSecurityController(modelConfig.roomsDAO(), rulesDAO(), new EmailSender(), new SecurityEventStorer(securityEventDAO()));
+    }
+
+    @Bean
+    public MotionSensorSecurityTrigger motionSensorTrigger() {
+	return new MotionSensorSecurityTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
     }
 }

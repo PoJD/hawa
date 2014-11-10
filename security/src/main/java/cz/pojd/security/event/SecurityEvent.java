@@ -1,6 +1,7 @@
 package cz.pojd.security.event;
 
 import java.nio.file.Path;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,13 +18,13 @@ public class SecurityEvent {
 
     private Type type;
     private Source source;
-    private final DateTime when = new DateTime();
+    private final DateTime at = new DateTime();
     private Path filePath;
 
     public Type getType() {
 	return type;
     }
-
+    
     public void setType(Type type) {
 	this.type = type;
     }
@@ -36,8 +37,11 @@ public class SecurityEvent {
 	this.source = source;
     }
 
-    public DateTime getWhen() {
-	return when;
+    public DateTime getAt() {
+	return at;
+    }
+    public Date getAtAsDate() {
+	return at.toDate();
     }
 
     public Path getFilePath() {
@@ -64,6 +68,6 @@ public class SecurityEvent {
 
     @Override
     public String toString() {
-	return "SecurityEvent [type=" + type + ", source=" + source + ", when=" + when + ", filePath=" + filePath + "]";
+	return "SecurityEvent [type=" + type + ", source=" + source + ", at=" + at + ", filePath=" + filePath + "]";
     }
 }

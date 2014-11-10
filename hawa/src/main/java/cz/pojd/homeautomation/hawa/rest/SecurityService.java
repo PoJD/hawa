@@ -31,7 +31,7 @@ public class SecurityService {
 	LOG.info("Detecting current state of security...");
 
 	SecurityStatus result = new SecurityStatus();
-	result.setRules(rulesDAO.queryAllRuleDetails());
+	result.setRules(rulesDAO.query());
 	result.setSecurityMode(securityController.getMode());
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("State detected: " + result);

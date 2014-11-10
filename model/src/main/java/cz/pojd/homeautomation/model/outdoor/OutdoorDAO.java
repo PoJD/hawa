@@ -1,5 +1,6 @@
 package cz.pojd.homeautomation.model.outdoor;
 
+import cz.pojd.homeautomation.model.DAO;
 import cz.pojd.homeautomation.model.refresh.Refreshable;
 
 /**
@@ -8,7 +9,7 @@ import cz.pojd.homeautomation.model.refresh.Refreshable;
  * @author Lubos Housa
  * @since Aug 10, 2014 4:07:08 PM
  */
-public interface OutdoorDAO extends Refreshable {
+public interface OutdoorDAO extends Refreshable, DAO {
 
     /**
      * Get the outdoor detail

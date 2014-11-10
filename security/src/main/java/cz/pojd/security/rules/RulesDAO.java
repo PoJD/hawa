@@ -15,14 +15,14 @@ public interface RulesDAO {
      * 
      * @return list of rules
      */
-    Collection<Rule> queryAllRules();
+    Collection<Rule> queryRules();
 
     /**
      * Get the details of all rules
      * 
      * @return list of all rules' details
      */
-    Collection<RuleDetail> queryAllRuleDetails();
+    Collection<RuleDetail> query();
 
     /**
      * Save the rule detail

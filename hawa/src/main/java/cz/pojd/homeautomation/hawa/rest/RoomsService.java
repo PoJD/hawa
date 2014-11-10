@@ -1,6 +1,6 @@
 package cz.pojd.homeautomation.hawa.rest;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -27,9 +27,9 @@ public class RoomsService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<RoomDetail> query() {
+    public Collection<RoomDetail> query() {
 	LOG.info("Detecting current state of all rooms...");
-	List<RoomDetail> result = roomsDAO.query();
+	Collection<RoomDetail> result = roomsDAO.query();
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("List of rooms: " + result);
 	}
