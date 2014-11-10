@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.model.graphs;
+package cz.pojd.homeautomation.model.web;
 
 import java.util.Arrays;
 

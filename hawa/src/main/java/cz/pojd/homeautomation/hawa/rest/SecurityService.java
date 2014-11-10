@@ -13,6 +13,8 @@ import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.security.SecurityStatus;
 import cz.pojd.security.controller.Controller;
+import cz.pojd.security.event.CalendarEventTranslator;
+import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.rules.RuleDetail;
 import cz.pojd.security.rules.RulesDAO;
 
@@ -22,6 +24,10 @@ public class SecurityService {
 
     @Inject
     private RulesDAO rulesDAO;
+    @Inject
+    private SecurityEventDAO securityEventDAO;
+    @Inject
+    private CalendarEventTranslator translator;
     @Inject
     private Controller securityController;
 
@@ -33,6 +39,7 @@ public class SecurityService {
 	SecurityStatus result = new SecurityStatus();
 	result.setRules(rulesDAO.query());
 	result.setSecurityMode(securityController.getMode());
+	result.setEvents(translator.translate(securityEventDAO.query()));
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("State detected: " + result);
 	}

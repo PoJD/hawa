@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import cz.pojd.homeautomation.model.graphs.GraphData;
 import cz.pojd.homeautomation.model.refresh.RefreshedLightCapableDetail;
+import cz.pojd.homeautomation.model.web.GraphData;
 import cz.pojd.rpi.sensors.Reading;
 
 /**

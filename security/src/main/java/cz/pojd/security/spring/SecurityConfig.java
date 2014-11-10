@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import cz.pojd.homeautomation.model.spring.ModelConfig;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
+import cz.pojd.security.event.CalendarEventTranslator;
+import cz.pojd.security.event.CalendarEventTranslatorImpl;
 import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.event.SecurityEventDAOImpl;
 import cz.pojd.security.ftp.CameraUploadFtplet;
@@ -91,5 +93,10 @@ public class SecurityConfig {
     @Bean
     public MotionSensorSecurityTrigger motionSensorTrigger() {
 	return new MotionSensorSecurityTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
+    }
+
+    @Bean
+    public CalendarEventTranslator calendarEventTranslator() {
+	return new CalendarEventTranslatorImpl();
     }
 }

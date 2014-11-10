@@ -12,12 +12,11 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
-import cz.pojd.homeautomation.model.graphs.GraphData;
 import cz.pojd.homeautomation.model.refresh.RefreshableDAO;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
+import cz.pojd.homeautomation.model.web.GraphData;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**
@@ -26,7 +25,6 @@ import cz.pojd.rpi.system.RuntimeExecutor;
  * @author Lubos Housa
  * @since Aug 1, 2014 10:58:59 PM
  */
-@Repository
 public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);

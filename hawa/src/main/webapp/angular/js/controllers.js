@@ -140,31 +140,35 @@ angular.module('homeAutomation.controllers', [])
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 				
 				$scope.update = function() {
-				    $scope.securityStatus = security.get();
-				    // $scope.calendar.events = [ securityStatus.events ];
-				    $scope.securityStatus.events = undefined;
-					$scope.changed = false;
+				    $scope.securityStatus = security.get({}, function(securityStatus) {
+				    	$scope.calendar.events.length = 0;
+				    	$scope.calendar.events.push(securityStatus.events);
+					    securityStatus.events = undefined; // avoid uploading the events on next POST
+						$scope.changed = false;
+				    }); 
 				};
 
 				$scope.apply = function() {
 					$scope.securityStatus.$save();
 					$scope.changed = false;
 				};
-
-				$scope.changed = false;
 			    
 			    $scope.calendar = {
-		    	      config:{
+			    	config: {
 		    	        height: 600,
 		    	        header:{
 		    	          left: 'agendaWeek agendaDay',
 		    	          center: 'title',
 		    	          right: 'today prev, next'
 		    	        },
-		    	        defaultView : 'agendaWeek'
-		    	      },
-		    	      events: [[ {title: 'Long Event', start: new Date(), end: new Date(new Date().getTime()+6000000)} ]]
-		    	    };				
+		    	        defaultView : 'agendaWeek',
+		    	        eventClick: function(calendarEvent) {
+		    	        	alert(calendarEvent.title);
+		    	        }
+			    	},
+				    events: []			    	
+		    	};
+
+			    $scope.changed = false;
 				$scope.update();
 } ]);
-

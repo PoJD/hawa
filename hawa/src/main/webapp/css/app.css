@@ -90,3 +90,8 @@ html, body {
 	width: 30px;
 	height: 30px;		
 }
+
+/* little tweak for full calendar (displays calendar event with below cursor) */
+.fc-event{
+    cursor: pointer;
+}

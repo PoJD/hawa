@@ -18,13 +18,13 @@ public class SecurityEvent {
 
     private Type type;
     private Source source;
-    private final DateTime at = new DateTime();
+    private DateTime at = new DateTime();
     private Path filePath;
 
     public Type getType() {
 	return type;
     }
-    
+
     public void setType(Type type) {
 	this.type = type;
     }
@@ -40,8 +40,13 @@ public class SecurityEvent {
     public DateTime getAt() {
 	return at;
     }
+
     public Date getAtAsDate() {
-	return at.toDate();
+	return at != null ? at.toDate() : null;
+    }
+
+    public void setAt(DateTime at) {
+	this.at = at;
     }
 
     public Path getFilePath() {

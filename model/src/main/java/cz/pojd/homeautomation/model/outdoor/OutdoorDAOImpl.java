@@ -8,17 +8,15 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
-import cz.pojd.homeautomation.model.graphs.GraphData;
 import cz.pojd.homeautomation.model.outdoor.factory.OutdoorFactory;
 import cz.pojd.homeautomation.model.refresh.RefreshableDAO;
 import cz.pojd.homeautomation.model.spring.OutdoorSpecification;
+import cz.pojd.homeautomation.model.web.GraphData;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
 import cz.pojd.rpi.sensors.Sensor;
 
-@Repository
 public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     private static final Log LOG = LogFactory.getLog(OutdoorDAOImpl.class);
