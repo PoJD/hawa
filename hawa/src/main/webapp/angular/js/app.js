@@ -7,6 +7,7 @@ angular.module('homeAutomation', [
   'angular-gauge',
   'toggle-switch',
   'nvd3ChartDirectives',
+  'ui.calendar',
   'homeAutomation.filters',
   'homeAutomation.services',
   'homeAutomation.directives',

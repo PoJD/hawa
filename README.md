@@ -18,6 +18,7 @@ This project was originally based on angular-seed project https://github.com/ang
 * Angular Toggle Switch: https://github.com/cgarvis/angular-toggle-switch
 * Google Gauge Node.js library using d3.js (custom angular port): https://developers.google.com/chart/interactive/docs/gallery/gauge?csw=1
 * Nvd3 Node.js graph library: http://cmaurer.github.io/angularjs-nvd3-directives/
+* Angular calendar using open source JQuery full calendar: https://github.com/angular-ui/ui-calendar/tree/master/demo
 * Twitter Bootstrap
 * JUnit, JMockit
 

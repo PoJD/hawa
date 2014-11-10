@@ -141,6 +141,8 @@ angular.module('homeAutomation.controllers', [])
 				
 				$scope.update = function() {
 				    $scope.securityStatus = security.get();
+				    // $scope.calendar.events = [ securityStatus.events ];
+				    $scope.securityStatus.events = undefined;
 					$scope.changed = false;
 				};
 
@@ -150,6 +152,19 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.changed = false;
+			    
+			    $scope.calendar = {
+		    	      config:{
+		    	        height: 600,
+		    	        header:{
+		    	          left: 'agendaWeek agendaDay',
+		    	          center: 'title',
+		    	          right: 'today prev, next'
+		    	        },
+		    	        defaultView : 'agendaWeek'
+		    	      },
+		    	      events: [[ {title: 'Long Event', start: new Date(), end: new Date(new Date().getTime()+6000000)} ]]
+		    	    };				
 				$scope.update();
 } ]);
 
