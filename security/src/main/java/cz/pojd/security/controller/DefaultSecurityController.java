@@ -89,6 +89,9 @@ public class DefaultSecurityController implements Controller {
 		return;
 	    }
 	}
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug(securityEvent + " ignored - no rules fired a security breach.");
+	}
     }
 
     @Override
