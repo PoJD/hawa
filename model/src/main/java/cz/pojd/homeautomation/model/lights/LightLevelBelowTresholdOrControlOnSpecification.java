@@ -13,12 +13,12 @@ import cz.pojd.rpi.controls.Control;
 public class LightLevelBelowTresholdOrControlOnSpecification implements Specification {
 
     private final LightCapable lightCapable;
-    private final double treshold;
+    private final double threshold;
     private final Control control;
 
     public LightLevelBelowTresholdOrControlOnSpecification(LightCapable lightCapable, double treshold, Control control) {
 	this.lightCapable = lightCapable;
-	this.treshold = treshold;
+	this.threshold = treshold;
 	this.control = control;
     }
 
@@ -26,12 +26,12 @@ public class LightLevelBelowTresholdOrControlOnSpecification implements Specific
     public boolean isSatisfied() {
 	return control.isSwitchedOn()
 		|| (lightCapable.getLastDetail() != null && lightCapable.getLastDetail().getLightLevel() != null && lightCapable.getLastDetail()
-			.getLightLevel().getDoubleValue() < treshold);
+			.getLightLevel().getDoubleValue() < threshold);
     }
 
     @Override
     public String toString() {
-	return "LightLevelBelowTresholdOrControlOnSpecification [lightCapable=" + lightCapable + ", treshold=" + treshold + ", control=" + control
+	return "LightLevelBelowTresholdOrControlOnSpecification [lightCapable=" + lightCapable + ", threshold=" + threshold + ", control=" + control
 		+ "]";
     }
 }
