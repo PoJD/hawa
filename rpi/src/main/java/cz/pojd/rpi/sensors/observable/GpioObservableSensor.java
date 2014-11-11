@@ -32,17 +32,11 @@ public class GpioObservableSensor extends BaseObservableSensor {
     private static final Log LOG = LogFactory.getLog(GpioObservableSensor.class);
 
     private final GpioPinDigitalInput gpioInputPin;
-    private final String name;
-    private final boolean highIsOff;
-
-    @Inject
-    public GpioObservableSensor(Gpio gpio, String name, Pin pin) {
-	this(gpio, gpio.getDefaultProvider(), name, pin);
-    }
+    protected final String name;
 
     @Inject
     public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin) {
-	this(gpio, provider, name, pin, false);
+	this(gpio, provider, name, pin, PinPullResistance.OFF);
     }
 
     /**
@@ -56,15 +50,12 @@ public class GpioObservableSensor extends BaseObservableSensor {
      *            the name of this sensor
      * @param pin
      *            the pin to connct to
-     * @param highIsOff
-     *            if true, then HIGH PinState is treated as OFF, otherwise is treated as on
      */
     @Inject
-    public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin, boolean highIsOff) {
+    public GpioObservableSensor(Gpio gpio, GpioProvider provider, String name, Pin pin, PinPullResistance pinPullResistance) {
 	this.name = name;
-	this.highIsOff = highIsOff;
-	LOG.info("Creating " + this + " connected to pin " + pin);
-	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, PinPullResistance.PULL_DOWN);
+	LOG.info("Creating " + this + " connected to pin " + pin + " with PinPullResistance " + pinPullResistance + " and using provider: " + provider);
+	this.gpioInputPin = gpio.provisionDigitalInputPin(provider, pin, pinPullResistance);
 	setupPin();
     }
 
@@ -94,7 +85,7 @@ public class GpioObservableSensor extends BaseObservableSensor {
 		    notifyObservers(translate(event.getState()).isHigh());
 		}
 	    });
-	    
+
 	    gpioInputPin.setShutdownOptions(true);
 	} else {
 	    LOG.warn(this + ": init failed before, not setting up any GPIO listener nor any shutdown options.");
@@ -106,12 +97,20 @@ public class GpioObservableSensor extends BaseObservableSensor {
 	return gpioInputPin != null;
     }
 
+    /**
+     * Translate the low level detected state to the outside world (via the API). Descendant classes are allowed to process the value here. The
+     * default implementation here does no translation
+     * 
+     * @param detected
+     *            low level detected pin state value to translate
+     * @return translated value
+     */
+    protected PinState translate(PinState detected) {
+	return detected;
+    }
+
     @Override
     public String toString() {
 	return "GpioObservableSensor [name=" + name + "]";
-    }
-
-    private PinState translate(PinState detected) {
-	return highIsOff ? PinState.getInverseState(detected) : detected;
     }
 }

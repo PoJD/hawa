@@ -11,6 +11,7 @@ import cz.pojd.rpi.controls.GpioControl;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
 import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
+import cz.pojd.rpi.sensors.observable.GpioSwitch;
 
 /**
  * Trigger for lights - sets up the observers on the motion sensors on the lights
@@ -38,7 +39,7 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
 	lightCapable.setLightControl(new GpioControl(gpio, details.getControlProvider(), lightCapable.getName() + " light control", details
 		.getLightControlPin()));
 
-	lightCapable.setLightSwitch(new GpioObservableSensor(gpio, details.getSwitchProvider(), lightCapable.getName() + " light switch", details
+	lightCapable.setLightSwitch(new GpioSwitch(gpio, details.getSwitchProvider(), lightCapable.getName() + " light switch", details
 		.getLightSwitchPin()));
 	lightCapable.getLightSwitch().addObserver(new ControlObserver(lightCapable.getLightControl()));
 
