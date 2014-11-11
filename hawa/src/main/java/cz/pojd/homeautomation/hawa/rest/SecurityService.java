@@ -1,16 +1,21 @@
 package cz.pojd.homeautomation.hawa.rest;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cz.pojd.homeautomation.hawa.rest.parse.DateTimeParam;
+import cz.pojd.homeautomation.model.web.CalendarEvent;
 import cz.pojd.security.SecurityStatus;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.CalendarEventTranslator;
@@ -39,12 +44,35 @@ public class SecurityService {
 	SecurityStatus result = new SecurityStatus();
 	result.setRules(rulesDAO.query());
 	result.setSecurityMode(securityController.getMode());
-	result.setEvents(translator.translate(securityEventDAO.query()));
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("State detected: " + result);
 	}
 
 	LOG.info("State detected.");
+	return result;
+    }
+
+    /**
+     * Gets the collection of calendar event via REST
+     * 
+     * @param start
+     *            start date - ISO8601 string format
+     * @param end
+     *            end date - ISO8601 string format
+     * @return calendar event in the specified range of dates
+     */
+    @GET
+    @Path("/events")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<CalendarEvent> queryCalendarEvents(@QueryParam("start") DateTimeParam start, @QueryParam("end") DateTimeParam end) {
+	LOG.info("Detecting calendar events ...");
+
+	Collection<CalendarEvent> result = translator.translate(securityEventDAO.query(start.getDateTime(), end.getDateTime()));
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Calendar events found: " + result);
+	}
+
+	LOG.info("Calendar events found.");
 	return result;
     }
 

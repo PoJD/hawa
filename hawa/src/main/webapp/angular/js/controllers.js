@@ -139,13 +139,12 @@ angular.module('homeAutomation.controllers', [])
 		[ '$scope', '$controller', 'security', function($scope, $controller, security) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 				
-				$scope.update = function() {
-				    $scope.securityStatus = security.get({}, function(securityStatus) {
-				    	$scope.calendar.events.length = 0;
-				    	$scope.calendar.events.push(securityStatus.events);
-					    securityStatus.events = undefined; // avoid uploading the events on next POST
-						$scope.changed = false;
-				    }); 
+				$scope.update = function(isFirstUpdate) {
+				    $scope.securityStatus = security.get(); 
+					if(!isFirstUpdate) { // first update is redundant since the calendar itself already fetched the data
+						$scope.eventsCalendar.fullCalendar('refetchEvents');
+					}
+					$scope.changed = false;
 				};
 
 				$scope.apply = function() {
@@ -166,9 +165,9 @@ angular.module('homeAutomation.controllers', [])
 		    	        	alert(calendarEvent.title);
 		    	        }
 			    	},
-				    events: []			    	
+				    events: [ { url: 'rest/security/events' } ]
 		    	};
 
 			    $scope.changed = false;
-				$scope.update();
+				$scope.update(true);
 } ]);

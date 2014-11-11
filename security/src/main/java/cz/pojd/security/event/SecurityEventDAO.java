@@ -2,6 +2,8 @@ package cz.pojd.security.event;
 
 import java.util.Collection;
 
+import org.joda.time.DateTime;
+
 import cz.pojd.homeautomation.model.DAO;
 
 /**
@@ -13,11 +15,15 @@ import cz.pojd.homeautomation.model.DAO;
 public interface SecurityEventDAO extends DAO {
 
     /**
-     * Get all security events
+     * Get all security events in the specified date range
      * 
-     * @return all security events for a preconfigured time period
+     * @param start
+     *            start of the range
+     * @param end
+     *            end of the range
+     * @return all security events for the specified time period
      */
-    Collection<SecurityEvent> query();
+    Collection<SecurityEvent> query(DateTime start, DateTime end);
 
     /**
      * Save the security event to the underlying storage

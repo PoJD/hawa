@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Value;
 
 import cz.pojd.homeautomation.model.DAOImpl;
@@ -44,10 +46,13 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
     }
 
     @Override
-    public Collection<SecurityEvent> query() {
+    public Collection<SecurityEvent> query(DateTime start, DateTime end) {
+	DateTimeFormatter parser = ISODateTimeFormat.dateTime();
+	String startString = parser.print(start);
+	String endString = parser.print(end);
 	List<SecurityEvent> result = new ArrayList<>();
 	try {
-	    for (Map<String, Object> row : getJdbcTemplate().queryForList(querySql, new Object[] { DAYS_BACK_HISTORY })) {
+	    for (Map<String, Object> row : getJdbcTemplate().queryForList(querySql, new Object[] { startString, endString })) {
 		SecurityEvent event = new SecurityEvent();
 		event.setFilePath(parsePathFromRow(row, "filepath"));
 		event.setSource(parseEnumFromRow(row, Source.class, "source"));
@@ -56,7 +61,7 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 		result.add(event);
 	    }
 	} catch (Exception e) {
-	    throw new SecurityEventDAOException("Unable to query the security event for past " + DAYS_BACK_HISTORY + " days.", e);
+	    throw new SecurityEventDAOException("Unable to query the security events for range " + startString + " -> " + endString, e);
 	}
 	return result;
     }
