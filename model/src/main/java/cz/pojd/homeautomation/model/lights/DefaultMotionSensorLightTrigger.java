@@ -49,18 +49,19 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
 	Observer lightCapableUpdatingObserver = new LightCapableUpdatingObserver(lightCapable);
 	lightCapable.getLightSwitch().addObserver(lightCapableUpdatingObserver);
 
-	if (details.getMotionSensorPin() != null) {
-	    // light level sensor only present if we have motion sensor
+	if (details.getMotionSensorPin() != null && details.getLightLevelSensorAddress() != null) {
 	    lightCapable.setLightLevelSensor(new TSL2561LightSensor(isNewRaspi, details.getLightLevelSensorAddress()));
 
 	    // motion sensor depends on light switch - so that the motion sensor does nothing if light switch is enabled and switched on
 	    // it also depends on light level sensor - if the sensor reads too high (too bright), then the motion sensor does nothing too
-	    lightCapable.setMotionSensor(new GpioObservableSensor(gpio, details.getSwitchProvider(), lightCapable.getName() + " motion sensor",
-		    details.getMotionSensorPin()));
+	    lightCapable.setMotionSensor(new GpioObservableSensor(
+		    gpio, details.getSwitchProvider(), lightCapable.getName() + " motion sensor", details.getMotionSensorPin()));
 	    lightCapable.getMotionSensor().addObserver(
-		    new SpecificationsDependentObserver(lightCapable.getLightControl(), new SensorDisabledOrOffSpecification(lightCapable
-			    .getLightSwitch()), new LightLevelBelowTresholdOrControlOnSpecification(lightCapable, details.getLightLevelTreshold(),
-			    lightCapable.getLightControl())));
+		    new SpecificationsDependentObserver(
+			    lightCapable.getLightControl(),
+			    new SensorDisabledOrOffSpecification(lightCapable.getLightSwitch()),
+			    new LightLevelBelowTresholdOrControlOnSpecification(lightCapable, details.getLightLevelTreshold(), lightCapable
+				    .getLightControl())));
 	    lightCapable.getMotionSensor().addObserver(lightCapableUpdatingObserver);
 	}
 	LOG.info("Done");

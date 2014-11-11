@@ -14,8 +14,8 @@ public class MotionSensorLightDetails {
     private final LightCapable lightCapable;
     private final GpioProvider switchProvider, controlProvider;
     private final Pin motionSensorPin, lightSwitchPin, lightControlPin;
-    private final int lightLevelSensorAddress;
-    private final double lightLevelTreshold;
+    private final Integer lightLevelSensorAddress;
+    private final Double lightLevelTreshold;
 
     private MotionSensorLightDetails(Builder builder) {
 	this.lightCapable = builder.lightCapable;
@@ -52,11 +52,11 @@ public class MotionSensorLightDetails {
 	return lightControlPin;
     }
 
-    public int getLightLevelSensorAddress() {
+    public Integer getLightLevelSensorAddress() {
 	return lightLevelSensorAddress;
     }
 
-    public double getLightLevelTreshold() {
+    public Double getLightLevelTreshold() {
 	return lightLevelTreshold;
     }
 
@@ -68,8 +68,8 @@ public class MotionSensorLightDetails {
 	private LightCapable lightCapable;
 	private GpioProvider switchProvider, controlProvider;
 	private Pin motionSensorPin, lightSwitchPin, lightControlPin;
-	private int lightLevelSensorAddress;
-	private double lightLevelTreshold;
+	private Integer lightLevelSensorAddress;
+	private Double lightLevelTreshold;
 
 	private Builder() {
 	}
@@ -104,12 +104,12 @@ public class MotionSensorLightDetails {
 	    return this;
 	}
 
-	public Builder lightLevelSensorAddress(int lightLevelSensorAddress) {
+	public Builder lightLevelSensorAddress(Integer lightLevelSensorAddress) {
 	    this.lightLevelSensorAddress = lightLevelSensorAddress;
 	    return this;
 	}
 
-	public Builder lightLevelTreshold(double lightLevelTreshold) {
+	public Builder lightLevelTreshold(Double lightLevelTreshold) {
 	    this.lightLevelTreshold = lightLevelTreshold;
 	    return this;
 	}

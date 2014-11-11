@@ -106,7 +106,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorAddress(0).build());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorAddress(0).build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -207,7 +207,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorAddress(0).build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -244,7 +244,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorAddress(0).build());
 	motionSensor.notifyObservers(false);
     }
 }
