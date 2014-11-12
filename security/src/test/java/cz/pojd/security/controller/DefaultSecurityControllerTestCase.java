@@ -118,6 +118,7 @@ public class DefaultSecurityControllerTestCase {
 		times = 1;
 	    }
 	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
 	controller.handle(securityEvent);
     }
 
@@ -133,6 +134,7 @@ public class DefaultSecurityControllerTestCase {
 		maxTimes = 0;
 	    }
 	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
 	controller.handle(securityEvent);
     }
 
@@ -174,6 +176,7 @@ public class DefaultSecurityControllerTestCase {
 		times = 1;
 	    }
 	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
 	controller.handle(securityEvent);
     }
 }

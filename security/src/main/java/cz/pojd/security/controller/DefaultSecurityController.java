@@ -23,7 +23,7 @@ public class DefaultSecurityController implements Controller {
     private final Map<SecurityMode, List<Rule>> rulesByMode = new HashMap<SecurityMode, List<Rule>>();
     private final List<SecurityHandler> securityHandlers;
 
-    private SecurityMode securityMode = SecurityMode.FULL_HOUSE;
+    private SecurityMode securityMode = SecurityMode.OFF;
     private RoomsDAO roomsDAO;
 
     @Inject
