@@ -61,15 +61,12 @@ public class CameraUploadFtplet extends DefaultFtplet {
 		if (LOG.isDebugEnabled()) {
 		    LOG.debug("Request matches watched path '" + watchPath + "', camera directory: '" + cameraDirectory + "' fileName: '" + fileName);
 		}
-		if (fileName.endsWith(".part")) { // workaround the fact we have only part file at this very moment
-		    Path fullPath = cameraDirectory.resolve(fileName.substring(0, fileName.length() - 5));
-		    SecurityEvent event = new SecurityEvent();
-		    event.setFilePath(fullPath);
-		    event.setType(Type.cameraMotionDetected);
-		    event.setSource(Source.parse(cameraDirectory.getFileName().toString()));
+		SecurityEvent event = new SecurityEvent();
+		event.setFilePath(path);
+		event.setType(Type.cameraMotionDetected);
+		event.setSource(Source.parse(cameraDirectory.getFileName().toString()));
 
-		    getSecurityController().handle(event);
-		}
+		getSecurityController().handle(event);
 	    } else {
 		LOG.debug("Request path does not contain subdirectory for camera name, skipping...");
 	    }

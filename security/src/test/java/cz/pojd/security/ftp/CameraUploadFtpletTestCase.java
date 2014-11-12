@@ -69,23 +69,6 @@ public class CameraUploadFtpletTestCase {
     }
 
     @Test
-    public void testOnUploadEndRequestHasMatchingArgumentMissingFileExtensionDoesNothing() throws FtpException, IOException {
-	new NonStrictExpectations() {
-	    {
-		request.hasArgument();
-		result = true;
-
-		request.getArgument();
-		result = WATCH_PATH + Source.CAMERA_MAINDOOR.name().toLowerCase() + "/file.JPG"; // no .part extension here
-
-		controller.handle(withInstanceOf(SecurityEvent.class));
-		maxTimes = 0;
-	    }
-	};
-	cameraUploadFtplet.onUploadEnd(session, request);
-    }
-
-    @Test
     public void testOnUploadEndRequestHasMatchingArgumentTriggersController() throws FtpException, IOException {
 	final String filePath = WATCH_PATH + Source.CAMERA_MAINDOOR.name().toLowerCase() + "/file.JPG";
 	new NonStrictExpectations() {
@@ -94,7 +77,7 @@ public class CameraUploadFtpletTestCase {
 		result = true;
 
 		request.getArgument();
-		result = filePath + ".part";
+		result = filePath;
 
 		controller.handle(withArgThat(new BaseMatcher<SecurityEvent>() {
 		    @Override

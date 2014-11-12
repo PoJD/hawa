@@ -64,7 +64,9 @@ public class SecurityEvent {
 	// only attempt deleting the file if exists..
 	if (filePath != null) {
 	    try {
-		filePath.toFile().delete();
+		if (!filePath.toFile().delete()) {
+		    LOG.warn("Unable to delete the file at path: " + filePath + ". File.delete returned false.");
+		}
 	    } catch (Exception e) {
 		LOG.error("Unable to delete the file at path: " + filePath, e);
 	    }

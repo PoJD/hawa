@@ -124,6 +124,10 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<properties>
+				<downloadSources>true</downloadSources>
+				<downloadJavadocs>true</downloadJavadocs>
+			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
