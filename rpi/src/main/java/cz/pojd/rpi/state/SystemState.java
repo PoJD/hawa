@@ -1,6 +1,7 @@
 package cz.pojd.rpi.state;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class SystemState {
     private final List<PropertyValue> values = new ArrayList<>();
-    private String lastUpdate;
+    private Date lastUpdate;
     private List<String> logSystem, logApplication;
     private boolean dbRunning;
 
@@ -25,11 +26,11 @@ public class SystemState {
 	return values;
     }
 
-    public String getLastUpdate() {
+    public Date getLastUpdate() {
 	return lastUpdate;
     }
 
-    public void setLastUpdate(String lastUpdate) {
+    public void setLastUpdate(Date lastUpdate) {
 	this.lastUpdate = lastUpdate;
     }
 

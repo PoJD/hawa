@@ -89,11 +89,6 @@ public class ModelConfig {
 
     @Bean
     public Refresher refresher() {
-	return new SpringScheduledRefresher(datePattern());
-    }
-
-    @Bean
-    public String datePattern() {
-	return "dd.MM.yyyy HH:mm";
+	return new SpringScheduledRefresher();
     }
 }

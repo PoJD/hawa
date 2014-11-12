@@ -1,10 +1,12 @@
 package cz.pojd.homeautomation.model.refresh;
 
+import java.util.Date;
+
 import cz.pojd.homeautomation.model.lights.LightCapable;
 import cz.pojd.homeautomation.model.lights.LightCapableDetail;
 
 public class RefreshedLightCapableDetail extends LightCapableDetail {
-    private String lastUpdate;
+    private Date lastUpdate;
 
     protected RefreshedLightCapableDetail() {
     }
@@ -18,11 +20,11 @@ public class RefreshedLightCapableDetail extends LightCapableDetail {
 	super(lightCapable);
     }
 
-    public String getLastUpdate() {
+    public Date getLastUpdate() {
 	return lastUpdate;
     }
 
-    public void setLastUpdate(String lastUpdate) {
+    public void setLastUpdate(Date lastUpdate) {
 	this.lastUpdate = lastUpdate;
     }
 }

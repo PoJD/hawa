@@ -4,9 +4,7 @@
 
 angular.module('homeAutomation.controllers', [])
 
-.controller(
-		'BaseUpdateController',
-		[ '$scope', '$interval', function($scope, $interval) {
+.controller('BaseUpdateController', function($scope, $interval) {
 				var updates = undefined;
 				$scope.autoUpdate = function() {
 					if (angular.isDefined(updates))
@@ -29,19 +27,20 @@ angular.module('homeAutomation.controllers', [])
 					$scope.stopUpdates();
 				});
 				
-			    
 			    $scope.xAxisTickFormat = function() {
-			    	return function(d){
-			    		return d3.time.format('%e.%m. %H:%M')(new Date(d));
+			    	return function(date){
+			    		return $scope.formatDateTime(date);
 			    	};
 			    };
+			    
+			    $scope.formatDateTime = function(date) {
+			    	return (date) ? d3.time.format('%e.%m. %H:%M')(new Date(date)) : '';
+			    }
 				
 				$scope.autoUpdate();
-			} ])
+			} )
 
-.controller(
-		'HomeController',
-		[ '$scope', '$controller', 'systemState', 'rooms', 'outdoor', function($scope, $controller, systemState, rooms, outdoor) {
+.controller('HomeController', function($scope, $controller, systemState, rooms, outdoor) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 
 				$scope.update = function() {
@@ -61,19 +60,17 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
-			} ])
+			} )
 
-.controller('LiveViewController', [ '$scope', 'liveview', function($scope, liveview) {
+.controller('LiveViewController', function($scope, liveview) {
 	$scope.liveview = liveview.get(function(result) {
 		if (result.cameraOK) { // only in this case change dynamically the img element to start fetching data...
 			$scope.source = "http://rpi:7070/?action=stream";
 		}
 	});
-} ])
+} )
 
-.controller(
-		'OutdoorController',
-		[ '$scope', '$controller', 'outdoor', function($scope, $controller, outdoor) {
+.controller('OutdoorController', function($scope, $controller, outdoor) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 
 				$scope.update = function() {
@@ -92,12 +89,9 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
-			} ])
+			} )
 			
-			
-.controller(
-		'SystemStateController',
-		[ '$scope', '$controller', 'systemState', function($scope, $controller, systemState) {
+.controller('SystemStateController', function($scope, $controller, systemState) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 
 				$scope.update = function() {
@@ -116,11 +110,9 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
-			} ])
+			} )
 						
-
-.controller('RoomController', 
-		[ '$scope', '$controller', '$routeParams', 'rooms', function($scope, $controller, $routeParams, rooms) {
+.controller('RoomController', function($scope, $controller, $routeParams, rooms) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 				
 				$scope.update = function() {
@@ -133,10 +125,9 @@ angular.module('homeAutomation.controllers', [])
 				};
 
 				$scope.update();
-} ])
+} )
 
-.controller('SecurityController', 
-		[ '$scope', '$controller', 'security', function($scope, $controller, security) {
+.controller('SecurityController', function($scope, $controller, security, ngDialog) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
 				
 				$scope.update = function(isFirstUpdate) {
@@ -152,6 +143,11 @@ angular.module('homeAutomation.controllers', [])
 					$scope.changed = false;
 				};
 			    
+			    $scope.showEventDetail = function(calendarEvent) {
+    	        	$scope.calendarEvent = calendarEvent;
+    	        	ngDialog.open({ template: 'calendarEvent.html', className: 'ngdialog-theme-default', scope: $scope });
+			    };
+
 			    $scope.calendar = {
 			    	config: {
 		    	        height: 600,
@@ -160,14 +156,16 @@ angular.module('homeAutomation.controllers', [])
 		    	          center: 'title',
 		    	          right: 'today prev, next'
 		    	        },
+		    	        timezone : 'local',
+		    	        firstDay: 1,
+		    	        columnFormat: { week: 'ddd D.M.' },
+		    	        timeFormat: { agenda: 'H:mm', '': 'H(:mm)' },
 		    	        defaultView : 'agendaWeek',
-		    	        eventClick: function(calendarEvent) {
-		    	        	alert(calendarEvent.title);
-		    	        }
+		    	        eventClick: $scope.showEventDetail
 			    	},
 				    events: [ { url: 'rest/security/events' } ]
 		    	};
 
 			    $scope.changed = false;
 				$scope.update(true);
-} ]);
+} );

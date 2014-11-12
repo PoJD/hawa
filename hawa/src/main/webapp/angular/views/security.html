@@ -1,6 +1,25 @@
+<script type="text/ng-template" id="calendarEvent.html">
+ <table class="table">
+	<thead>
+		<tr><th colspan="2">Event Detail</th></tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>When</th>
+			<td>{{formatDateTime(calendarEvent.start)}}</td>
+		</tr>
+		<tr>
+			<th>What</th>
+			<td>{{calendarEvent.title}}</td>
+		</tr>
+	</tbody>
+ </table>
+</script>
+
 <div class="row full">
 	<div class="col-md-8">
-		<div ui-calendar="calendar.config" calendar="eventsCalendar" ng-model="calendar.events"></div>
+		<div ui-calendar="calendar.config" calendar="eventsCalendar"
+			ng-model="calendar.events"></div>
 	</div>
 	<div class="col-md-4">
 		<div class="panel panel-info">

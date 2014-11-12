@@ -25,7 +25,7 @@
 	<div class="col-md-3 col-xs-6">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				<a href="#/outdoor">Outdoor ({{outdoor.lastUpdate}})</a>
+				<a href="#/outdoor">Outdoor</a>
 				<ha-light-control entity="outdoor" small="true"></ha-light-control>
 				<span class="glyphicon glyphicon-cloud right"></span>
 			</div>
@@ -35,6 +35,10 @@
 						<th>{{reading.type}}</th>
 						<td>{{reading.stringValue}}</td>
 					</tr>
+					<tr>
+						<th>Last Checked</th>
+						<td>{{formatDateTime(outdoor.lastUpdate)}}</td>
+					</tr>					
 				</tbody>
 			</table>
 		</div>

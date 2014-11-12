@@ -8,6 +8,7 @@ angular.module('homeAutomation', [
   'toggle-switch',
   'nvd3ChartDirectives',
   'ui.calendar',
+  'ngDialog',
   'homeAutomation.filters',
   'homeAutomation.services',
   'homeAutomation.directives',

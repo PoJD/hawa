@@ -1,5 +1,7 @@
 package cz.pojd.homeautomation.model.refresh;
 
+import java.util.Date;
+
 /**
  * Refresher is the main point of refreshing data in the application
  * 
@@ -27,5 +29,5 @@ public interface Refresher {
      * 
      * @return last date/time this instance ran
      */
-    public String getLastUpdate();
+    public Date getLastUpdate();
 }

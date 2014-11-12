@@ -1,15 +1,12 @@
 package cz.pojd.homeautomation.model.refresh;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
@@ -23,14 +20,8 @@ public class SpringScheduledRefresher implements Refresher {
     private static final Log LOG = LogFactory.getLog(SpringScheduledRefresher.class);
 
     private final List<Refreshable> refreshableList = new ArrayList<>();
-    private final DateTimeFormatter formatter;
 
     private LocalDateTime lastUpdate;
-
-    @Inject
-    public SpringScheduledRefresher(String datePattern) {
-	formatter = DateTimeFormat.forPattern(datePattern);
-    }
 
     /**
      * Run refresh logic every 5 mins and refresh all injected refreshable interfaces
@@ -49,8 +40,8 @@ public class SpringScheduledRefresher implements Refresher {
     }
 
     @Override
-    public String getLastUpdate() {
-	return formatter.print(lastUpdate);
+    public Date getLastUpdate() {
+	return lastUpdate != null ? lastUpdate.toDate() : null;
     }
 
     @Override
