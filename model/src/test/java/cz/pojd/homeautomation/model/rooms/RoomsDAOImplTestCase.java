@@ -438,7 +438,7 @@ public class RoomsDAOImplTestCase {
 
     private void checkDetail(RoomDetail detail) {
 	assertTrue(detail.getMotionSensor().isEnabled());
-	assertEquals(Floor.BASEMENT, detail.getFloor());
+	assertEquals(Floor.Basement, detail.getFloor());
 	assertEquals(ROOM_NAME, detail.getName());
 	assertEquals(1.0, detail.getTemperature().getDoubleValue(), 0.001);
 	assertEquals("1.00", detail.getTemperature().getStringValue());
@@ -454,7 +454,7 @@ public class RoomsDAOImplTestCase {
 
 	    public Room create(RoomSpecification specification) {
 		Room result = new Room();
-		result.setFloor(specification.getFloor() != null ? specification.getFloor() : Floor.BASEMENT);
+		result.setFloor(specification.getFloor() != null ? specification.getFloor() : Floor.Basement);
 		result.setName(specification.getName());
 		result.setMotionSensor(mockedMotionSensor);
 		result.setLightControl(mockControl);

@@ -90,7 +90,7 @@ public class DefaultRoomFactory implements RoomFactory {
 
 	@SuppressWarnings("unused")
 	GpioProvider switchProvider = null, controlProvider = null;
-	if (Floor.BASEMENT.equals(room.getFloor())) {
+	if (Floor.Basement.equals(room.getFloor())) {
 	    switchProvider = getBasementFloorLightSwitches();
 	    controlProvider = getBasementFloorLightControls();
 	} else {

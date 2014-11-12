@@ -21,32 +21,32 @@ public enum SecuritySource implements Source {
     UNKNOWN("N/A", false);
 
     private static final Log LOG = LogFactory.getLog(SecuritySource.class);
-    private final String description;
+    private final String name;
     private final Floor floor;
     private final boolean outdoor;
 
-    private SecuritySource(String description, boolean outdoor) {
-	this(description, Floor.BASEMENT, outdoor);
+    private SecuritySource(String name, boolean outdoor) {
+	this(name, Floor.Basement, outdoor);
     }
 
-    private SecuritySource(RoomSpecification room, String description) {
-	this(description, room.getFloor(), false);
+    private SecuritySource(RoomSpecification room, String name) {
+	this(name, room.getFloor(), false);
     }
 
-    private SecuritySource(String description, Floor floor, boolean outdoor) {
-	this.description = description;
+    private SecuritySource(String name, Floor floor, boolean outdoor) {
+	this.name = name;
 	this.floor = floor;
 	this.outdoor = outdoor;
     }
 
     @Override
     public String getName() {
-	return name();
+	return name;
     }
 
     @Override
-    public String getDescription() {
-	return description;
+    public String getId() {
+	return name();
     }
 
     @Override
@@ -66,10 +66,5 @@ public enum SecuritySource implements Source {
 	    LOG.error("Unable to parse value " + source + " into an existing source. Assuming unknown source...", e);
 	    return UNKNOWN;
 	}
-    }
-
-    @Override
-    public String toString() {
-	return "SecuritySource [name=" + getName() + ", description=" + description + ", floor=" + floor + ", outdoor=" + outdoor + "]";
     }
 }

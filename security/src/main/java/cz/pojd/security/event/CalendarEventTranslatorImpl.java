@@ -29,7 +29,7 @@ public class CalendarEventTranslatorImpl implements CalendarEventTranslator {
     private CalendarEvent translate(SecurityEvent securityEvent) {
 	if (securityEvent.getAt() != null) {
 	    CalendarEvent result = new CalendarEvent();
-	    result.setWhat((securityEvent.getType() != null ? securityEvent.getType().toString() : "")
+	    result.setWhat((securityEvent.getType() != null ? securityEvent.getType().getName() : "")
 		    + (securityEvent.getDetail() != null ? ": " + securityEvent.getDetail() : ""));
 	    result.setTitle(result.getWhat());
 	    if (securityEvent.getSource() != null) {

@@ -66,7 +66,8 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     public RoomsDAOImpl(RoomFactory factory, RoomSpecification[] roomSpecifications, RuntimeExecutor runtimeExecutor, StorageCleanup storageCleanup) {
 	rooms = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
-	    rooms.put(roomSpecification.getName(), factory.create(roomSpecification));
+	    Room room = factory.create(roomSpecification);
+	    rooms.put(room.getName(), room);
 	}
 	storageCleanup.registerTable("roomstate");
     }

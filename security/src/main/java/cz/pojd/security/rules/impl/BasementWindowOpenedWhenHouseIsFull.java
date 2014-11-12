@@ -9,7 +9,7 @@ public class BasementWindowOpenedWhenHouseIsFull extends AbstractRule {
 
     @Override
     public boolean isSecurityBreach(SecurityEvent event) {
-	return Type.windowOpened == event.getType() && Floor.BASEMENT == event.getSource().getFloor();
+	return Type.windowOpened == event.getType() && Floor.Basement == event.getSource().getFloor();
     }
 
     @Override

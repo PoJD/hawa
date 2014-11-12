@@ -16,11 +16,11 @@ public interface Source {
     String getName();
 
     /**
-     * Gets the description of this source
+     * Gets the Id of this source
      * 
-     * @return string description of this source (more human readable compared to name)
+     * @return string unique ID of this source
      */
-    String getDescription();
+    String getId();
 
     /**
      * Gets the floor of this source
