@@ -5,6 +5,7 @@ import java.util.Collection;
 import cz.pojd.homeautomation.model.dao.DAO;
 import cz.pojd.homeautomation.model.refresh.Refreshable;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
+import cz.pojd.rpi.controllers.Observer;
 
 /**
  * DAO for Rooms
@@ -50,4 +51,12 @@ public interface RoomsDAO extends Refreshable, DAO {
      * Switches of all lights of all rooms
      */
     void switchOffAllLights();
+
+    /**
+     * Add observer for changes in rooms - new room details created to wrap information about the rooms
+     * 
+     * @param observer
+     *            observer to be added and to be fired anytime a room detail is created for a room
+     */
+    void addObserver(Observer<RoomsDAO, RoomDetail> observer);
 }

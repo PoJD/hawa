@@ -1,10 +1,8 @@
 package cz.pojd.rpi.sensors.observable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controls.BaseControl;
+import cz.pojd.rpi.controls.Controllable;
 
 /**
  * ObservableSensor base implementation. Notifies the observers exactly in the order they where added to this observable sensor
@@ -14,11 +12,7 @@ import cz.pojd.rpi.controls.BaseControl;
  */
 public abstract class BaseObservableSensor extends BaseControl implements ObservableSensor {
 
-    /*
-     * Use our own observer list, avoid using java.util.Observable since: 1) it is following reverse order when notifying (did not want to rely on
-     * that implementation detail) 2) we don't need that complexity anyway
-     */
-    private List<Observer> observers = new ArrayList<>();
+    private Observable<Controllable, Boolean> observable = new Observable<>();
 
     @Override
     public boolean isSwitchedOn() {
@@ -46,15 +40,17 @@ public abstract class BaseObservableSensor extends BaseControl implements Observ
     }
 
     @Override
-    public synchronized void addObserver(Observer o) {
-	observers.add(o);
+    public synchronized void addObserver(Observer<Controllable, Boolean> o) {
+	observable.addObserver(o);
     }
 
-    @Override
+    /**
+     * Notify the observers about a change - switched on or off
+     * 
+     * @param switchedOn
+     *            true if the sensor just switched on, false if it just switched off
+     */
     public void notifyObservers(boolean switchedOn) {
-	// always notify observers (even if disabled)
-	for (Observer observer : observers) {
-	    observer.switched(this, switchedOn);
-	}
+	observable.notifyObservers(this, switchedOn);
     }
 }

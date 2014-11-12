@@ -18,6 +18,8 @@ import cz.pojd.homeautomation.model.refresh.RefreshableDAO;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.homeautomation.model.web.GraphData;
+import cz.pojd.rpi.controllers.Observer;
+import cz.pojd.rpi.sensors.observable.Observable;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
 /**
@@ -31,6 +33,7 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     private static final Log LOG = LogFactory.getLog(RoomsDAOImpl.class);
 
     private final Map<String, Room> rooms;
+    private final Observable<RoomsDAO, RoomDetail> observable = new Observable<>();
 
     @Value("${sql.roomsDAO.insert}")
     private String insertSql;
@@ -116,6 +119,11 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	}
     }
 
+    @Override
+    public void addObserver(Observer<RoomsDAO, RoomDetail> observer) {
+	observable.addObserver(observer);
+    }
+
     /*
      * Scheduler logic
      */
@@ -145,8 +153,9 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
 	    detail.setLastUpdate(getRefresher().getLastUpdate());
 	    room.setLastDetail(detail);
 	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Room state detected: " + detail);
+		LOG.debug("Room state detected: " + detail + ". Notifying all observers... ");
 	    }
+	    observable.notifyObservers(this, detail);
 	}
     }
 

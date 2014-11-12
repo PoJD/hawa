@@ -7,6 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
+import cz.pojd.homeautomation.model.Source;
+
 /**
  * SecurityEvent wraps a security event triggered within the application.
  *

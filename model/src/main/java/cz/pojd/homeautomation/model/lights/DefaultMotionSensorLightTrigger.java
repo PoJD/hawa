@@ -7,6 +7,7 @@ import cz.pojd.rpi.controllers.ControlObserver;
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controllers.SensorDisabledOrOffSpecification;
 import cz.pojd.rpi.controllers.SpecificationsDependentObserver;
+import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.controls.GpioControl;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
@@ -46,7 +47,7 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
 	// #15 this makes sure that after the primary observer does it work (e.g. light switch fired and control changed), the respective details are
 	// updated too
 	// the same logic then below in motion sensor
-	Observer lightCapableUpdatingObserver = new LightCapableUpdatingObserver(lightCapable);
+	Observer<Controllable, Boolean> lightCapableUpdatingObserver = new LightCapableUpdatingObserver(lightCapable);
 	lightCapable.getLightSwitch().addObserver(lightCapableUpdatingObserver);
 
 	if (details.getMotionSensorPin() != null && details.getLightLevelSensorAddress() != null) {

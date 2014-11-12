@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import cz.pojd.homeautomation.model.dao.DAOImpl;
 import cz.pojd.homeautomation.model.dao.StorageCleanup;
+import cz.pojd.homeautomation.model.spring.RoomSpecification;
 
 /**
  * Simple implementation of SecurityEventDAO using spring JDBC support
@@ -63,7 +64,13 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 	    for (Map<String, Object> row : getJdbcTemplate().queryForList(querySql, new Object[] { startString, endString })) {
 		SecurityEvent event = new SecurityEvent();
 		event.setFilePath(parsePathFromRow(row, "filepath"));
-		event.setSource(parseEnumFromRow(row, Source.class, "source"));
+
+		// TODO not the best logic here, think over something cleaner?
+		try {
+		    event.setSource(parseEnumFromRow(row, SecuritySource.class, "source"));
+		} catch (IllegalArgumentException e) {
+		    event.setSource(parseEnumFromRow(row, RoomSpecification.class, "source"));
+		}
 		event.setType(parseEnumFromRow(row, Type.class, "type"));
 		event.setAt(parseDateTimeFromRow(row, "at"));
 		result.add(event);
@@ -77,8 +84,11 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
     @Override
     public void save(SecurityEvent securityEvent) {
 	try {
-	    getJdbcTemplate().update(insertSql, new Object[] { securityEvent.getType(), securityEvent.getSource(), securityEvent.getAtAsDate(),
-		    securityEvent.getFilePath() }, new int[] { Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP, Types.VARCHAR });
+	    getJdbcTemplate().update(
+		    insertSql,
+		    new Object[] { securityEvent.getType(), securityEvent.getSource() != null ? securityEvent.getSource().getName() : null,
+			    securityEvent.getAtAsDate(),
+			    securityEvent.getFilePath() }, new int[] { Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP, Types.VARCHAR });
 	} catch (Exception e) {
 	    throw new SecurityEventDAOException("Unable to save the security event " + securityEvent, e);
 	}

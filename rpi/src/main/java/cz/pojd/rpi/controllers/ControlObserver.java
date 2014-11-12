@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.rpi.controls.Control;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
+import cz.pojd.rpi.controls.Controllable;
 
 /**
  * ControlObserver is a special observer switching on the control anytime this observer is notified (assuming the sensor is enabled)
@@ -12,7 +12,7 @@ import cz.pojd.rpi.sensors.observable.ObservableSensor;
  * @author Lubos Housa
  * @since Sep 9, 2014 7:50:49 PM
  */
-public class ControlObserver implements Observer {
+public class ControlObserver implements Observer<Controllable, Boolean> {
 
     private static final Log LOG = LogFactory.getLog(ControlObserver.class);
 
@@ -27,11 +27,11 @@ public class ControlObserver implements Observer {
     }
 
     @Override
-    public void switched(ObservableSensor sensor, boolean switchedOn) {
+    public void update(Controllable controllable, Boolean switchedOn) {
 	// only here we decide based on the enabled flag
-	if (!sensor.isEnabled()) {
+	if (!controllable.isEnabled()) {
 	    if (LOG.isDebugEnabled()) {
-		LOG.debug(sensor + " is not enabled. Therefore switched call ignored with switchedOn: " + switchedOn);
+		LOG.debug(controllable + " is not enabled. Therefore update call ignored with switchedOn: " + switchedOn);
 	    }
 	} else {
 	    getControl().setSwitchedOn(switchedOn);

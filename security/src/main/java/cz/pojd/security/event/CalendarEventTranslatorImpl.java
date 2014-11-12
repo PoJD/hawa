@@ -28,11 +28,16 @@ public class CalendarEventTranslatorImpl implements CalendarEventTranslator {
 
     private CalendarEvent translate(SecurityEvent securityEvent) {
 	if (securityEvent.getAt() != null) {
-	    return CalendarEvent.newBuilder()
-		    .title(new StringBuilder().append(securityEvent.getType()).append(" at ").append(securityEvent.getSource()).toString())
-		    .start(securityEvent.getAtAsDate())
-		    .end(securityEvent.getAt().plusHours(1).toDate())
-		    .build();
+	    CalendarEvent result = new CalendarEvent();
+	    result.setWhat(securityEvent.getType() != null ? securityEvent.getType().toString() : "N/A");
+	    result.setTitle(result.getWhat());
+	    if (securityEvent.getSource() != null) {
+		result.setWhere(securityEvent.getSource().getName());
+		result.setFloor(securityEvent.getSource().getFloor());
+	    }
+	    result.setStart(securityEvent.getAtAsDate());
+	    result.setEnd(securityEvent.getAt().plusHours(1).toDate());
+	    return result;
 	} else {
 	    LOG.warn("Found security event without time. Ignoring this event in the translation: " + securityEvent);
 	    return null;

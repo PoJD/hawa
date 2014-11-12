@@ -8,11 +8,10 @@ import org.junit.Test;
 
 import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.controls.Control;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 public class ControlObserverTestCase {
 
-    private ObservableSensor sensor;
+    private MockObservableSensor sensor;
     private @Mocked Control control;
 
     @Before

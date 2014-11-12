@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.refresh.Refresher;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
@@ -32,6 +33,7 @@ import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.rpi.MockControl;
 import cz.pojd.rpi.MockObservableSensor;
 import cz.pojd.rpi.State;
+import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.Reading.Type;
@@ -54,6 +56,8 @@ public class RoomsDAOImplTestCase {
     private RoomFactory mockRoomFactory;
     @Mocked
     private StorageCleanup storageCleanup;
+    @Mocked
+    private Observer<RoomsDAO, RoomDetail> observer;
 
     private MockObservableSensor mockedLightSwitch, mockedMotionSensor, mockedTemperatureSensor;
     private Control mockControl;
@@ -310,6 +314,18 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
+    public void testDetectStateShouldInvokeObserversForEachRoom() {
+	createDAO(RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP);
+	new NonStrictExpectations() {
+	    {
+		observer.update(dao, withInstanceOf(RoomDetail.class));
+		times = 2;
+	    }
+	};
+	dao.detectState();
+    }
+
+    @Test
     public void testRefreshDetectOKSaveOK() {
 	new NonStrictExpectations() {
 	    {
@@ -450,5 +466,6 @@ public class RoomsDAOImplTestCase {
 	}, rooms, runtimeExecutor, storageCleanup);
 	dao.setJdbcTemplate(jdbcTemplate);
 	dao.setRefresher(refresher);
+	dao.addObserver(observer);
     }
 }

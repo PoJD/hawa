@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cz.pojd.homeautomation.model.rooms.RoomsDAO;
+import cz.pojd.rpi.controllers.Observer;
+import cz.pojd.rpi.sensors.observable.Observable;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
@@ -24,12 +25,11 @@ public class DefaultSecurityController implements Controller {
     private final List<SecurityHandler> securityHandlers;
 
     private SecurityMode securityMode = SecurityMode.OFF;
-    private RoomsDAO roomsDAO;
+    private Observable<Controller, SecurityMode> observable = new Observable<>();
 
     @Inject
-    public DefaultSecurityController(RoomsDAO roomsDAO, RulesDAO rulesDao, SecurityHandler... securityHandlers) {
+    public DefaultSecurityController(RulesDAO rulesDao, SecurityHandler... securityHandlers) {
 	LOG.info("Initating DefaultSecurityController...");
-	this.roomsDAO = roomsDAO;
 	for (Rule rule : rulesDao.queryRules()) {
 	    registerRule(rule);
 	}
@@ -99,14 +99,16 @@ public class DefaultSecurityController implements Controller {
 	LOG.info("Switching the securityMode to " + newMode);
 	this.securityMode = newMode;
 
-	// TODO does this belong here?
-	if (SecurityMode.EMPTY_HOUSE == securityMode) {
-	    roomsDAO.switchOffAllLights();
-	}
+	observable.notifyObservers(this, securityMode);
     }
 
     @Override
     public SecurityMode getMode() {
 	return securityMode;
+    }
+
+    @Override
+    public void addObserver(Observer<Controller, SecurityMode> observer) {
+	observable.addObserver(observer);
     }
 }

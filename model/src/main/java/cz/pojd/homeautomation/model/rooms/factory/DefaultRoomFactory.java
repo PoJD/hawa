@@ -8,9 +8,9 @@ import org.apache.commons.logging.LogFactory;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.RaspiPin;
 
+import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.homeautomation.model.lights.MotionSensorLightDetails;
 import cz.pojd.homeautomation.model.lights.MotionSensorLightTrigger;
-import cz.pojd.homeautomation.model.rooms.Floor;
 import cz.pojd.homeautomation.model.rooms.Room;
 import cz.pojd.homeautomation.model.rooms.RoomDetail;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
@@ -83,9 +83,10 @@ public class DefaultRoomFactory implements RoomFactory {
 	LOG.info("Creating new instance of room using: " + roomSpecification);
 
 	Room room = new Room();
+	room.setSpecification(roomSpecification);
 	room.setName(roomSpecification.getName());
 	room.setTemperatureSensor(new Ds18B20TemperatureSensor(getRuntimeExecutor(), roomSpecification.getTemperatureID()));
-	room.setFloor(roomSpecification.getFloor() != null ? roomSpecification.getFloor() : Floor.BASEMENT);
+	room.setFloor(roomSpecification.getFloor());
 
 	@SuppressWarnings("unused")
 	GpioProvider switchProvider = null, controlProvider = null;

@@ -2,6 +2,7 @@ package cz.pojd.rpi.sensors.observable;
 
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controls.Control;
+import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.sensors.Sensor;
 
 /**
@@ -25,13 +26,5 @@ public interface ObservableSensor extends Sensor, Control {
      * @param o
      *            observer to observe the changes
      */
-    public void addObserver(Observer o);
-
-    /**
-     * Notify the observers about a change - switched on or off
-     * 
-     * @param switchedOn
-     *            true if the sensor just switched on, false if it just switched off
-     */
-    public void notifyObservers(boolean switchedOn);
+    void addObserver(Observer<Controllable, Boolean> o);
 }

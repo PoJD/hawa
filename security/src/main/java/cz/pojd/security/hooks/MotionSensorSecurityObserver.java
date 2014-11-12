@@ -1,10 +1,10 @@
-package cz.pojd.security.motion;
+package cz.pojd.security.hooks;
 
+import cz.pojd.homeautomation.model.Source;
 import cz.pojd.rpi.controllers.Observer;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
+import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.SecurityEvent;
-import cz.pojd.security.event.Source;
 import cz.pojd.security.event.Type;
 
 /**
@@ -13,7 +13,7 @@ import cz.pojd.security.event.Type;
  * @author Lubos Housa
  * @since Nov 3, 2014 12:17:53 AM
  */
-public class MotionSensorSecurityObserver implements Observer {
+public class MotionSensorSecurityObserver implements Observer<Controllable, Boolean> {
 
     private final Source source;
     private final Controller securityController;
@@ -24,7 +24,7 @@ public class MotionSensorSecurityObserver implements Observer {
     }
 
     @Override
-    public void switched(ObservableSensor obserableSensorSource, boolean switchedOn) {
+    public void update(Controllable controllable, Boolean switchedOn) {
 	if (switchedOn) {
 	    SecurityEvent event = new SecurityEvent();
 	    event.setType(Type.sensorMotionDetected);

@@ -8,7 +8,7 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
-import cz.pojd.homeautomation.model.rooms.RoomsDAO;
+import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
@@ -20,13 +20,13 @@ public class DefaultSecurityControllerTestCase {
     @Mocked
     private RulesDAO rulesDAO;
     @Mocked
-    private RoomsDAO roomsDAO;
-    @Mocked
     private Rule rule, rule2, rule3;
     @Mocked
     private SecurityHandler securityHandler;
     @Mocked
     private SecurityEvent securityEvent;
+    @Mocked
+    private Observer<Controller, SecurityMode> observer;
 
     @Before
     public void setup() {
@@ -58,7 +58,8 @@ public class DefaultSecurityControllerTestCase {
 	    }
 	};
 
-	controller = new DefaultSecurityController(roomsDAO, rulesDAO, securityHandler);
+	controller = new DefaultSecurityController(rulesDAO, securityHandler);
+	controller.addObserver(observer);
     }
 
     @Test
@@ -105,7 +106,7 @@ public class DefaultSecurityControllerTestCase {
 	controller.switchMode(SecurityMode.EMPTY_HOUSE);
 	controller.handle(securityEvent);
     }
-    
+
     @Test
     public void testHandleRuleFiresBreachTriggersHandler() {
 	new NonStrictExpectations() {
@@ -154,6 +155,16 @@ public class DefaultSecurityControllerTestCase {
     }
 
     @Test
+    public void testSwitchModeObserverIsNotified() {
+	new NonStrictExpectations() {
+	    {
+		observer.update(controller, SecurityMode.OFF);
+	    }
+	};
+	controller.switchMode(SecurityMode.OFF);
+    }
+
+    @Test
     public void testSecurityEventIsDisposedWhenProcessingOKAndModeIsOff() {
 	new NonStrictExpectations() {
 	    {
@@ -165,7 +176,7 @@ public class DefaultSecurityControllerTestCase {
 	controller.handle(securityEvent);
     }
 
-    @Test(expected=RuntimeException.class)
+    @Test(expected = RuntimeException.class)
     public void testSecurityEventIsDisposedWhenProcessingThrowsAnError() {
 	new NonStrictExpectations() {
 	    {

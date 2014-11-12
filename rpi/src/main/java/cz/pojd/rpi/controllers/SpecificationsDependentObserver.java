@@ -7,7 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.rpi.controls.Control;
-import cz.pojd.rpi.sensors.observable.ObservableSensor;
+import cz.pojd.rpi.controls.Controllable;
 
 /**
  * Observer dependent on a list of specifications. All must be satisfied in order to fire the dependent control.
@@ -27,7 +27,7 @@ public class SpecificationsDependentObserver extends ControlObserver {
     }
 
     @Override
-    public void switched(ObservableSensor sensor, boolean switchedOn) {
+    public void update(Controllable controllable, Boolean switchedOn) {
 	for (Specification specification : specifications) {
 	    if (specification.isSatisfied()) {
 		if (LOG.isDebugEnabled()) {
@@ -43,6 +43,6 @@ public class SpecificationsDependentObserver extends ControlObserver {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("All specifications are satisfied. Letting the switched event processing.");
 	}
-	super.switched(sensor, switchedOn);
+	super.update(controllable, switchedOn);
     }
 }

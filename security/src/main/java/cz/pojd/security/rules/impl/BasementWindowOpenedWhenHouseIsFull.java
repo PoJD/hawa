@@ -1,6 +1,6 @@
 package cz.pojd.security.rules.impl;
 
-import cz.pojd.homeautomation.model.rooms.Floor;
+import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.security.controller.SecurityMode;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.event.Type;

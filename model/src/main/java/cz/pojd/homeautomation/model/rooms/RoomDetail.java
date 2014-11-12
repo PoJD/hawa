@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.homeautomation.model.refresh.RefreshedLightCapableDetail;
+import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.homeautomation.model.web.GraphData;
 import cz.pojd.rpi.sensors.Reading;
 
@@ -17,6 +19,7 @@ import cz.pojd.rpi.sensors.Reading;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomDetail extends RefreshedLightCapableDetail {
 
+    private RoomSpecification specification;
     private String name;
     private Floor floor;
     private Reading temperature;
@@ -27,6 +30,7 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 
     public RoomDetail(RoomDetail copy) {
 	super(copy);
+	setSpecification(copy.getSpecification());
 	setName(copy.getName());
 	setFloor(copy.getFloor());
 	setTemperature(copy.getTemperature());
@@ -39,11 +43,20 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 
     public RoomDetail(Room room, boolean readTemperature) {
 	super(room);
+	setSpecification(room.getSpecification());
 	setName(room.getName());
 	setFloor(room.getFloor());
 	if (readTemperature) {
 	    setTemperature(room.getTemperatureSensor().read());
 	}
+    }
+
+    public RoomSpecification getSpecification() {
+	return specification;
+    }
+
+    public void setSpecification(RoomSpecification specification) {
+	this.specification = specification;
     }
 
     public String getName() {
@@ -84,9 +97,10 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 
     @Override
     public String toString() {
-	return "RoomDetail [getName()=" + getName() + ", getFloor()=" + getFloor() + ", getTemperature()=" + getTemperature()
-		+ ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()=" + Arrays.toString(getTemperatureHistory())
-		+ ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch()
-		+ ", getLightControl()=" + getLightControl() + ", getLightLevel()=" + getLightLevel() + "]";
+	return "RoomDetail [getSpecification()=" + getSpecification() + ", getName()=" + getName() + ", getFloor()=" + getFloor()
+		+ ", getTemperature()=" + getTemperature() + ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()="
+		+ Arrays.toString(getTemperatureHistory()) + ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor()
+		+ ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + ", getLightLevel()=" + getLightLevel()
+		+ "]";
     }
 }

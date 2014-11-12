@@ -1,5 +1,6 @@
 package cz.pojd.security.controller;
 
+import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.security.event.SecurityEvent;
 
 /**
@@ -32,4 +33,12 @@ public interface Controller {
      * @return current security mode
      */
     SecurityMode getMode();
+
+    /**
+     * Add observer for changes in security mode
+     * 
+     * @param observer
+     *            observer to be added and to be fired anytime the security mode is changed
+     */
+    void addObserver(Observer<Controller, SecurityMode> observer);
 }

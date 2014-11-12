@@ -2,6 +2,8 @@ package cz.pojd.homeautomation.model.web;
 
 import java.util.Date;
 
+import cz.pojd.homeautomation.model.Floor;
+
 /**
  * CalendarEvent is a model object for a calendar event
  *
@@ -10,62 +12,63 @@ import java.util.Date;
  */
 public class CalendarEvent {
 
-    private final String title;
-    private final Date start;
-    private final Date end;
-
-    public CalendarEvent(Builder builder) {
-	this.title = builder.title;
-	this.start = builder.start;
-	this.end = builder.end;
-    }
+    private String title;
+    private String what;
+    private String where;
+    private Floor floor;
+    private Date start;
+    private Date end;
 
     public String getTitle() {
 	return title;
+    }
+
+    public void setTitle(String title) {
+	this.title = title;
+    }
+
+    public String getWhat() {
+	return what;
+    }
+
+    public void setWhat(String what) {
+	this.what = what;
+    }
+
+    public String getWhere() {
+	return where;
+    }
+
+    public void setWhere(String where) {
+	this.where = where;
+    }
+
+    public Floor getFloor() {
+	return floor;
+    }
+
+    public void setFloor(Floor floor) {
+	this.floor = floor;
     }
 
     public Date getStart() {
 	return start;
     }
 
+    public void setStart(Date start) {
+	this.start = start;
+    }
+
     public Date getEnd() {
 	return end;
     }
 
-    public static Builder newBuilder() {
-	return new Builder();
-    }
-
-    public static class Builder {
-	private String title;
-	private Date start;
-	private Date end;
-
-	private Builder() {
-	};
-
-	public Builder title(String title) {
-	    this.title = title;
-	    return this;
-	}
-
-	public Builder start(Date start) {
-	    this.start = start;
-	    return this;
-	}
-
-	public Builder end(Date end) {
-	    this.end = end;
-	    return this;
-	}
-
-	public CalendarEvent build() {
-	    return new CalendarEvent(this);
-	}
+    public void setEnd(Date end) {
+	this.end = end;
     }
 
     @Override
     public String toString() {
-	return "CalendarEvent [title=" + title + ", start=" + start + ", end=" + end + "]";
+	return "CalendarEvent [what=" + what + ", where=" + where + ", floor=" + floor + ", start=" + start + ", end=" + end + "]";
     }
 }

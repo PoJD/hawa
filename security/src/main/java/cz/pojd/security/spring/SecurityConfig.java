@@ -1,6 +1,8 @@
 package cz.pojd.security.spring;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -13,9 +15,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import cz.pojd.homeautomation.model.rooms.RoomDetail;
+import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.spring.ModelConfig;
+import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
+import cz.pojd.security.controller.SecurityMode;
+import cz.pojd.security.controller.SwitchingLightsObserver;
 import cz.pojd.security.event.CalendarEventTranslator;
 import cz.pojd.security.event.CalendarEventTranslatorImpl;
 import cz.pojd.security.event.SecurityEventDAO;
@@ -24,7 +31,8 @@ import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
 import cz.pojd.security.handler.EmailSender;
 import cz.pojd.security.handler.SecurityEventStorer;
-import cz.pojd.security.motion.MotionSensorSecurityTrigger;
+import cz.pojd.security.hooks.MotionSensorSecurityHook;
+import cz.pojd.security.hooks.RoomDetailSecurityObserver;
 import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
 import cz.pojd.security.rules.RulesDAOImpl;
@@ -88,16 +96,32 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	return new DefaultSecurityController(modelConfig.roomsDAO(), rulesDAO(), new EmailSender(), new SecurityEventStorer(securityEventDAO()));
+	Controller result = new DefaultSecurityController(rulesDAO(), new EmailSender(), new SecurityEventStorer(securityEventDAO()));
+	for (Observer<Controller, SecurityMode> observer : securityObservers()) {
+	    result.addObserver(observer);
+	}
+	return result;
     }
 
     @Bean
-    public MotionSensorSecurityTrigger motionSensorTrigger() {
-	return new MotionSensorSecurityTrigger(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
+    public MotionSensorSecurityHook motionSensorTrigger() {
+	return new MotionSensorSecurityHook(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
     }
 
     @Bean
     public CalendarEventTranslator calendarEventTranslator() {
 	return new CalendarEventTranslatorImpl();
+    }
+
+    @Bean
+    public Collection<? extends Observer<Controller, SecurityMode>> securityObservers() {
+	return Collections.singleton(new SwitchingLightsObserver(modelConfig.roomsDAO()));
+    }
+
+    @Bean
+    public Observer<RoomsDAO, RoomDetail> roomDetailSecurityObserver() {
+	RoomDetailSecurityObserver result = new RoomDetailSecurityObserver(securityController(), 35); // 35 degrees is a threshold
+	modelConfig.roomsDAO().addObserver(result);
+	return result;
     }
 }
