@@ -87,8 +87,12 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
 		LOG.error("System command " + commaSeparatedCommand + " returned error.");
 		LOG.error(StringUtils.collectionToCommaDelimitedString(error));
 	    }
-	} catch (IOException | InterruptedException | NumberFormatException e) {
+	} catch (IOException | NumberFormatException e) {
 	    LOG.error("Unable to execute/parse system command " + commaSeparatedCommand, e);
+	} catch (InterruptedException e) {
+	    if (Thread.currentThread().isInterrupted()) {
+		Thread.currentThread().interrupt();
+	    }
 	}
 	return null;
     }
