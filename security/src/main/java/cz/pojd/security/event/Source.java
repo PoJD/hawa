@@ -14,19 +14,20 @@ import cz.pojd.homeautomation.model.spring.RoomSpecification;
  */
 public enum Source {
     KITCHEN_WEST_WINDOW(RoomSpecification.KITCHEN, "West kitchen window"),
+    CAMERA_HALL_DOWN("Camera hall down", false),
     HALL_DOWN(RoomSpecification.HALL_DOWN),
     HALL_UP(RoomSpecification.HALL_UP),
-    OUTDOOR("Outdoor"),
-    CAMERA_MAINDOOR("Camera main door"),
-    UNKNOWN("N/A");
+    OUTDOOR("Outdoor", true),
+    CAMERA_MAINDOOR("Camera main door", true),
+    UNKNOWN("N/A", false);
 
     private static final Log LOG = LogFactory.getLog(Source.class);
     private final String description;
     private final Floor floor;
+    private final boolean outdoor;
 
-    private Source(String description) {
-	this.description = description;
-	this.floor = Floor.BASEMENT;
+    private Source(String description, boolean outdoor) {
+	this(description, Floor.BASEMENT, outdoor);
     }
 
     private Source(RoomSpecification room) {
@@ -34,8 +35,13 @@ public enum Source {
     }
 
     private Source(RoomSpecification room, String description) {
+	this(room.getName(), room.getFloor(), false);
+    }
+
+    private Source(String description, Floor floor, boolean outdoor) {
 	this.description = description;
-	this.floor = room.getFloor();
+	this.floor = floor;
+	this.outdoor = outdoor;
     }
 
     public String getDescription() {
@@ -44,6 +50,10 @@ public enum Source {
 
     public Floor getFloor() {
 	return floor;
+    }
+
+    public boolean isOutdoor() {
+	return outdoor;
     }
 
     public static Source parse(String source) {

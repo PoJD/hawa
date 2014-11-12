@@ -31,6 +31,7 @@ import cz.pojd.security.rules.RulesDAOImpl;
 import cz.pojd.security.rules.impl.BasementWindowOpenedWhenHouseIsFull;
 import cz.pojd.security.rules.impl.DoorOrGarageOpened;
 import cz.pojd.security.rules.impl.HighTemperature;
+import cz.pojd.security.rules.impl.IndoorCameraMotionWhenHouseIsEmpty;
 import cz.pojd.security.rules.impl.MotionInHallsWhenHouseIsEmpty;
 import cz.pojd.security.rules.impl.MotionOutside;
 import cz.pojd.security.rules.impl.WindowOpened;
@@ -71,8 +72,8 @@ public class SecurityConfig {
 
     @Bean
     public Rule[] rules() {
-	return new Rule[] { new HighTemperature(), new MotionInHallsWhenHouseIsEmpty(), new WindowOpened(), new DoorOrGarageOpened(),
-		new MotionOutside(), new BasementWindowOpenedWhenHouseIsFull() };
+	return new Rule[] { new HighTemperature(), new MotionInHallsWhenHouseIsEmpty(), new IndoorCameraMotionWhenHouseIsEmpty(), new WindowOpened(),
+		new DoorOrGarageOpened(), new MotionOutside(), new BasementWindowOpenedWhenHouseIsFull() };
     }
 
     @Bean
