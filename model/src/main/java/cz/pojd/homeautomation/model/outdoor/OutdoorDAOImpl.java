@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.outdoor.factory.OutdoorFactory;
 import cz.pojd.homeautomation.model.refresh.RefreshableDAO;
 import cz.pojd.homeautomation.model.spring.OutdoorSpecification;
@@ -50,8 +51,9 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
      * @see cz.pojd.homeautomation.hawa.outdoor.OutdoorDAO
      */
 
-    public OutdoorDAOImpl(OutdoorFactory outdoorFactory, OutdoorSpecification outdoorSpecification) {
+    public OutdoorDAOImpl(OutdoorFactory outdoorFactory, OutdoorSpecification outdoorSpecification, StorageCleanup storageCleanup) {
 	this.outdoor = outdoorFactory.create(outdoorSpecification);
+	storageCleanup.registerTable("outdoor");
     }
 
     @Override

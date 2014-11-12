@@ -1,6 +1,6 @@
 package cz.pojd.homeautomation.model.outdoor;
 
-import cz.pojd.homeautomation.model.DAO;
+import cz.pojd.homeautomation.model.dao.DAO;
 import cz.pojd.homeautomation.model.refresh.Refreshable;
 
 /**

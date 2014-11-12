@@ -9,12 +9,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Value;
 
-import cz.pojd.homeautomation.model.DAOImpl;
+import cz.pojd.homeautomation.model.dao.DAOImpl;
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 
 /**
  * Simple implementation of SecurityEventDAO using spring JDBC support
@@ -28,6 +31,11 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
     private String insertSql;
     @Value("${sql.securityEventDAO.query}")
     private String querySql;
+
+    @Inject
+    public SecurityEventDAOImpl(StorageCleanup storageCleanup) {
+	storageCleanup.registerTable("securityevents");
+    }
 
     public String getInsertSql() {
 	return insertSql;

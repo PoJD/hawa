@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
 
-import cz.pojd.homeautomation.model.DAOImpl;
+import cz.pojd.homeautomation.model.dao.DAOImpl;
 
 /**
  * Generic refreshable DAO.

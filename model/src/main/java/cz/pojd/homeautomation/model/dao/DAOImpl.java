@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.model;
+package cz.pojd.homeautomation.model.dao;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;

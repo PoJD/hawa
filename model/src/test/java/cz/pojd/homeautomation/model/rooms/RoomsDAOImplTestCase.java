@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.refresh.Refresher;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
@@ -51,6 +52,8 @@ public class RoomsDAOImplTestCase {
     private Refresher refresher;
     @Mocked
     private RoomFactory mockRoomFactory;
+    @Mocked
+    private StorageCleanup storageCleanup;
 
     private MockObservableSensor mockedLightSwitch, mockedMotionSensor, mockedTemperatureSensor;
     private Control mockControl;
@@ -242,7 +245,7 @@ public class RoomsDAOImplTestCase {
 		times = 0;
 	    }
 	};
-	dao = new RoomsDAOImpl(mockRoomFactory, new RoomSpecification[] {}, runtimeExecutor);
+	dao = new RoomsDAOImpl(mockRoomFactory, new RoomSpecification[] {}, runtimeExecutor, storageCleanup);
 	dao.saveState(new Date());
     }
 
@@ -444,7 +447,7 @@ public class RoomsDAOImplTestCase {
 		result.setLastDetail(detail);
 		return result;
 	    }
-	}, rooms, runtimeExecutor);
+	}, rooms, runtimeExecutor, storageCleanup);
 	dao.setJdbcTemplate(jdbcTemplate);
 	dao.setRefresher(refresher);
     }

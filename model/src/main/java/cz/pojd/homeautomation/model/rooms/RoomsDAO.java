@@ -2,7 +2,7 @@ package cz.pojd.homeautomation.model.rooms;
 
 import java.util.Collection;
 
-import cz.pojd.homeautomation.model.DAO;
+import cz.pojd.homeautomation.model.dao.DAO;
 import cz.pojd.homeautomation.model.refresh.Refreshable;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 

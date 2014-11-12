@@ -83,7 +83,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityEventDAO securityEventDAO() {
-	return new SecurityEventDAOImpl();
+	return new SecurityEventDAOImpl(modelConfig.storageCleanup());
     }
 
     @Bean

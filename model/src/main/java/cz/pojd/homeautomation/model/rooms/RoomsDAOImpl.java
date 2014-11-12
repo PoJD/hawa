@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.refresh.RefreshableDAO;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
@@ -59,11 +60,12 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
      */
 
     @Inject
-    public RoomsDAOImpl(RoomFactory factory, RoomSpecification[] roomSpecifications, RuntimeExecutor runtimeExecutor) {
+    public RoomsDAOImpl(RoomFactory factory, RoomSpecification[] roomSpecifications, RuntimeExecutor runtimeExecutor, StorageCleanup storageCleanup) {
 	rooms = new LinkedHashMap<>();
 	for (RoomSpecification roomSpecification : roomSpecifications) {
 	    rooms.put(roomSpecification.getName(), factory.create(roomSpecification));
 	}
+	storageCleanup.registerTable("roomstate");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package cz.pojd.homeautomation.model;
+package cz.pojd.homeautomation.model.dao;
 
 /**
  * Generic Marker interface for DAOs. Used mostly to have some common constants available in DAOs.

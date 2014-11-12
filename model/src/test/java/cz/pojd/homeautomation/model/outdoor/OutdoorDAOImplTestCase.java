@@ -20,10 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cz.pojd.homeautomation.model.outdoor.Outdoor;
-import cz.pojd.homeautomation.model.outdoor.OutdoorDAOException;
-import cz.pojd.homeautomation.model.outdoor.OutdoorDAOImpl;
-import cz.pojd.homeautomation.model.outdoor.OutdoorDetail;
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.outdoor.factory.OutdoorFactory;
 import cz.pojd.homeautomation.model.refresh.Refresher;
 import cz.pojd.homeautomation.model.spring.OutdoorSpecification;
@@ -46,9 +43,10 @@ public class OutdoorDAOImplTestCase {
     private List<Sensor> sensors;
     @Mocked
     private Sensor sensor, sensor2;
-
     @Mocked
     private Refresher refresher;
+    @Mocked
+    private StorageCleanup storageCleanup;
 
     private Outdoor outdoor;
     private OutdoorDetail detail;
@@ -81,7 +79,7 @@ public class OutdoorDAOImplTestCase {
 	    public Outdoor create(OutdoorSpecification outdoorSpecification) {
 		return outdoor;
 	    }
-	}, new OutdoorSpecification());
+	}, new OutdoorSpecification(), storageCleanup);
 	dao.setJdbcTemplate(jdbcTemplate);
 	dao.setRefresher(refresher);
     }

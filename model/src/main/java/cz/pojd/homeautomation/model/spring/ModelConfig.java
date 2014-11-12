@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.pi4j.io.gpio.RaspiPin;
 
+import cz.pojd.homeautomation.model.dao.SpringScheduledStorageCleanup;
+import cz.pojd.homeautomation.model.dao.StorageCleanup;
 import cz.pojd.homeautomation.model.lights.DefaultMotionSensorLightTrigger;
 import cz.pojd.homeautomation.model.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.model.outdoor.OutdoorDAOImpl;
@@ -54,7 +56,7 @@ public class ModelConfig {
 
     @Bean
     public RoomsDAO roomsDAO() {
-	return new RoomsDAOImpl(roomFactory(), rooms(), rpiConfig.runtimeExecutor());
+	return new RoomsDAOImpl(roomFactory(), rooms(), rpiConfig.runtimeExecutor(), storageCleanup());
     }
 
     @Bean
@@ -64,7 +66,7 @@ public class ModelConfig {
 
     @Bean
     public OutdoorDAO outdoorDAO() {
-	return new OutdoorDAOImpl(outdoorFactory(), outdoorSpecification());
+	return new OutdoorDAOImpl(outdoorFactory(), outdoorSpecification(), storageCleanup());
     }
 
     @Bean
@@ -90,5 +92,10 @@ public class ModelConfig {
     @Bean
     public Refresher refresher() {
 	return new SpringScheduledRefresher();
+    }
+
+    @Bean
+    public StorageCleanup storageCleanup() {
+	return new SpringScheduledStorageCleanup();
     }
 }

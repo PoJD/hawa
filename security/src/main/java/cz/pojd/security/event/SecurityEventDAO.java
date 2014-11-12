@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.joda.time.DateTime;
 
-import cz.pojd.homeautomation.model.DAO;
+import cz.pojd.homeautomation.model.dao.DAO;
 
 /**
  * DAO for retrieving/storing security events
