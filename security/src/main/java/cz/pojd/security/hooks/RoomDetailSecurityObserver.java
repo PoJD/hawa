@@ -44,13 +44,16 @@ public class RoomDetailSecurityObserver implements Observer<RoomsDAO, RoomDetail
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Checking room detail " + newValue + " - whether the temperature is not above threshold: " + threshold);
 	}
-	if (newValue.getTemperature() != null && newValue.getTemperature().getDoubleValue() > threshold) {
-	    LOG.info("Temperature above threshold detected. Room: " + newValue + ", temperature: " + newValue.getTemperature().getDoubleValue()
-		    + ", threshold: " + threshold);
-	    SecurityEvent event = new SecurityEvent();
-	    event.setType(Type.highTemperature);
-	    event.setSource(newValue.getSpecification());
-	    securityController.handle(event);
+	if (newValue.getTemperature() != null) {
+	    double doubleValue = newValue.getTemperature().getDoubleValue();
+	    if (doubleValue > threshold) {
+		LOG.info("Temperature above threshold detected. Room: " + newValue + ", temperature: " + doubleValue + ", threshold: " + threshold);
+		SecurityEvent event = new SecurityEvent();
+		event.setType(Type.highTemperature);
+		event.setDetail(newValue.getTemperature().getStringValue());
+		event.setSource(newValue.getSpecification());
+		securityController.handle(event);
+	    }
 	}
     }
 }

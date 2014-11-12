@@ -3,7 +3,6 @@ package cz.pojd.security.event;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +63,7 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 	    for (Map<String, Object> row : getJdbcTemplate().queryForList(querySql, new Object[] { startString, endString })) {
 		SecurityEvent event = new SecurityEvent();
 		event.setFilePath(parsePathFromRow(row, "filepath"));
+		event.setDetail(parseStringFromRow(row, "detail"));
 
 		// TODO not the best logic here, think over something cleaner?
 		try {
@@ -86,9 +86,9 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 	try {
 	    getJdbcTemplate().update(
 		    insertSql,
-		    new Object[] { securityEvent.getType(), securityEvent.getSource() != null ? securityEvent.getSource().getName() : null,
-			    securityEvent.getAtAsDate(),
-			    securityEvent.getFilePath() }, new int[] { Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP, Types.VARCHAR });
+		    securityEvent.getType() != null ? securityEvent.getType().toString() : null,
+		    securityEvent.getSource() != null ? securityEvent.getSource().getName() : null,
+		    securityEvent.getAtAsDate(), securityEvent.getFilePath(), securityEvent.getDetail());
 	} catch (Exception e) {
 	    throw new SecurityEventDAOException("Unable to save the security event " + securityEvent, e);
 	}

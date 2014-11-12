@@ -12,4 +12,5 @@ create table if not exists securityevents (
   type varchar(100),
   source varchar(100),
   at timestamp, 
-  filepath varchar(100));
+  filepath varchar(100),
+  detail varchar(100));

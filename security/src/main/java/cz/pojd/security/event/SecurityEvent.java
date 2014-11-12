@@ -22,6 +22,7 @@ public class SecurityEvent {
     private Source source;
     private DateTime at = new DateTime();
     private Path filePath;
+    private String detail;
 
     public Type getType() {
 	return type;
@@ -59,6 +60,14 @@ public class SecurityEvent {
 	this.filePath = filePath;
     }
 
+    public String getDetail() {
+	return detail;
+    }
+
+    public void setDetail(String detail) {
+	this.detail = detail;
+    }
+
     /**
      * Dispose this security event and any resources it may have allocated
      */
@@ -77,6 +86,6 @@ public class SecurityEvent {
 
     @Override
     public String toString() {
-	return "SecurityEvent [type=" + type + ", source=" + source + ", at=" + at + ", filePath=" + filePath + "]";
+	return "SecurityEvent [type=" + type + ", source=" + source + ", at=" + at + ", filePath=" + filePath + ", detail=" + detail + "]";
     }
 }
