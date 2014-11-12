@@ -31,4 +31,9 @@ public class DateTimeParam {
     public DateTime getDateTime() {
 	return dateTime;
     }
+
+    @Override
+    public String toString() {
+	return "DateTimeParam [dateTime=" + dateTime + "]";
+    }
 }

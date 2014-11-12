@@ -65,7 +65,7 @@ public class SecurityService {
     @Path("/events")
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<CalendarEvent> queryCalendarEvents(@QueryParam("start") DateTimeParam start, @QueryParam("end") DateTimeParam end) {
-	LOG.info("Detecting calendar events ...");
+	LOG.info("Detecting calendar events for time range [" + start + ", " + end + "]");
 
 	Collection<CalendarEvent> result = translator.translate(securityEventDAO.query(start.getDateTime(), end.getDateTime()));
 	if (LOG.isDebugEnabled()) {
