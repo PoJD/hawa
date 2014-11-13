@@ -3,12 +3,13 @@ package cz.pojd.security.rules.impl;
 import cz.pojd.security.controller.SecurityMode;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.event.Type;
+import cz.pojd.security.rules.SecurityBreach;
 
 public class IndoorCameraMotionWhenHouseIsEmpty extends AbstractRule {
 
     @Override
-    public boolean isSecurityBreach(SecurityEvent event) {
-	return !event.getSource().isOutdoor() && Type.cameraMotionDetected == event.getType();
+    public SecurityBreach isSecurityBreach(SecurityEvent event) {
+	return SecurityBreach.valueOf(!event.getSource().isOutdoor() && Type.cameraMotionDetected == event.getType());
     }
 
     @Override

@@ -3,33 +3,43 @@ package cz.pojd.security.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.sensors.observable.Observable;
+import cz.pojd.rpi.system.TimeService;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
+import cz.pojd.security.rules.SecurityBreach;
 
 public class DefaultSecurityController implements Controller {
     private static final Log LOG = LogFactory.getLog(DefaultSecurityController.class);
 
     private final Map<SecurityMode, List<Rule>> rulesByMode = new HashMap<SecurityMode, List<Rule>>();
     private final List<SecurityHandler> securityHandlers;
+    private final Set<SecurityEvent> delayedEvents = new TreeSet<>();
+    private final TimeService timeService;
 
     private SecurityMode securityMode = SecurityMode.OFF;
     private Observable<Controller, SecurityMode> observable = new Observable<>();
 
     @Inject
-    public DefaultSecurityController(RulesDAO rulesDao, SecurityHandler... securityHandlers) {
-	LOG.info("Initating DefaultSecurityController...");
+    public DefaultSecurityController(TimeService timeService, RulesDAO rulesDao, SecurityHandler... securityHandlers) {
+	LOG.info("Initiating DefaultSecurityController...");
+	this.timeService = timeService;
 	for (Rule rule : rulesDao.queryRules()) {
 	    registerRule(rule);
 	}
@@ -51,47 +61,111 @@ public class DefaultSecurityController implements Controller {
 	}
     }
 
-    @Override
-    public void handle(SecurityEvent securityEvent) {
+    /**
+     * Every 2 minutes check the delayed events
+     */
+    @Scheduled(fixedDelay = 2 * 60 * 1000)
+    public synchronized void handleDelayedEvents() {
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("Security event fired: " + securityEvent);
+	    LOG.debug("Handle delayed events called.");
 	}
-
-	try {
-	    fireRules(securityEvent);
-	} finally {
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Disposing security event: " + securityEvent);
+	for (Iterator<SecurityEvent> iterator = delayedEvents.iterator(); iterator.hasNext();) {
+	    SecurityEvent securityEvent = iterator.next();
+	    DateTime now = timeService.now();
+	    DateTime securityEventTime = securityEvent.getAt();
+	    if (now.minusMinutes(SecurityBreach.DELAY_MINUTES).isBefore(securityEventTime)) {
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Security event " + securityEvent + " is younger than " + SecurityBreach.DELAY_MINUTES
+			    + " minutes. Skipping this and following security events for further processing. Now: " + now + ". Event time: "
+			    + securityEventTime);
+		}
+		break;
 	    }
-	    securityEvent.dispose();
+	    // otherwise we have an event to process and drop from the set
+	    handle(securityEvent, true);
+	    iterator.remove();
+	}
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Handle delayed events finished. Remaining delayed events: " + delayedEvents);
 	}
     }
 
-    private void fireRules(SecurityEvent securityEvent) {
-	for (Rule rule : rulesByMode.get(securityMode)) {
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Processing " + securityEvent + " by rule " + rule);
-	    }
+    @Override
+    public void handle(SecurityEvent securityEvent) {
+	handle(securityEvent, false);
+    }
 
-	    if (rule.isEnabled() && rule.isSecurityBreach(securityEvent)) {
-		if (LOG.isInfoEnabled()) {
-		    LOG.info("Security breach detected: " + securityEvent + ". Rule firing this breach: " + rule + ". Security mode: " + securityMode);
-		    LOG.info("Firing security breach handlers and skipping next rules...");
+    private void handle(SecurityEvent securityEvent, boolean processingDelayedEvents) {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Processing security event: " + securityEvent);
+	}
+
+	boolean shouldDisposeEvent = true;
+	try {
+	    shouldDisposeEvent = fireRules(securityEvent, processingDelayedEvents);
+	} finally {
+	    if (shouldDisposeEvent) {
+		securityEvent.dispose();
+	    }
+	}
+    }
+
+    private boolean fireRules(SecurityEvent securityEvent, boolean processingDelayedEvents) {
+	for (Rule rule : rulesByMode.get(securityMode)) {
+	    if (rule.isEnabled()) {
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Processing " + securityEvent + " by rule " + rule);
 		}
-		for (SecurityHandler securityHandler : securityHandlers) {
-		    try {
-			securityHandler.handleSecurityBreach(securityEvent);
-		    } catch (Exception e) {
-			LOG.error("Some error occured while processing security event breach " + securityEvent + " by security handler "
-				+ securityHandler, e);
-		    }
+
+		SecurityBreach securityBreach = rule.isSecurityBreach(securityEvent);
+		if (SecurityBreach.NOW == securityBreach) {
+		    return processSecurityBreach(securityEvent, rule);
+		} else if (SecurityBreach.DELAYED == securityBreach) {
+		    return processDelayedSecurityBreach(securityEvent, rule, processingDelayedEvents);
 		}
-		return;
 	    }
 	}
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug(securityEvent + " ignored - no rules fired a security breach.");
 	}
+	return true;
+    }
+
+    private boolean processDelayedSecurityBreach(SecurityEvent securityEvent, Rule rule, boolean processingDelayedEvents) {
+	if (processingDelayedEvents) { // in this case the event got fired again, so throw it now
+	    processSecurityBreach(securityEvent, rule);
+	    return true;
+	} else { // otherwise store the event for later processing
+	    securityEvent.setMinor(true); // delayed are minor by default
+	    if (LOG.isInfoEnabled()) {
+		LOG.info("Security breach detected: " + securityEvent + ". Rule firing this breach: " + rule + ". Security mode: "
+			+ securityMode);
+		LOG.info("Since this securityEvent is delayed, storing it for later processing and skipping next rules...");
+	    }
+	    storeEvent(securityEvent);
+	    return false;
+	}
+    }
+
+    private synchronized void storeEvent(SecurityEvent securityEvent) {
+	delayedEvents.add(securityEvent);
+    }
+
+    private boolean processSecurityBreach(SecurityEvent securityEvent, Rule rule) {
+	if (LOG.isInfoEnabled()) {
+	    LOG.info("Security breach detected: " + securityEvent + ". Rule firing this breach: " + rule + ". Security mode: "
+		    + securityMode);
+	    LOG.info("Firing security breach handlers and skipping next rules...");
+	}
+	for (SecurityHandler securityHandler : securityHandlers) {
+	    try {
+		securityHandler.handleSecurityBreach(securityEvent);
+	    } catch (Exception e) {
+		LOG.error("Some error occured while processing security event breach " + securityEvent + " by security handler "
+			+ securityHandler, e);
+	    }
+	}
+	return true;
     }
 
     @Override
@@ -100,6 +174,19 @@ public class DefaultSecurityController implements Controller {
 	this.securityMode = newMode;
 
 	observable.notifyObservers(this, securityMode);
+	afterModeSwitch();
+    }
+
+    private synchronized void afterModeSwitch() {
+	if (SecurityMode.OFF == securityMode) {
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Dropping all delayed events...:  " + delayedEvents);
+	    }
+	    for (Iterator<SecurityEvent> iterator = delayedEvents.iterator(); iterator.hasNext();) {
+		iterator.next().dispose();
+		iterator.remove();
+	    }
+	}
     }
 
     @Override

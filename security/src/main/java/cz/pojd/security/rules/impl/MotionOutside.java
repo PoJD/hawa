@@ -4,14 +4,14 @@ import cz.pojd.security.controller.SecurityMode;
 import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.event.SecuritySource;
 import cz.pojd.security.event.Type;
+import cz.pojd.security.rules.SecurityBreach;
 
 public class MotionOutside extends AbstractRule {
 
     @Override
-    public boolean isSecurityBreach(SecurityEvent event) {
-	// TODO this should fire a later event, e.g. say 10mins later is the alarm is still off (e.g. somehow re-throw the same security event and let
-	// it process?)
-	return SecuritySource.OUTDOOR == event.getSource() && (Type.sensorMotionDetected == event.getType() || Type.cameraMotionDetected == event.getType());
+    public SecurityBreach isSecurityBreach(SecurityEvent event) {
+	return (SecuritySource.OUTDOOR == event.getSource() && (Type.sensorMotionDetected == event.getType() || Type.cameraMotionDetected == event
+		.getType())) ? SecurityBreach.DELAYED : SecurityBreach.NONE;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class MotionOutside extends AbstractRule {
 
     @Override
     public String getDescription() {
-	return "Motion detected outside the house (empty or full house)";
+	return "Motion detected outside the house - security still on " + SecurityBreach.DELAY_MINUTES + " minutes later (empty or full house)";
     }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
@@ -20,8 +19,14 @@ import cz.pojd.rpi.controls.MjpegStreamerCameraControl;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.gpio.GpioImpl;
 import cz.pojd.rpi.sensors.gpio.MockGpio;
+import cz.pojd.rpi.state.OsStateService;
+import cz.pojd.rpi.state.OsStateServiceImpl;
+import cz.pojd.rpi.state.VmStateService;
+import cz.pojd.rpi.state.VmStateServiceImpl;
 import cz.pojd.rpi.system.RuntimeExecutor;
 import cz.pojd.rpi.system.RuntimeExecutorImpl;
+import cz.pojd.rpi.system.TimeService;
+import cz.pojd.rpi.system.TimeServiceImpl;
 
 /**
  * Main configuration for spring in rpi project
@@ -30,7 +35,6 @@ import cz.pojd.rpi.system.RuntimeExecutorImpl;
  * @since Jul 23, 2014 2:34:22 AM
  */
 @Configuration
-@ComponentScan("cz.pojd.rpi")
 public class RpiConfig {
     private static final Log LOG = LogFactory.getLog(RpiConfig.class);
 
@@ -66,6 +70,16 @@ public class RpiConfig {
     }
 
     @Bean
+    public VmStateService vmStateService() {
+	return new VmStateServiceImpl();
+    }
+
+    @Bean
+    public OsStateService osStateService() {
+	return new OsStateServiceImpl();
+    }
+
+    @Bean
     public Runtime runtime() {
 	return Runtime.getRuntime();
     }
@@ -73,6 +87,11 @@ public class RpiConfig {
     @Bean
     public RuntimeExecutor runtimeExecutor() {
 	return new RuntimeExecutorImpl();
+    }
+
+    @Bean
+    public TimeService timeService() {
+	return new TimeServiceImpl();
     }
 
     @Bean

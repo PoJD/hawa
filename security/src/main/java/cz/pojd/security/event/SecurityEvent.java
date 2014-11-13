@@ -15,7 +15,7 @@ import cz.pojd.homeautomation.model.Source;
  * @author Lubos Housa
  * @since Nov 2, 2014 7:47:45 PM
  */
-public class SecurityEvent {
+public class SecurityEvent implements Comparable<SecurityEvent> {
     private static final Log LOG = LogFactory.getLog(SecurityEvent.class);
 
     private Type type;
@@ -23,6 +23,7 @@ public class SecurityEvent {
     private DateTime at = new DateTime();
     private Path filePath;
     private String detail;
+    private boolean isMinor; // transient field, never stored or displayed
 
     public Type getType() {
 	return type;
@@ -68,10 +69,21 @@ public class SecurityEvent {
 	this.detail = detail;
     }
 
+    public boolean isMinor() {
+	return isMinor;
+    }
+
+    public void setMinor(boolean isMinor) {
+	this.isMinor = isMinor;
+    }
+
     /**
      * Dispose this security event and any resources it may have allocated
      */
     public void dispose() {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Disposing security event: " + this);
+	}
 	// only attempt deleting the file if exists..
 	if (filePath != null) {
 	    try {
@@ -86,6 +98,12 @@ public class SecurityEvent {
 
     @Override
     public String toString() {
-	return "SecurityEvent [type=" + type + ", source=" + source + ", at=" + at + ", filePath=" + filePath + ", detail=" + detail + "]";
+	return "SecurityEvent [type=" + type + ", source=" + source + ", at=" + at + ", filePath=" + filePath + ", detail=" + detail + ", isMinor="
+		+ isMinor + "]";
+    }
+
+    @Override
+    public int compareTo(SecurityEvent o) {
+	return getAt() != null ? getAt().compareTo(o.getAt()) : o.getAt() == null ? 0 : 1;
     }
 }

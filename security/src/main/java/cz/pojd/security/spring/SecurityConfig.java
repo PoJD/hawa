@@ -12,13 +12,14 @@ import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.usermanager.ClearTextPasswordEncryptor;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import cz.pojd.homeautomation.model.rooms.RoomDetail;
 import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.spring.ModelConfig;
 import cz.pojd.rpi.controllers.Observer;
+import cz.pojd.rpi.spring.RpiConfig;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.controller.DefaultSecurityController;
 import cz.pojd.security.controller.SecurityMode;
@@ -51,11 +52,13 @@ import cz.pojd.security.rules.impl.WindowOpened;
  * @since Nov 2, 2014 5:26:21 PM
  */
 @Configuration
-@ComponentScan("cz.pojd.security")
+@EnableScheduling
 public class SecurityConfig {
 
     @Inject
     private ModelConfig modelConfig;
+    @Inject
+    private RpiConfig rpiConfig;
 
     @Bean
     public Ftp ftp() throws FtpException {
@@ -96,7 +99,8 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	Controller result = new DefaultSecurityController(rulesDAO(), new EmailSender(), new SecurityEventStorer(securityEventDAO()));
+	Controller result = new DefaultSecurityController(rpiConfig.timeService(), rulesDAO(), new EmailSender(), new SecurityEventStorer(
+		securityEventDAO()));
 	for (Observer<Controller, SecurityMode> observer : securityObservers()) {
 	    result.addObserver(observer);
 	}

@@ -8,12 +8,9 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
-import org.springframework.stereotype.Service;
-
 import cz.pojd.rpi.state.PropertyValue.Type;
 import cz.pojd.rpi.system.RuntimeExecutor;
 
-@Service
 public class OsStateServiceImpl extends StateServiceBase implements OsStateService {
 
     private static final String CPU_COMMAND = "uptime | sed 's/.*average: \\([^,]*\\).*/\\1/'";

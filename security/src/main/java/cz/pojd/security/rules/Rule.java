@@ -17,9 +17,9 @@ public interface Rule {
      * 
      * @param event
      *            event to process
-     * @return true if this event represents a security breach, false otherwise
+     * @return security breach - either a breach or not (could be delayed)
      */
-    boolean isSecurityBreach(SecurityEvent event);
+    SecurityBreach isSecurityBreach(SecurityEvent event);
 
     /**
      * Detects whether this rule is applicable in the in-passed security mode. Each rule guarantees to return the very same value of this method at
