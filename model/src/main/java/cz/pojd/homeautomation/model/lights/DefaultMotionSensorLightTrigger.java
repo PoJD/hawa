@@ -9,10 +9,12 @@ import cz.pojd.rpi.controllers.SensorDisabledOrOffSpecification;
 import cz.pojd.rpi.controllers.SpecificationsDependentObserver;
 import cz.pojd.rpi.controls.Controllable;
 import cz.pojd.rpi.controls.GpioControl;
+import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.gpio.Gpio;
-import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
 import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
 import cz.pojd.rpi.sensors.observable.GpioSwitch;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.CsChannel;
 
 /**
  * Trigger for lights - sets up the observers on the motion sensors on the lights
@@ -50,8 +52,9 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
 	Observer<Controllable, Boolean> lightCapableUpdatingObserver = new LightCapableUpdatingObserver(lightCapable);
 	lightCapable.getLightSwitch().addObserver(lightCapableUpdatingObserver);
 
-	if (details.getMotionSensorPin() != null && details.getLightLevelSensorAddress() != null) {
-	    lightCapable.setLightLevelSensor(new TSL2561LightSensor(isNewRaspi, details.getLightLevelSensorAddress()));
+	if (details.getMotionSensorPin() != null && details.getLightLevelSensorChannel() != null) {
+	    // skip the units since we do not know them :)
+	    lightCapable.setLightLevelSensor(new MCP3008Adc(gpio, CsChannel.CS0, details.getLightLevelSensorChannel(), Reading.Type.light, ""));
 
 	    // motion sensor depends on light switch - so that the motion sensor does nothing if light switch is enabled and switched on
 	    // it also depends on light level sensor - if the sensor reads too high (too bright), then the motion sensor does nothing too

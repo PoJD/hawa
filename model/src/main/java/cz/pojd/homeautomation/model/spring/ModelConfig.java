@@ -21,7 +21,7 @@ import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.model.rooms.factory.DefaultRoomFactory;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
-import cz.pojd.rpi.sensors.i2c.TSL2561LightSensor;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 import cz.pojd.rpi.spring.RpiConfig;
 
 /**
@@ -79,7 +79,7 @@ public class ModelConfig {
 	result.setMotionSensorPin(RaspiPin.GPIO_00);
 	result.setLightSwitchPin(RaspiPin.GPIO_01);
 	result.setLightControlPin(RaspiPin.GPIO_02);
-	result.setLightLevelSensorAddress(TSL2561LightSensor.TSL2561_ADDRESS_FLOAT);
+	result.setLightLevelSensorChannel(InputChannel.CH0);
 	result.setLightLevelTreshold(500); // TODO should be higher once outside?
 	return result;
     }

@@ -3,6 +3,8 @@ package cz.pojd.homeautomation.model.lights;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
+
 /**
  * Simple POJO for motion sensor details using the builder pattern
  *
@@ -14,7 +16,7 @@ public class MotionSensorLightDetails {
     private final LightCapable lightCapable;
     private final GpioProvider switchProvider, controlProvider;
     private final Pin motionSensorPin, lightSwitchPin, lightControlPin;
-    private final Integer lightLevelSensorAddress;
+    private final InputChannel lightLevelSensorChannel;
     private final Double lightLevelTreshold;
 
     private MotionSensorLightDetails(Builder builder) {
@@ -24,7 +26,7 @@ public class MotionSensorLightDetails {
 	this.motionSensorPin = builder.motionSensorPin;
 	this.lightSwitchPin = builder.lightSwitchPin;
 	this.lightControlPin = builder.lightControlPin;
-	this.lightLevelSensorAddress = builder.lightLevelSensorAddress;
+	this.lightLevelSensorChannel = builder.lightLevelSensorChannel;
 	this.lightLevelTreshold = builder.lightLevelTreshold;
     }
 
@@ -52,8 +54,8 @@ public class MotionSensorLightDetails {
 	return lightControlPin;
     }
 
-    public Integer getLightLevelSensorAddress() {
-	return lightLevelSensorAddress;
+    public InputChannel getLightLevelSensorChannel() {
+	return lightLevelSensorChannel;
     }
 
     public Double getLightLevelTreshold() {
@@ -68,7 +70,7 @@ public class MotionSensorLightDetails {
 	private LightCapable lightCapable;
 	private GpioProvider switchProvider, controlProvider;
 	private Pin motionSensorPin, lightSwitchPin, lightControlPin;
-	private Integer lightLevelSensorAddress;
+	private InputChannel lightLevelSensorChannel;
 	private Double lightLevelTreshold;
 
 	private Builder() {
@@ -104,8 +106,8 @@ public class MotionSensorLightDetails {
 	    return this;
 	}
 
-	public Builder lightLevelSensorAddress(Integer lightLevelSensorAddress) {
-	    this.lightLevelSensorAddress = lightLevelSensorAddress;
+	public Builder lightLevelSensorChannel(InputChannel lightLevelSensorChannel) {
+	    this.lightLevelSensorChannel = lightLevelSensorChannel;
 	    return this;
 	}
 
