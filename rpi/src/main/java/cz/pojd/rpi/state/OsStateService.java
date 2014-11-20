@@ -62,5 +62,5 @@ public interface OsStateService {
     /**
      * Shutdown the whole system
      */
-    void shutdown();
+    void shutdownRpi();
 }

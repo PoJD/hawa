@@ -69,8 +69,8 @@ public class MCP3008Adc implements Sensor {
 
     @Inject
     public MCP3008Adc(Gpio gpio, CsChannel csChannel, InputChannel channel, Reading.Type readingType, String units) {
-	LOG.info("Initializing analog sensor through MCP3008 at csChannel " + csChannel + ", input channel " + channel + ", readingType "
-		+ readingType + ", units " + units);
+	LOG.info("Initializing analog sensor through MCP3008 at csChannel '" + csChannel + "', input channel '" + channel + "', readingType '"
+		+ readingType + "', units '" + units + "'");
 	this.channel = channel.channel;
 	this.readingType = readingType;
 	this.units = units;
@@ -80,8 +80,9 @@ public class MCP3008Adc implements Sensor {
 	    this.chipSelectOutput = gpio.provisionDigitalOutputPin(csChannel.pin, "CS", PinState.LOW);
 
 	    this.misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
-	    this.initiated = true;
-	    LOG.info("Initializing of analog sensor through MCP3008 finished successfully.");
+	    this.initiated = mosiOutput != null && clockOutput != null && chipSelectOutput != null && misoInput != null;
+	    LOG.info("Initializing of analog sensor through MCP3008 finished "
+		    + (initiated ? "OK." : "with issues, some inputs/outputs failed to init."));
 	} catch (Exception e) {
 	    LOG.error("Unable to initialize analog sensor reader through MCP3008.", e);
 	    this.initiated = false;

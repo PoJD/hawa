@@ -72,6 +72,9 @@ public class RuntimeExecutorImpl implements RuntimeExecutor {
     }
 
     private Process executeCommand(String commandSimple) {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("About to run system command: " + commandSimple);
+	}
 	String[] command = new String[] { COMMAND_START[0], COMMAND_START[1], commandSimple };
 	String commaSeparatedCommand = StringUtils.arrayToCommaDelimitedString(command);
 	try {

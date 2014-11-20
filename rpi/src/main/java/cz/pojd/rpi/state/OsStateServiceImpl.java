@@ -124,7 +124,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     }
 
     @Override
-    public void shutdown() {
+    public void shutdownRpi() {
 	getRuntimeExecutor().executeNoReturn(SHUTDOWN_COMMAND);
     }
 

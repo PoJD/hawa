@@ -67,7 +67,7 @@ public class SystemStateService {
     @PUT
     public void shutdown() {
 	LOG.info("Shutting down the system...");
-	osStateService.shutdown();
+	osStateService.shutdownRpi();
     }
 
     private SystemState getState() {
