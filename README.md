@@ -57,3 +57,4 @@ This project was originally based on angular-seed project https://github.com/ang
 * HC-SR501 Adjust IR Pyroelectric Infrared PIR Motion Sensor (GPIO listener through Pi4J)
 * Button switch (Pi4J)
 * MCP23017 expansion board - setup in RoomSpecification - each room could use different expansion board to control Solid State Relays to control the lights
+* MCP3008 Analog to Digital converter - using SPI

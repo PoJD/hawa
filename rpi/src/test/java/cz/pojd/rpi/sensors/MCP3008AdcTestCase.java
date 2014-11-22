@@ -4,52 +4,39 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.IOException;
+
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinState;
-
-import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.spi.MCP3008Adc;
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.CsChannel;
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
+import cz.pojd.rpi.sensors.spi.SpiDevice;
+import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
+import cz.pojd.rpi.sensors.spi.SpiDevice.SpiChannel;
 
 public class MCP3008AdcTestCase {
 
     private MCP3008Adc mcpP3008Adc;
 
     @Mocked
-    private Gpio gpio;
-    @Mocked
-    private GpioPinDigitalOutput output;
-    @Mocked
-    private GpioPinDigitalInput input;
+    private SpiDevice spiDevice;
 
-    private CsChannel csChannel = CsChannel.CS0;
-    private InputChannel channel = InputChannel.CH0;
+    private SpiChannel spiChannel = SpiChannel.CS0;
+    private InputChannel inputChannel = InputChannel.CH0;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalOutputPin(withInstanceOf(Pin.class), anyString, withInstanceOf(PinState.class));
-		result = output;
-
-		gpio.provisionDigitalInputPin(withInstanceOf(Pin.class), anyString);
-		result = input;
-
-		input.isHigh();
-		returns(true, true, false, false, true, false, true, false, false, true, false, false);
+		spiDevice.readWrite(withInstanceLike(new short[] {}));
 	    }
 	};
 
-	mcpP3008Adc = new MCP3008Adc(gpio, csChannel, channel, Reading.Type.light, "");
+	mcpP3008Adc = new MCP3008Adc(spiChannel, inputChannel, Reading.Type.light, "");
     }
 
     @Test
@@ -58,11 +45,11 @@ public class MCP3008AdcTestCase {
     }
 
     @Test
-    public void testReadReturnsInvalidIfReadFails() {
+    public void testReadReturnsInvalidIfReadFails() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		input.isHigh();
-		result = new RuntimeException("Some fake error");
+		spiDevice.readWrite(withInstanceLike(new short[] {}));
+		result = new IOException("Some fake error");
 	    }
 	};
 	Reading result;
@@ -81,20 +68,19 @@ public class MCP3008AdcTestCase {
     public void testReadReturnsValid() {
 	Reading result = mcpP3008Adc.read();
 	assertTrue(result.isValid());
-	assertEquals(1618, result.getDoubleValue(), 0.001);
+	assertEquals(0, result.getDoubleValue(), 0.001);
     }
 
     @Test
-    public void testIsInitiatedReturnsFalseIfExceptionThrownDuringInit() {
+    public void testIsInitiatedReturnsFalseIfExceptionThrownDuringInit() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		gpio.provisionDigitalOutputPin(withInstanceOf(Pin.class), anyString, withInstanceOf(PinState.class));
-		result = new RuntimeException("Some fake error");
+		new SpiDevice(spiChannel, inputChannel);
+		result = new IOException("Some fake error");
 	    }
 	};
 
-	mcpP3008Adc = new MCP3008Adc(gpio, csChannel, channel, Reading.Type.light, "");
+	mcpP3008Adc = new MCP3008Adc(spiChannel, inputChannel, Reading.Type.light, "");
 	assertFalse(mcpP3008Adc.isInitiated());
     }
-
 }

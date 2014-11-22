@@ -19,7 +19,7 @@ import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
+import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
 
 public class DefaultMotionSensorLightTriggerTestCase {
 
