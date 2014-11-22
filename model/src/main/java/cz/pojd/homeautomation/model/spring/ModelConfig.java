@@ -79,7 +79,7 @@ public class ModelConfig {
 	result.setMotionSensorPin(RaspiPin.GPIO_00);
 	result.setLightSwitchPin(RaspiPin.GPIO_01);
 	result.setLightControlPin(RaspiPin.GPIO_02);
-	result.setLightLevelSensorChannel(InputChannel.CH0);
+	result.setLightLevelSensorChannel(InputChannel.CH7);
 	result.setLightLevelTreshold(500); // TODO should be higher once outside?
 	return result;
     }

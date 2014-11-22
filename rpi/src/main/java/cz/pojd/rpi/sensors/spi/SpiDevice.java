@@ -1,5 +1,8 @@
 package cz.pojd.rpi.sensors.spi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.pi4j.wiringpi.Spi;
 
 /**
@@ -9,6 +12,7 @@ import com.pi4j.wiringpi.Spi;
  * @since Nov 21, 2014 10:56:28 PM
  */
 public class SpiDevice {
+    private static final Log LOG = LogFactory.getLog(SpiDevice.class);
     public static final int SPI_SPEED = 1000000; // 1MHz (range is 500kHz - 32MHz)
 
     public enum SpiChannel {
@@ -33,25 +37,29 @@ public class SpiDevice {
 	private InputChannel(int channel) {
 	    this.channel = (short) channel;
 	}
+
+	public short getChannel() {
+	    return channel;
+	}
     }
 
-    private final InputChannel inputChannel;
+    private final SpiChannel spiChannel;
 
     /**
      * Creates the SPI Device at the given spi and input channel
      * 
      * @param spiChannel
      *            spi channel to use
-     * @param inputChannel
-     *            input channel to use
      */
-    public SpiDevice(SpiChannel spiChannel, InputChannel inputChannel) {
-	this.inputChannel = inputChannel;
+    public SpiDevice(SpiChannel spiChannel) {
+	LOG.info("Initializing Spi device at spiChannel " + spiChannel);
+	this.spiChannel = spiChannel;
 	try {
 	    int fd = Spi.wiringPiSPISetup(spiChannel.getChannel(), SPI_SPEED);
 	    if (fd <= -1) {
 		throw new SpiAccessException("SPI port setup failed, wiringSPISetup returned " + fd);
 	    }
+	    LOG.info("Spi device initiated successfully. wiringPiSPISetup returned " + fd);
 	} catch (UnsatisfiedLinkError e) {
 	    throw new SpiAccessException("SPI port setup failed, no SPI available.", e);
 	}
@@ -61,10 +69,11 @@ public class SpiDevice {
      * Attempts to read/write data through this SPI device
      * 
      * @param data
-     *            input/output of the operation
+     *            input of the operation
+     * @return output of the operation from wiringPI
      */
     public short[] readWrite(short[] data) {
-	short[] result = Spi.wiringPiSPIDataRW(inputChannel.channel, data);
+	short[] result = Spi.wiringPiSPIDataRW(spiChannel.getChannel(), data);
 	if (result == null) {
 	    throw new SpiAccessException("Some I/O error occured when talking to SPI. Spi.wiringPiSPIDataRW returned null.");
 	}

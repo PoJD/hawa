@@ -41,7 +41,7 @@ public class MCP3008Adc implements Sensor {
 	this.units = units;
 	this.channelCommand = toCommand(inputChannel.channel);
 	try {
-	    this.spiDevice = new SpiDevice(spiChannel, inputChannel);
+	    this.spiDevice = new SpiDevice(spiChannel);
 	    this.initiated = true;
 	    LOG.info("Initializing of analog sensor through MCP3008 finished OK.");
 	} catch (Exception e) {
@@ -53,7 +53,7 @@ public class MCP3008Adc implements Sensor {
     private short toCommand(short channel) {
 	short command = (short) ((channel + 8) << 4);
 	if (LOG.isDebugEnabled()) {
-	    LOG.debug("command: " + toBinary(command) + ". channel: " + toBinary(channel));
+	    LOG.debug("command: " + toBinary(command) + ". channel: " + channel);
 	}
 	return command;
     }
@@ -61,8 +61,7 @@ public class MCP3008Adc implements Sensor {
     private int readAnalog() {
 	// send 3 bytes command - "1", channel command and some extra byte 0
 	// http://hertaville.com/2013/07/24/interfacing-an-spi-adc-mcp3008-chip-to-the-raspberry-pi-using-c/ or
-	// http://raspberrypihobbyist.blogspot.cz/2012/12/analog-interface.html
-	short[] data = new short[] { 1, (short) channelCommand, 0 };
+	short[] data = new short[] { 1, channelCommand, 0 };
 	short[] result = spiDevice.readWrite(data);
 
 	if (LOG.isDebugEnabled()) {
@@ -75,7 +74,7 @@ public class MCP3008Adc implements Sensor {
 	}
 
 	// now take 8 and 9 bit from second byte (& with 0b11 and shift) and the whole last byte to form the value
-	int analogValue = (((int)data[1] & 3) << 8) + data[2];
+	int analogValue = ((result[1] & 3) << 8) + result[2];
 
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Result: " + analogValue + ". In binary: " + toBinary(analogValue));
