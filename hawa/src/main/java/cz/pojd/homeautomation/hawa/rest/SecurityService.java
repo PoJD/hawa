@@ -1,5 +1,6 @@
 package cz.pojd.homeautomation.hawa.rest;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import cz.pojd.homeautomation.model.web.CalendarEvent;
 import cz.pojd.security.SecurityStatus;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.CalendarEventTranslator;
+import cz.pojd.security.event.SecurityEvent;
 import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.rules.RuleDetail;
 import cz.pojd.security.rules.RulesDAO;
@@ -67,7 +69,10 @@ public class SecurityService {
     public Collection<CalendarEvent> queryCalendarEvents(@QueryParam("start") DateTimeParam start, @QueryParam("end") DateTimeParam end) {
 	LOG.info("Detecting calendar events for time range [" + start + ", " + end + "]");
 
-	Collection<CalendarEvent> result = translator.translate(securityEventDAO.query(start.getDateTime(), end.getDateTime()));
+	Collection<CalendarEvent> result = new ArrayList<>();
+	for (SecurityEvent securityEvent : securityEventDAO.query(start.getDateTime(), end.getDateTime())) {
+	    result.add(translator.translate(securityEvent));
+	}
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Calendar events found: " + result);
 	}

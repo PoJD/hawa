@@ -1,32 +1,21 @@
 package cz.pojd.security.event;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cz.pojd.homeautomation.model.web.CalendarEvent;
 
+/**
+ * Translates security events into calendar events
+ *
+ * @author Lubos Housa
+ * @since Nov 25, 2014 11:56:27 PM
+ */
 public class CalendarEventTranslatorImpl implements CalendarEventTranslator {
     private static final Log LOG = LogFactory.getLog(CalendarEventTranslatorImpl.class);
 
     @Override
-    public Collection<CalendarEvent> translate(Collection<SecurityEvent> securityEvents) {
-	List<CalendarEvent> result = new ArrayList<>();
-	if (securityEvents != null) {
-	    for (SecurityEvent securityEvent : securityEvents) {
-		CalendarEvent calendarEvent = translate(securityEvent);
-		if (calendarEvent != null) {
-		    result.add(calendarEvent);
-		}
-	    }
-	}
-	return result;
-    }
-
-    private CalendarEvent translate(SecurityEvent securityEvent) {
+    public CalendarEvent translate(SecurityEvent securityEvent) {
 	if (securityEvent.getAt() != null) {
 	    CalendarEvent result = new CalendarEvent();
 	    result.setWhat((securityEvent.getType() != null ? securityEvent.getType().getName() : "")

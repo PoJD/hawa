@@ -88,7 +88,9 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 		    insertSql,
 		    securityEvent.getType() != null ? securityEvent.getType().getId() : null,
 		    securityEvent.getSource() != null ? securityEvent.getSource().getId() : null,
-		    securityEvent.getAtAsDate(), securityEvent.getFilePath(), securityEvent.getDetail());
+		    securityEvent.getAtAsDate(),
+		    securityEvent.getFilePath() != null ? securityEvent.getFilePath().toString() : null,
+		    securityEvent.getDetail());
 	} catch (Exception e) {
 	    throw new SecurityEventDAOException("Unable to save the security event " + securityEvent, e);
 	}

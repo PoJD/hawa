@@ -28,10 +28,13 @@ import cz.pojd.security.event.CalendarEventTranslator;
 import cz.pojd.security.event.CalendarEventTranslatorImpl;
 import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.event.SecurityEventDAOImpl;
+import cz.pojd.security.event.SecurityEventTranslator;
+import cz.pojd.security.event.SimpleStringTranslator;
 import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
 import cz.pojd.security.handler.EmailSender;
 import cz.pojd.security.handler.SecurityEventStorer;
+import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.hooks.MotionSensorSecurityHook;
 import cz.pojd.security.hooks.RoomDetailSecurityObserver;
 import cz.pojd.security.rules.Rule;
@@ -93,13 +96,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public SecurityHandler emailSender() {
+	return new EmailSender();
+    }
+
+    @Bean
     public SecurityEventDAO securityEventDAO() {
 	return new SecurityEventDAOImpl(modelConfig.storageCleanup());
     }
 
     @Bean
     public Controller securityController() {
-	Controller result = new DefaultSecurityController(rpiConfig.timeService(), rulesDAO(), new EmailSender(), new SecurityEventStorer(
+	Controller result = new DefaultSecurityController(rpiConfig.timeService(), rulesDAO(), emailSender(), new SecurityEventStorer(
 		securityEventDAO()));
 	for (Observer<Controller, SecurityMode> observer : securityObservers()) {
 	    result.addObserver(observer);
@@ -115,6 +123,11 @@ public class SecurityConfig {
     @Bean
     public CalendarEventTranslator calendarEventTranslator() {
 	return new CalendarEventTranslatorImpl();
+    }
+
+    @Bean
+    public SecurityEventTranslator<String> stringEventTranslator() {
+	return new SimpleStringTranslator();
     }
 
     @Bean

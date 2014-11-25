@@ -11,7 +11,7 @@
 	<context:annotation-config />
 	<bean name="config" class="cz.pojd.homeautomation.hawa.spring.HawaConfig" />
 
-	<!-- we only configure JDBC here though... -->
+	<!-- we only configure JDBC and mail here though... -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
@@ -19,8 +19,24 @@
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
 	</bean>
-
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="port" value="${email.port}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">${email.protocol}</prop>
+				<prop key="mail.smtp.auth">${email.auth}</prop>
+				<prop key="mail.smtp.starttls.enable">${email.starttls}</prop>
+				<prop key="mail.debug">${email.debug}</prop>
+			</props>
+		</property>
+	</bean>
+	
 	<!-- this gets chosen based on the profile (different for rpi and dev) -->
-	<context:property-placeholder location="classpath:jdbc.properties,classpath:sql.properties" />
+	<context:property-placeholder
+		location="classpath:jdbc.properties,classpath:sql.properties,classpath:email.properties" />
 
 </beans>

@@ -35,6 +35,7 @@ This project was originally based on angular-seed project https://github.com/ang
 * Right click on hawa -> Configure -> Convert to AngularJS project
 * Right click on hawa -> Configure facets, check Dynamic Web Module, enter homeAutomation as context root, src/main/webapp as web contents
 * Edit your maven settings.xml and add a definition of a server, call it TomcatServer and add your username and password you setup in your maven manager app (or change pom.xml accordingly if you use a different container
+* Edit email.properties, replace the text REPLACE with your own email properties (server and user and other properties). See applicationContext.xml for more details. COnsider ignoring this file in git from that moment on.
 * Deploy hawa on a local server and enjoy!
 * To deploy latest version on Rpi (assuming you run on tomcat): mvn clean install tomcat7:redeploy -Prpi
 
