@@ -3,6 +3,8 @@ package cz.pojd.homeautomation.model.lights;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.pi4j.io.spi.SpiChannel;
+
 import cz.pojd.rpi.controllers.ControlObserver;
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.controllers.SensorDisabledOrOffSpecification;
@@ -14,7 +16,6 @@ import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.GpioObservableSensor;
 import cz.pojd.rpi.sensors.observable.GpioSwitch;
 import cz.pojd.rpi.sensors.spi.MCP3008Adc;
-import cz.pojd.rpi.sensors.spi.SpiDevice.SpiChannel;
 
 /**
  * Trigger for lights - sets up the observers on the motion sensors on the lights

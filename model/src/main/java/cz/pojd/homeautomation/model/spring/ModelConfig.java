@@ -21,7 +21,7 @@ import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.model.rooms.factory.DefaultRoomFactory;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
-import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 import cz.pojd.rpi.spring.RpiConfig;
 
 /**

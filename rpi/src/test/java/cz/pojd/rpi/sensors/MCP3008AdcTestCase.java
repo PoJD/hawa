@@ -13,11 +13,12 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.pi4j.io.spi.SpiChannel;
+import com.pi4j.io.spi.SpiDevice;
+import com.pi4j.io.spi.SpiFactory;
+
 import cz.pojd.rpi.sensors.spi.MCP3008Adc;
-import cz.pojd.rpi.sensors.spi.SpiAccessException;
-import cz.pojd.rpi.sensors.spi.SpiDevice;
-import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
-import cz.pojd.rpi.sensors.spi.SpiDevice.SpiChannel;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 
 public class MCP3008AdcTestCase {
 
@@ -25,6 +26,8 @@ public class MCP3008AdcTestCase {
 
     @Mocked
     private SpiDevice spiDevice;
+    @Mocked
+    private SpiFactory spiFactory;
 
     private SpiChannel spiChannel = SpiChannel.CS0;
     private InputChannel inputChannel = InputChannel.CH0;
@@ -33,7 +36,10 @@ public class MCP3008AdcTestCase {
     public void setup() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		spiDevice.readWrite(withInstanceLike(new short[] {}));
+		SpiFactory.getInstance(spiChannel);
+		result = spiDevice;
+
+		spiDevice.write(anyShort, anyShort, anyShort);
 		result = new short[] { 0, 0b01, 0b11111111 };
 	    }
 	};
@@ -50,8 +56,8 @@ public class MCP3008AdcTestCase {
     public void testReadReturnsInvalidIfReadFails() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		spiDevice.readWrite(withInstanceLike(new short[] {}));
-		result = new SpiAccessException("Some fake error");
+		spiDevice.write(anyShort, anyShort, anyShort);
+		result = new IOException("Some fake error");
 	    }
 	};
 	Reading result;
@@ -77,8 +83,8 @@ public class MCP3008AdcTestCase {
     public void testIsInitiatedReturnsFalseIfExceptionThrownDuringInit() throws IOException {
 	new NonStrictExpectations() {
 	    {
-		new SpiDevice(spiChannel);
-		result = new SpiAccessException("Some fake error");
+		SpiFactory.getInstance(spiChannel);
+		result = new IOException("Some fake error");
 	    }
 	};
 

@@ -19,7 +19,7 @@ import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
-import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 
 public class DefaultMotionSensorLightTriggerTestCase {
 
@@ -107,7 +107,8 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0)
+		.build());
     }
 
     @Test
@@ -171,7 +172,8 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0)
+		.build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -208,7 +210,8 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0)
+		.build());
 	motionSensor.notifyObservers(false);
     }
 
@@ -245,7 +248,8 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0).build());
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0)
+		.build());
 	motionSensor.notifyObservers(false);
     }
 }

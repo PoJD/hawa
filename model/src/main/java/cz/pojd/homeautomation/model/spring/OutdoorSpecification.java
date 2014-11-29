@@ -3,7 +3,7 @@ package cz.pojd.homeautomation.model.spring;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 
-import cz.pojd.rpi.sensors.spi.SpiDevice.InputChannel;
+import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 
 public class OutdoorSpecification {
 
