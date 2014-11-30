@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.pi4j.gpio.extension.mcp.MCP3008Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
 import cz.pojd.homeautomation.model.dao.SpringScheduledStorageCleanup;
@@ -21,7 +22,6 @@ import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.model.rooms.factory.DefaultRoomFactory;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 import cz.pojd.rpi.spring.RpiConfig;
 
 /**
@@ -79,7 +79,7 @@ public class ModelConfig {
 	result.setMotionSensorPin(RaspiPin.GPIO_00);
 	result.setLightSwitchPin(RaspiPin.GPIO_01);
 	result.setLightControlPin(RaspiPin.GPIO_02);
-	result.setLightLevelSensorChannel(InputChannel.CH7);
+	result.setLightLevelSensorPin(MCP3008Pin.CH7);
 	result.setLightLevelTreshold(500); // TODO should be higher once outside?
 	return result;
     }

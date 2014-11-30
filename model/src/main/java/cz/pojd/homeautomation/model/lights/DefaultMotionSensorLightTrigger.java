@@ -53,9 +53,9 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
 	Observer<Controllable, Boolean> lightCapableUpdatingObserver = new LightCapableUpdatingObserver(lightCapable);
 	lightCapable.getLightSwitch().addObserver(lightCapableUpdatingObserver);
 
-	if (details.getMotionSensorPin() != null && details.getLightLevelSensorChannel() != null) {
+	if (details.getMotionSensorPin() != null && details.getLightLevelSensorPin() != null) {
 	    // skip the units since we do not know them :)
-	    lightCapable.setLightLevelSensor(new MCP3008Adc(SpiChannel.CS0, details.getLightLevelSensorChannel(), Reading.Type.light, ""));
+	    lightCapable.setLightLevelSensor(new MCP3008Adc(gpio, SpiChannel.CS0, details.getLightLevelSensorPin(), Reading.Type.light, ""));
 
 	    // motion sensor depends on light switch - so that the motion sensor does nothing if light switch is enabled and switched on
 	    // it also depends on light level sensor - if the sensor reads too high (too bright), then the motion sensor does nothing too

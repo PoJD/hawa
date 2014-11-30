@@ -60,7 +60,7 @@ public class DefaultOutdoorFactory implements OutdoorFactory {
 		.motionSensorPin(outdoorSpecification.getMotionSensorPin())
 		.lightSwitchPin(outdoorSpecification.getLightSwitchPin())
 		.lightControlPin(outdoorSpecification.getLightControlPin())
-		.lightLevelSensorChannel(outdoorSpecification.getLightLevelSensorChannel())
+		.lightLevelSensorPin(outdoorSpecification.getLightLevelSensorPin())
 		.lightLevelTreshold(outdoorSpecification.getLightLevelTreshold())
 		.build());
 

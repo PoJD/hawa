@@ -3,16 +3,13 @@ package cz.pojd.homeautomation.model.spring;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
-
 public class OutdoorSpecification {
 
     private boolean newRaspi;
     private int altitude;
     private int dhtSensorSysClassPin;
     private Pin motionSensorPin;
-    private Pin lightSwitchPin, lightControlPin;
-    private InputChannel lightLevelSensorChannel;
+    private Pin lightSwitchPin, lightControlPin, lightLevelSensorPin;
     private double lightLevelTreshold;
     private GpioProvider gpioProvider;
 
@@ -64,12 +61,12 @@ public class OutdoorSpecification {
 	this.lightControlPin = lightControlPin;
     }
 
-    public InputChannel getLightLevelSensorChannel() {
-	return lightLevelSensorChannel;
+    public Pin getLightLevelSensorPin() {
+	return lightLevelSensorPin;
     }
 
-    public void setLightLevelSensorChannel(InputChannel lightLevelSensorChannel) {
-	this.lightLevelSensorChannel = lightLevelSensorChannel;
+    public void setLightLevelSensorPin(Pin lightLevelSensorPin) {
+	this.lightLevelSensorPin = lightLevelSensorPin;
     }
 
     public double getLightLevelTreshold() {
@@ -92,7 +89,7 @@ public class OutdoorSpecification {
     public String toString() {
 	return "OutdoorSpecification [newRaspi=" + newRaspi + ", altitude=" + altitude + ", dhtSensorSysClassPin=" + dhtSensorSysClassPin
 		+ ", motionSensorPin=" + motionSensorPin + ", lightSwitchPin=" + lightSwitchPin + ", lightControlPin=" + lightControlPin
-		+ ", lightLevelSensorChannel=" + lightLevelSensorChannel + ", lightLevelTreshold=" + lightLevelTreshold + ", gpioProvider="
-		+ gpioProvider + "]";
+		+ ", lightLevelSensorPin=" + lightLevelSensorPin + ", lightLevelTreshold=" + lightLevelTreshold + ", gpioProvider=" + gpioProvider
+		+ "]";
     }
 }

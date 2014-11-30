@@ -8,6 +8,7 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.pi4j.gpio.extension.mcp.MCP3008Pin;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CBus;
@@ -19,7 +20,6 @@ import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Reading;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
-import cz.pojd.rpi.sensors.spi.MCP3008Adc.InputChannel;
 
 public class DefaultMotionSensorLightTriggerTestCase {
 
@@ -107,7 +107,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorPin(MCP3008Pin.CH0)
 		.build());
     }
 
@@ -172,7 +172,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorPin(MCP3008Pin.CH0)
 		.build());
 	motionSensor.notifyObservers(false);
     }
@@ -210,7 +210,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorChannel(InputChannel.CH0)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(60.).lightLevelSensorPin(MCP3008Pin.CH0)
 		.build());
 	motionSensor.notifyObservers(false);
     }
@@ -248,7 +248,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 	};
 
 	lightTrigger.setup(MotionSensorLightDetails.newBuilder().lightCapable(lightCapable).switchProvider(provider).controlProvider(provider)
-		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorChannel(InputChannel.CH0)
+		.lightControlPin(pin).lightSwitchPin(pin).motionSensorPin(pin).lightLevelTreshold(0.).lightLevelSensorPin(MCP3008Pin.CH0)
 		.build());
 	motionSensor.notifyObservers(false);
     }

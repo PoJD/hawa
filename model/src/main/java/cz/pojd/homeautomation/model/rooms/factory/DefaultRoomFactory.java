@@ -108,7 +108,7 @@ public class DefaultRoomFactory implements RoomFactory {
 		    .motionSensorPin(RaspiPin.GPIO_04)
 		    .lightSwitchPin(RaspiPin.GPIO_05)
 		    .lightControlPin(RaspiPin.GPIO_06)
-		    .lightLevelSensorChannel(null)
+		    .lightLevelSensorPin(null)
 		    .lightLevelTreshold(roomSpecification.getLightLevelTreshold())
 		    .build());
 	}
