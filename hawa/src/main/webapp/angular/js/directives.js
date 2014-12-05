@@ -130,7 +130,8 @@ angular.module('homeAutomation.directives', [])
 				var lastDate = new Date(values[values.length-1][0]);
 				
 				// if the diff between the above is pretty much a week, then take the appropriate index...
-				if (lastDate.getDate() - firstDate.getDate() == 7) {
+				var interval = lastDate - firstDate;
+				if (Math.round(interval / (24 * 3600 * 1000)) == 7) {
 					var result = Math.round( values.length - 1 - ( days * values.length / 7 ) );
 					return result >= 0 ? result : 0;
 				}
