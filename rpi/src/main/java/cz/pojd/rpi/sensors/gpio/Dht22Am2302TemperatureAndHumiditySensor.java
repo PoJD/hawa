@@ -17,7 +17,7 @@ import cz.pojd.rpi.sensors.Sensor;
 
 /**
  * Sensor implementation for DHT22/AM2302 Digital Temperature And Humidity Sensor. Implemented using Adafruit Python library installed on Pi.
- * https://github.com/adafruit/Adafruit_Python_DHT. This class expects a library with name dht exists on the RasPi (get the libdht.so to e.g.
+ * https://github.com/adafruit/Adafruit_Python_DHT.
  * 
  * @author Lubos Housa
  * @since Aug 4, 2014 7:27:57 PM
