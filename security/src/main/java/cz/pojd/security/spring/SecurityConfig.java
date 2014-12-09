@@ -39,6 +39,7 @@ import cz.pojd.security.handler.SecurityEventStorer;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.hooks.MotionSensorSecurityHook;
 import cz.pojd.security.hooks.RoomDetailSecurityObserver;
+import cz.pojd.security.hooks.EntryReedSwitchSecurityHook;
 import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
 import cz.pojd.security.rules.RulesDAOImpl;
@@ -125,6 +126,11 @@ public class SecurityConfig {
     @Bean
     public MotionSensorSecurityHook motionSensorTrigger() {
 	return new MotionSensorSecurityHook(modelConfig.roomsDAO(), modelConfig.outdoorDAO(), securityController());
+    }
+
+    @Bean
+    public EntryReedSwitchSecurityHook reedSwitchTrigger() {
+	return new EntryReedSwitchSecurityHook(modelConfig.roomsDAO(), securityController());
     }
 
     @Bean

@@ -1,5 +1,8 @@
 package cz.pojd.homeautomation.model.rooms.factory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
@@ -11,8 +14,10 @@ import com.pi4j.io.gpio.RaspiPin;
 import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.homeautomation.model.lights.MotionSensorLightDetails;
 import cz.pojd.homeautomation.model.lights.MotionSensorLightTrigger;
+import cz.pojd.homeautomation.model.rooms.Entry;
 import cz.pojd.homeautomation.model.rooms.Room;
 import cz.pojd.homeautomation.model.rooms.RoomDetail;
+import cz.pojd.homeautomation.model.spring.EntrySpecification;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.rpi.sensors.gpio.Gpio;
 import cz.pojd.rpi.sensors.w1.Ds18B20TemperatureSensor;
@@ -21,7 +26,8 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 public class DefaultRoomFactory implements RoomFactory {
 
     private static final Log LOG = LogFactory.getLog(DefaultRoomFactory.class);
-    private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches, firstFloorLightControls;
+    private final GpioProvider basementFloorLightSwitches, basementFloorLightControls, firstFloorLightSwitches,
+	    firstFloorLightControls;
 
     @Inject
     private Gpio gpio;
@@ -29,6 +35,8 @@ public class DefaultRoomFactory implements RoomFactory {
     private RuntimeExecutor runtimeExecutor;
     @Inject
     private MotionSensorLightTrigger lightTrigger;
+    @Inject
+    private EntryFactory entryFactory;
 
     public DefaultRoomFactory(GpioProvider basementFloorLightSwitches, GpioProvider basementFloorLightControls, GpioProvider firstFloorLightSwitches,
 	    GpioProvider firstFloorLightControls) {
@@ -78,6 +86,14 @@ public class DefaultRoomFactory implements RoomFactory {
 	return firstFloorLightControls;
     }
 
+    public EntryFactory getEntryFactory() {
+	return entryFactory;
+    }
+
+    public void setEntryFactory(EntryFactory entryFactory) {
+	this.entryFactory = entryFactory;
+    }
+
     @Override
     public Room create(RoomSpecification roomSpecification) {
 	LOG.info("Creating new instance of room using: " + roomSpecification);
@@ -112,6 +128,13 @@ public class DefaultRoomFactory implements RoomFactory {
 		    .lightLevelTreshold(roomSpecification.getLightLevelTreshold())
 		    .build());
 	}
+
+	List<Entry> entries = new ArrayList<>();
+	for (EntrySpecification entrySpecification : roomSpecification.getEntrySpecifications()) {
+	    Entry entry = entryFactory.create(entrySpecification, room);
+	    entries.add(entry);
+	}
+	room.setEntries(entries);
 
 	// #21 avoid reading temperature now on room creation
 	room.setLastDetail(new RoomDetail(room, false));

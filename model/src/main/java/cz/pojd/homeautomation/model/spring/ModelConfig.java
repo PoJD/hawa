@@ -21,7 +21,9 @@ import cz.pojd.homeautomation.model.refresh.SpringScheduledRefresher;
 import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.rooms.RoomsDAOImpl;
 import cz.pojd.homeautomation.model.rooms.factory.DefaultRoomFactory;
+import cz.pojd.homeautomation.model.rooms.factory.DefaultEntryFactory;
 import cz.pojd.homeautomation.model.rooms.factory.RoomFactory;
+import cz.pojd.homeautomation.model.rooms.factory.EntryFactory;
 import cz.pojd.rpi.spring.RpiConfig;
 
 /**
@@ -40,6 +42,12 @@ public class ModelConfig {
     @Bean
     public RoomSpecification[] rooms() {
 	return RoomSpecification.values();
+    }
+
+    @Bean
+    public EntryFactory entryFactory() {
+	// each floor's window reed switches provider
+	return new DefaultEntryFactory(rpiConfig.getMCP23017Provider(0x24), rpiConfig.getMCP23017Provider(0x25));
     }
 
     @Bean

@@ -1,5 +1,9 @@
 package cz.pojd.homeautomation.model.spring;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.Pin;
 
@@ -13,7 +17,7 @@ import cz.pojd.homeautomation.model.Floor;
  */
 public enum RoomSpecification {
     HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, null, MCP23017Pin.GPIO_A2, 50),
-    KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A3),
+    KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A3, EntrySpecification.KITCHEN_WEST),
     LIVING_ROOM("Living room", "28-0000060a84d1", MCP23017Pin.GPIO_A4),
     BATHROOM_DOWN("Bathroom down", "28-0000060a84d1", MCP23017Pin.GPIO_A5),
     WC_DOWN("WC down", "28-0000060a84d1", MCP23017Pin.GPIO_A6),
@@ -35,21 +39,22 @@ public enum RoomSpecification {
     private final Pin motionSensorPin, lightPin, lightLevelSensorPin;
     private final Floor floor;
     private final double lightLevelTreshold;
+    private final List<EntrySpecification> entrySpecifications;
 
-    private RoomSpecification(String name, String temperatureID, Pin lightPin) {
-	this(name, temperatureID, lightPin, null, null, null, 0);
+    private RoomSpecification(String name, String temperatureID, Pin lightPin, EntrySpecification... entrySpecifications) {
+	this(name, temperatureID, lightPin, null, null, null, 0, entrySpecifications);
     }
 
-    private RoomSpecification(String name, String temperatureID, Pin lightPin, Pin motionSensorPin) {
-	this(name, temperatureID, lightPin, motionSensorPin, null, null, 0);
+    private RoomSpecification(String name, String temperatureID, Pin lightPin, Pin motionSensorPin, EntrySpecification... entrySpecifications) {
+	this(name, temperatureID, lightPin, motionSensorPin, null, null, 0, entrySpecifications);
     }
 
-    private RoomSpecification(String name, String temperatureID, Pin lightPin, Floor floor) {
-	this(name, temperatureID, lightPin, null, floor, null, 0);
+    private RoomSpecification(String name, String temperatureID, Pin lightPin, Floor floor, EntrySpecification... entrySpecifications) {
+	this(name, temperatureID, lightPin, null, floor, null, 0, entrySpecifications);
     }
 
     private RoomSpecification(String name, String temperatureID, Pin lightPin, Pin motionSensorPin, Floor floor, Pin lightLevelSensorPin,
-	    double lightLevelTreshold) {
+	    double lightLevelTreshold, EntrySpecification... entrySpecifications) {
 	this.name = name;
 	this.temperatureID = temperatureID;
 	this.lightPin = lightPin;
@@ -57,6 +62,11 @@ public enum RoomSpecification {
 	this.floor = floor != null ? floor : Floor.Basement;
 	this.lightLevelSensorPin = lightLevelSensorPin;
 	this.lightLevelTreshold = lightLevelTreshold;
+	if (entrySpecifications != null) {
+	    this.entrySpecifications = Arrays.asList(entrySpecifications);
+	} else {
+	    this.entrySpecifications = new ArrayList<>();
+	}
     }
 
     public String getId() {
@@ -89,5 +99,9 @@ public enum RoomSpecification {
 
     public double getLightLevelTreshold() {
 	return lightLevelTreshold;
+    }
+
+    public List<EntrySpecification> getEntrySpecifications() {
+	return entrySpecifications;
     }
 }

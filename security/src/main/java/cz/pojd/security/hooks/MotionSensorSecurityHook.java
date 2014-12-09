@@ -8,6 +8,7 @@ import cz.pojd.homeautomation.model.outdoor.OutdoorDAO;
 import cz.pojd.homeautomation.model.rooms.RoomsDAO;
 import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.security.controller.Controller;
+import cz.pojd.security.event.Type;
 
 /**
  * Hook for motion sensors - is responsible for making sure the motion sensors are hooked up to the security system
@@ -31,7 +32,7 @@ public class MotionSensorSecurityHook {
     private void setupMotionSensor(LightCapable lightCapable, Controller controller) {
 	if (lightCapable.getMotionSensor() != null) {
 	    LOG.info("Hooking up " + lightCapable + " ...");
-	    lightCapable.getMotionSensor().addObserver(new MotionSensorSecurityObserver(lightCapable, controller));
+	    lightCapable.getMotionSensor().addObserver(new SensorSecurityObserver(lightCapable, controller, Type.sensorMotionDetected, true));
 	}
     }
 }
