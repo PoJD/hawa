@@ -1,5 +1,6 @@
 package cz.pojd.homeautomation.model.lights;
 
+import cz.pojd.homeautomation.model.Source;
 import cz.pojd.rpi.controls.Control;
 import cz.pojd.rpi.sensors.Sensor;
 import cz.pojd.rpi.sensors.observable.ObservableSensor;
@@ -11,7 +12,7 @@ import cz.pojd.rpi.sensors.observable.ObservableSensor;
  * @author Lubos Housa
  * @since Sep 11, 2014 8:44:25 PM
  */
-public abstract class LightCapable {
+public abstract class LightCapable implements Source {
     private ObservableSensor motionSensor;
     private ObservableSensor lightSwitch;
     private Control lightControl;

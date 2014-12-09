@@ -51,7 +51,7 @@ public class RoomDetailSecurityObserver implements Observer<RoomsDAO, RoomDetail
 		SecurityEvent event = new SecurityEvent();
 		event.setType(Type.highTemperature);
 		event.setDetail(newValue.getTemperature().getStringValue());
-		event.setSource(newValue.getSpecification());
+		event.setSource(source.getRoom(newValue.getSpecification()));
 		securityController.handle(event);
 	    }
 	}

@@ -55,10 +55,20 @@ public class Room extends LightCapable {
     }
 
     @Override
+    public String getId() {
+	return getSpecification().getId();
+    }
+
+    @Override
+    public boolean isOutdoor() {
+	return false;
+    }
+
+    @Override
     public String toString() {
 	return "Room [getSpecification()=" + getSpecification() + ", getName()=" + getName() + ", getTemperatureSensor()=" + getTemperatureSensor()
-		+ ", getFloor()=" + getFloor() + ", getLastDetail()=" + getLastDetail() + ", getMotionSensor()=" + getMotionSensor()
-		+ ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + ", getLightLevelSensor()="
-		+ getLightLevelSensor() + "]";
+		+ ", getFloor()=" + getFloor() + ", getLastDetail()=" + getLastDetail() + ", getId()=" + getId() + ", isOutdoor()=" + isOutdoor()
+		+ ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl()
+		+ ", getLightLevelSensor()=" + getLightLevelSensor() + "]";
     }
 }

@@ -4,7 +4,6 @@ import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.Pin;
 
 import cz.pojd.homeautomation.model.Floor;
-import cz.pojd.homeautomation.model.Source;
 
 /**
  * Room specification holds all information to create the rooms
@@ -12,7 +11,7 @@ import cz.pojd.homeautomation.model.Source;
  * @author Lubos Housa
  * @since Sep 10, 2014 9:58:42 PM
  */
-public enum RoomSpecification implements Source {
+public enum RoomSpecification {
     HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, null, MCP23017Pin.GPIO_A2, 50),
     KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A3),
     LIVING_ROOM("Living room", "28-0000060a84d1", MCP23017Pin.GPIO_A4),
@@ -60,24 +59,16 @@ public enum RoomSpecification implements Source {
 	this.lightLevelTreshold = lightLevelTreshold;
     }
 
-    @Override
     public String getId() {
 	return name();
     }
 
-    @Override
     public String getName() {
 	return name;
     }
 
-    @Override
     public Floor getFloor() {
 	return floor;
-    }
-
-    @Override
-    public boolean isOutdoor() {
-	return false;
     }
 
     public String getTemperatureID() {

@@ -16,7 +16,7 @@ import org.apache.ftpserver.ftplet.FtpletResult;
 
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.SecurityEvent;
-import cz.pojd.security.event.SecuritySource;
+import cz.pojd.security.event.Camera;
 import cz.pojd.security.event.Type;
 
 /**
@@ -64,7 +64,7 @@ public class CameraUploadFtplet extends DefaultFtplet {
 		SecurityEvent event = new SecurityEvent();
 		event.setFilePath(path);
 		event.setType(Type.cameraMotionDetected);
-		event.setSource(SecuritySource.parse(cameraDirectory.getFileName().toString()));
+		event.setSource(Camera.parse(cameraDirectory.getFileName().toString()));
 
 		getSecurityController().handle(event);
 	    } else {

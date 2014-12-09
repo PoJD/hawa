@@ -30,6 +30,8 @@ import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.event.SecurityEventDAOImpl;
 import cz.pojd.security.event.SecurityEventTranslator;
 import cz.pojd.security.event.SimpleStringTranslator;
+import cz.pojd.security.event.SourceResolver;
+import cz.pojd.security.event.SourceResolverImpl;
 import cz.pojd.security.ftp.CameraUploadFtplet;
 import cz.pojd.security.ftp.Ftp;
 import cz.pojd.security.handler.EmailSender;
@@ -101,8 +103,13 @@ public class SecurityConfig {
     }
 
     @Bean
+    public SourceResolver sourceResolver() {
+	return new SourceResolverImpl(modelConfig.outdoorDAO(), modelConfig.roomsDAO());
+    }
+
+    @Bean
     public SecurityEventDAO securityEventDAO() {
-	return new SecurityEventDAOImpl(modelConfig.storageCleanup());
+	return new SecurityEventDAOImpl(modelConfig.storageCleanup(), sourceResolver());
     }
 
     @Bean

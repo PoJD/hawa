@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import cz.pojd.homeautomation.model.dao.DAOImpl;
 import cz.pojd.homeautomation.model.dao.StorageCleanup;
-import cz.pojd.homeautomation.model.spring.RoomSpecification;
 
 /**
  * Simple implementation of SecurityEventDAO using spring JDBC support
@@ -32,9 +31,12 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
     @Value("${sql.securityEventDAO.query}")
     private String querySql;
 
+    private final SourceResolver sourceResolver;
+
     @Inject
-    public SecurityEventDAOImpl(StorageCleanup storageCleanup) {
+    public SecurityEventDAOImpl(StorageCleanup storageCleanup, SourceResolver sourceResolver) {
 	storageCleanup.registerTable("securityevents");
+	this.sourceResolver = sourceResolver;
     }
 
     public String getInsertSql() {
@@ -53,6 +55,10 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 	this.querySql = querySql;
     }
 
+    public SourceResolver getSourceResolver() {
+	return sourceResolver;
+    }
+
     @Override
     public Collection<SecurityEvent> query(DateTime start, DateTime end) {
 	DateTimeFormatter parser = ISODateTimeFormat.dateTime();
@@ -64,13 +70,7 @@ public class SecurityEventDAOImpl extends DAOImpl implements SecurityEventDAO {
 		SecurityEvent event = new SecurityEvent();
 		event.setFilePath(parsePathFromRow(row, "filepath"));
 		event.setDetail(parseStringFromRow(row, "detail"));
-
-		// TODO not the best logic here, think over something cleaner?
-		try {
-		    event.setSource(parseEnumFromRow(row, SecuritySource.class, "source"));
-		} catch (IllegalArgumentException e) {
-		    event.setSource(parseEnumFromRow(row, RoomSpecification.class, "source"));
-		}
+		event.setSource(sourceResolver.resolve(parseStringFromRow(row, "source")));
 		event.setType(parseEnumFromRow(row, Type.class, "type"));
 		event.setAt(parseDateTimeFromRow(row, "at"));
 		result.add(event);

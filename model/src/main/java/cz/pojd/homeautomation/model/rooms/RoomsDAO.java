@@ -16,9 +16,9 @@ import cz.pojd.rpi.controllers.Observer;
 public interface RoomsDAO extends Refreshable, DAO {
 
     /**
-     * Get all rooms
+     * Get all room details
      * 
-     * @return collection of all rooms
+     * @return collection of all room details
      */
     Collection<RoomDetail> query();
 

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.SecurityEvent;
-import cz.pojd.security.event.SecuritySource;
+import cz.pojd.security.event.Camera;
 
 public class CameraUploadFtpletTestCase {
 
@@ -70,7 +70,7 @@ public class CameraUploadFtpletTestCase {
 
     @Test
     public void testOnUploadEndRequestHasMatchingArgumentTriggersController() throws FtpException, IOException {
-	final String filePath = WATCH_PATH + SecuritySource.CAMERA_MAINDOOR.name().toLowerCase() + "/file.JPG";
+	final String filePath = WATCH_PATH + Camera.CAMERA_MAINDOOR.name().toLowerCase() + "/file.JPG";
 	new NonStrictExpectations() {
 	    {
 		request.hasArgument();
@@ -86,7 +86,7 @@ public class CameraUploadFtpletTestCase {
 			    return false;
 			}
 			SecurityEvent event = (SecurityEvent) item;
-			if (SecuritySource.CAMERA_MAINDOOR != event.getSource()) {
+			if (Camera.CAMERA_MAINDOOR != event.getSource()) {
 			    return false;
 			}
 			if (!((ROOT_PATH + filePath).equals(event.getFilePath().toString()))) {
