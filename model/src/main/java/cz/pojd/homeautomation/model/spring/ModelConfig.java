@@ -86,7 +86,7 @@ public class ModelConfig {
 
     @Bean
     public DefaultMotionSensorLightTrigger motionSensorLightTrigger() {
-	return new DefaultMotionSensorLightTrigger(rpiConfig.gpio(), rpiConfig.newRasPI());
+	return new DefaultMotionSensorLightTrigger(rpiConfig.gpio());
     }
 
     @Bean

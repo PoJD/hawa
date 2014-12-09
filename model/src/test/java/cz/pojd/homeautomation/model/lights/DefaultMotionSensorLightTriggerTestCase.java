@@ -51,7 +51,7 @@ public class DefaultMotionSensorLightTriggerTestCase {
 
     @Before
     public void setup() throws IOException {
-	lightTrigger = new DefaultMotionSensorLightTrigger(gpio, true);
+	lightTrigger = new DefaultMotionSensorLightTrigger(gpio);
 	new NonStrictExpectations() {
 	    {
 		I2CFactory.getInstance(withEqual(I2CBus.BUS_1));

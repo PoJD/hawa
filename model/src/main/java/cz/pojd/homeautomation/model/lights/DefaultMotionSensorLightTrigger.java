@@ -27,11 +27,9 @@ public class DefaultMotionSensorLightTrigger implements MotionSensorLightTrigger
     private static final Log LOG = LogFactory.getLog(DefaultMotionSensorLightTrigger.class);
 
     public final Gpio gpio;
-    public final boolean isNewRaspi;
 
-    public DefaultMotionSensorLightTrigger(Gpio gpio, boolean isNewRaspi) {
+    public DefaultMotionSensorLightTrigger(Gpio gpio) {
 	this.gpio = gpio;
-	this.isNewRaspi = isNewRaspi;
     }
 
     @Override
