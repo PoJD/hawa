@@ -12,7 +12,7 @@ import com.pi4j.io.gpio.Pin;
 public enum EntrySpecification {
     MAIN_DOOR("Main door", MCP23017Pin.GPIO_A0),
     GARAGE_DOOR("Garage door", MCP23017Pin.GPIO_A1),
-    KITCHEN_WEST("West kitchen window", MCP23017Pin.GPIO_A2);
+    KITCHEN_WEST("West window", MCP23017Pin.GPIO_A2);
 
     private final String name;
     private final Pin reedSwitchPin;
