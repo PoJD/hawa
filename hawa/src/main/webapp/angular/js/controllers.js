@@ -62,13 +62,20 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update();
 			} )
 
-.controller('LiveViewController', function($scope, liveview) {
-	$scope.liveview = liveview.get(function(result) {
-		if (result.cameraOK) { // only in this case change dynamically the img element to start fetching data...
-			$scope.source = "http://rpi:7070/?action=stream";
-		}
-	});
-} )
+.controller('LiveViewController', function($scope, $controller, liveview) {
+				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				
+				$scope.update = function(isFirstUpdate) {
+					$scope.liveview = liveview.get(function(result) {
+						// dynamically change the img element source to start fetching data only if camera is OK and not done before
+						if (result.cameraOK && isFirstUpdate) {
+							$scope.source = "http://rpi:7070/?action=stream";
+						}
+					});
+				};
+
+				$scope.update(true);				
+			} )
 
 .controller('OutdoorController', function($scope, $controller, outdoor) {
 				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
