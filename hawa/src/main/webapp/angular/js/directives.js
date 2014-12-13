@@ -46,7 +46,19 @@ angular.module('homeAutomation.directives', [])
 		scope : {
 			room : '=',
 		},
-		templateUrl : 'angular/components/roomPanel.html'
+		templateUrl : 'angular/components/roomPanel.html',
+		link: function (scope) {
+	        scope.hasOpenedEntry = function(room) {
+	        	for (var i = 0; i < room.entries.length; i++) {
+	        		var entry = room.entries[i];
+	        		if (entry.reedSwitch && entry.reedSwitch.initiated && entry.reedSwitch.enabled && !entry.reedSwitch.switchedOn) {
+	        			// switched on translates to "closed", i.e. the circuit is closed
+	        			return true;
+	        		}
+	        	}
+	        	return false;
+			};
+	    }		
 	};
 } ])
 

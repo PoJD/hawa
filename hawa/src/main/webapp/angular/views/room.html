@@ -20,7 +20,7 @@
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">
-			<div class="panel-heading">Room details</div>
+			<div class="panel-heading">Details</div>
 			<table class="table">
 				<tbody>
 					<tr>
@@ -38,6 +38,19 @@
 					<tr>
 						<th>Last Checked</th>
 						<td>{{formatDateTime(roomDetail.lastUpdate)}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">Windows / doors</div>
+			<table class="table">
+				<tbody>
+					<tr ng-repeat="entry in roomDetail.entries">
+						<th>{{entry.name}}</th>
+						<td>{{entry.reedSwitch.initiated && entry.reedSwitch.enabled
+							? (entry.reedSwitch.switchedOn ? 'Closed' : 'Open') : 'Sensor not
+							working'}}</td>
 					</tr>
 				</tbody>
 			</table>

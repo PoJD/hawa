@@ -16,7 +16,7 @@ import cz.pojd.homeautomation.model.Floor;
  * @since Sep 10, 2014 9:58:42 PM
  */
 public enum RoomSpecification {
-    HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, null, MCP23017Pin.GPIO_A2, 50),
+    HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, null, MCP23017Pin.GPIO_A2, 50, EntrySpecification.MAIN_DOOR),
     KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A3, EntrySpecification.KITCHEN_WEST),
     LIVING_ROOM("Living room", "28-0000060a84d1", MCP23017Pin.GPIO_A4),
     BATHROOM_DOWN("Bathroom down", "28-0000060a84d1", MCP23017Pin.GPIO_A5),

@@ -34,7 +34,18 @@ public class EntryReedSwitchSecurityHook {
 
     private void setupReedSwitch(Entry entry, Controller controller) {
 	LOG.info("Hooking up " + entry + " ...");
+	Type type;
+	switch (entry.getSpecification()) {
+	case GARAGE_DOOR:
+	    type = Type.garageOpened;
+	    break;
+	case MAIN_DOOR:
+	    type = Type.doorOpened;
+	    break;
+	default:
+	    type = Type.windowOpened;
+	}
 	entry.getReedSwitch().addObserver(
-		new SensorSecurityObserver(entry, controller, entry.getSpecification().isDoor() ? Type.doorOpened : Type.windowOpened, false));
+		new SensorSecurityObserver(entry, controller, type, false));
     }
 }

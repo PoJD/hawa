@@ -8,7 +8,13 @@
 			<span gauge value="room.temperature.doubleValue" label="°C"></span>
 		</div>
 		<div class="col-md-3 col-xs-3 panel-buttons">
-			<ha-light-control entity="room" />
+			<div>
+				<ha-light-control entity="room" />
+			</div>
+			<div>
+				<img class="window"
+					ng-src="{{hasOpenedEntry(room) ? 'img/entry-opened.jpg' : 'img/entry-closed.jpg'}}">
+			</div>
 		</div>
 	</div>
 </div>

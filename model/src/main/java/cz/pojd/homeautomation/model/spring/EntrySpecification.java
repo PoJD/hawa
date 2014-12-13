@@ -10,21 +10,16 @@ import com.pi4j.io.gpio.Pin;
  * @since Nov 8, 2014 11:31:17 PM
  */
 public enum EntrySpecification {
-    KITCHEN_WEST("West kitchen window", MCP23017Pin.GPIO_A0),
-    MAIN_DOOR("Main door", MCP23017Pin.GPIO_A0, true);
+    MAIN_DOOR("Main door", MCP23017Pin.GPIO_A0),
+    GARAGE_DOOR("Garage door", MCP23017Pin.GPIO_A1),
+    KITCHEN_WEST("West kitchen window", MCP23017Pin.GPIO_A2);
 
     private final String name;
     private final Pin reedSwitchPin;
-    private final boolean door;
 
     private EntrySpecification(String name, Pin reedSwitchPin) {
-	this(name, reedSwitchPin, false);
-    }
-
-    private EntrySpecification(String name, Pin reedSwitchPin, boolean door) {
 	this.name = name;
 	this.reedSwitchPin = reedSwitchPin;
-	this.door = door;
     }
 
     public String getId() {
@@ -37,9 +32,5 @@ public enum EntrySpecification {
 
     public Pin getReedSwitchPin() {
 	return reedSwitchPin;
-    }
-
-    public boolean isDoor() {
-	return door;
     }
 }

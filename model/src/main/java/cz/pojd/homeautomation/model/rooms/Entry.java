@@ -3,7 +3,7 @@ package cz.pojd.homeautomation.model.rooms;
 import cz.pojd.homeautomation.model.Floor;
 import cz.pojd.homeautomation.model.Source;
 import cz.pojd.homeautomation.model.spring.EntrySpecification;
-import cz.pojd.rpi.sensors.observable.GpioSwitch;
+import cz.pojd.rpi.sensors.observable.ObservableSensor;
 
 /**
  * Entry entity. Represents either a window or door.
@@ -16,7 +16,7 @@ public class Entry implements Source {
     private EntrySpecification specification;
     private String name;
     private Room room;
-    private GpioSwitch reedSwitch;
+    private ObservableSensor reedSwitch;
 
     public EntrySpecification getSpecification() {
 	return specification;
@@ -42,11 +42,16 @@ public class Entry implements Source {
 	this.room = room;
     }
 
-    public GpioSwitch getReedSwitch() {
+    /**
+     * Detects the read switch associated with this entry. Cannot be null
+     * 
+     * @return returns the reed switch. Never null
+     */
+    public ObservableSensor getReedSwitch() {
 	return reedSwitch;
     }
 
-    public void setReedSwitch(GpioSwitch reedSwitch) {
+    public void setReedSwitch(ObservableSensor reedSwitch) {
 	this.reedSwitch = reedSwitch;
     }
 

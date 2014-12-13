@@ -1,6 +1,8 @@
 package cz.pojd.homeautomation.model.rooms;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -24,6 +26,7 @@ public class RoomDetail extends RefreshedLightCapableDetail {
     private Floor floor;
     private Reading temperature;
     private GraphData[] temperatureHistory;
+    private EntryDetail[] entries;
 
     public RoomDetail() {
     }
@@ -35,6 +38,7 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 	setFloor(copy.getFloor());
 	setTemperature(copy.getTemperature());
 	setTemperatureHistory(copy.getTemperatureHistory());
+	setEntries(copy.getEntries());
     }
 
     public RoomDetail(Room room) {
@@ -46,6 +50,15 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 	setSpecification(room.getSpecification());
 	setName(room.getName());
 	setFloor(room.getFloor());
+
+	if (room.getEntries() != null) {
+	    List<EntryDetail> entries = new ArrayList<>();
+	    for (Entry entry : room.getEntries()) {
+		entries.add(new EntryDetail(entry));
+	    }
+	    setEntries(entries.toArray(new EntryDetail[entries.size()]));
+	}
+
 	if (readTemperature) {
 	    setTemperature(room.getTemperatureSensor().read());
 	}
@@ -95,12 +108,20 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 	this.temperatureHistory = temperatureHistory;
     }
 
+    public EntryDetail[] getEntries() {
+	return entries;
+    }
+
+    public void setEntries(EntryDetail[] entries) {
+	this.entries = entries;
+    }
+
     @Override
     public String toString() {
 	return "RoomDetail [getSpecification()=" + getSpecification() + ", getName()=" + getName() + ", getFloor()=" + getFloor()
 		+ ", getTemperature()=" + getTemperature() + ", isValidTemperature()=" + isValidTemperature() + ", getTemperatureHistory()="
-		+ Arrays.toString(getTemperatureHistory()) + ", getLastUpdate()=" + getLastUpdate() + ", getMotionSensor()=" + getMotionSensor()
-		+ ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()=" + getLightControl() + ", getLightLevel()=" + getLightLevel()
-		+ "]";
+		+ Arrays.toString(getTemperatureHistory()) + ", getEntries()=" + Arrays.toString(getEntries()) + ", getLastUpdate()="
+		+ getLastUpdate() + ", getMotionSensor()=" + getMotionSensor() + ", getLightSwitch()=" + getLightSwitch() + ", getLightControl()="
+		+ getLightControl() + ", getLightLevel()=" + getLightLevel() + "]";
     }
 }

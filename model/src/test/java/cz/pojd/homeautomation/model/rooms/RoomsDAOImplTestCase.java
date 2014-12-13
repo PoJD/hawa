@@ -59,7 +59,7 @@ public class RoomsDAOImplTestCase {
     @Mocked
     private Observer<RoomsDAO, RoomDetail> observer;
 
-    private MockObservableSensor mockedLightSwitch, mockedMotionSensor, mockedTemperatureSensor;
+    private MockObservableSensor mockedLightSwitch, mockedMotionSensor, mockedTemperatureSensor, mockReedSwitch;
     private Control mockControl;
 
     @Before
@@ -73,6 +73,7 @@ public class RoomsDAOImplTestCase {
 	mockedLightSwitch = new MockObservableSensor();
 	mockedMotionSensor = new MockObservableSensor();
 	mockedTemperatureSensor = new MockObservableSensor();
+	mockReedSwitch = new MockObservableSensor();
 	mockControl = new MockControl();
 
 	createDAO(RoomSpecification.HALL_DOWN);
@@ -314,6 +315,14 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
+    public void testDetectStateShouldReadEntryReedSwitchForEachRoomAndEntry() {
+	createDAO(RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP);
+	dao.detectState();
+
+	assertEquals(2, mockReedSwitch.getReadCount());
+    }
+
+    @Test
     public void testDetectStateShouldInvokeObserversForEachRoom() {
 	createDAO(RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP);
 	new NonStrictExpectations() {
@@ -461,6 +470,14 @@ public class RoomsDAOImplTestCase {
 		result.setLightSwitch(mockedLightSwitch);
 		result.setTemperatureSensor(temperatureSensor != null ? temperatureSensor[index++] : mockedTemperatureSensor);
 		result.setLastDetail(detail);
+
+		Entry entry = new Entry();
+		entry.setName(specification.getName() + " test entry");
+		entry.setReedSwitch(mockReedSwitch);
+		entry.setRoom(result);
+
+		result.setEntries(Collections.singletonList(entry));
+
 		return result;
 	    }
 	}, rooms, runtimeExecutor, storageCleanup);
