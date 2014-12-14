@@ -4,8 +4,8 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">Controls</div>
 				<div class="panel-body">
-					<button type="button" class="btn btn-default"
-						ng-click="switchOffLights()">Switch of all lights</button>
+					<img class="switch-all cursor" src="img/lights-switchAll.png"
+						ng-click="switchOffLights()" title="Switch of all lights" />
 				</div>
 			</div>
 		</div>
@@ -38,7 +38,7 @@
 					<tr>
 						<th>Last Checked</th>
 						<td>{{formatDateTime(outdoor.lastUpdate)}}</td>
-					</tr>					
+					</tr>
 				</tbody>
 			</table>
 		</div>

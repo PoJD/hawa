@@ -76,6 +76,11 @@ html, body {
 	height: 20px;
 }
 
+.switch-all {
+	width: 64px;
+	height: 64px;
+}
+
 .cursor {
 	cursor: pointer;
 }
