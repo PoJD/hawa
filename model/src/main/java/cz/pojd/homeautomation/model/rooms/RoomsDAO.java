@@ -23,6 +23,13 @@ public interface RoomsDAO extends Refreshable, DAO {
     Collection<RoomDetail> query();
 
     /**
+     * Get all rooms
+     * 
+     * @return collection of all rooms
+     */
+    Collection<Room> queryRooms();
+
+    /**
      * Save the room
      * 
      * @param room

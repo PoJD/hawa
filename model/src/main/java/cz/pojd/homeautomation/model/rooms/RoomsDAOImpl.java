@@ -85,6 +85,12 @@ public class RoomsDAOImpl extends RefreshableDAO implements RoomsDAO {
     }
 
     @Override
+    public Collection<Room> queryRooms() {
+	// get new copy of the list to avoid changing it outside of the DAO
+	return new ArrayList<>(rooms.values());
+    }
+
+    @Override
     public void save(RoomDetail roomDetail) {
 	Room room = rooms.get(roomDetail.getName());
 	if (room != null) {

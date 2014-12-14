@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import cz.pojd.homeautomation.model.rooms.Entry;
 import cz.pojd.homeautomation.model.rooms.Room;
 import cz.pojd.homeautomation.model.rooms.RoomsDAO;
-import cz.pojd.homeautomation.model.spring.RoomSpecification;
 import cz.pojd.security.controller.Controller;
 import cz.pojd.security.event.Type;
 
@@ -22,8 +21,7 @@ public class EntryReedSwitchSecurityHook {
     public EntryReedSwitchSecurityHook(RoomsDAO roomsDAO, Controller controller) {
 	LOG.info("Hooking up reed switches to the security system...");
 
-	for (RoomSpecification specification : RoomSpecification.values()) {
-	    Room room = roomsDAO.getRoom(specification);
+	for (Room room : roomsDAO.queryRooms()) {
 	    for (Entry entry : room.getEntries()) {
 		setupReedSwitch(entry, controller);
 	    }
