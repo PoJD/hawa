@@ -159,7 +159,7 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    private double readTemperature() throws IOException {
+    protected double readTemperature() throws IOException {
 	int UT = 0;
 	int X1 = 0;
 	int X2 = 0;
@@ -183,7 +183,7 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
      * @return
      * @throws IOException
      */
-    private double readPressure() throws IOException {
+    protected double readPressure() throws IOException {
 	int UT = 0;
 	int UP = 0;
 	int B3 = 0;
@@ -276,7 +276,7 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
 	List<Reading> result = new ArrayList<>();
 	try {
 	    if (isInitiated()) {
-		result.add(Reading.newBuilder().type(Type.temperature).doubleValue(readTemperature()).units("°C").build());
+		result.add(translateTemperature(readTemperature()));
 		result.add(Reading.newBuilder().type(Type.pressure).doubleValue(readPressureHPaAtSeaLevel()).units("HPa").build());
 	    } else {
 		LOG.warn("Init failed before, not attempting to read anything from the sensor.");
@@ -296,5 +296,10 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
 	} else {
 	    return Reading.invalid(Type.temperature);
 	}
+    }
+
+    @Override
+    public String toString() {
+	return "Bmp180BarometricSensor [mode=" + mode + ", altitude=" + altitude + "]";
     }
 }

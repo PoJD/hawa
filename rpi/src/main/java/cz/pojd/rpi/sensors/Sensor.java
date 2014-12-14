@@ -10,6 +10,9 @@ import java.util.List;
  */
 public interface Sensor {
 
+    int MAX_TEMPERATURE = 40;
+    int MIN_TEMPERATURE = -40;
+    
     /**
      * Read the current values of this sensor
      * 

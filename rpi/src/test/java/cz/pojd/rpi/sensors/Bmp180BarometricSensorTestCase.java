@@ -119,6 +119,34 @@ public class Bmp180BarometricSensorTestCase {
     }
 
     @Test
+    public void testReadAllDetectsInvalidTemperature() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		I2CFactory.getInstance(anyInt);
+		result = i2cBus;
+
+		i2cBus.getDevice(anyInt);
+		result = device;
+
+		device.read(anyInt);
+		result = 1;
+	    }
+	};
+	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0) {
+	    protected double readTemperature() throws IOException {
+		return -89;
+	    }
+	};
+	List<Reading> result = sensor.readAll();
+	assertNotNull(result);
+	assertEquals(2, result.size());
+
+	Reading first = result.get(0);
+	assertEquals(Type.temperature, first.getType());
+	assertEquals(0, first.getDoubleValue(), 0.001); // would only return 0 if not valid
+	assertFalse(first.isValid());
+    }
+    @Test
     public void testReadAllOK() throws IOException {
 	new NonStrictExpectations() {
 	    {
