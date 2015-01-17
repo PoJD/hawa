@@ -113,7 +113,7 @@ public class Bmp180BarometricSensorTestCase {
 	};
 	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0);
 	Reading reading = sensor.read();
-	assertEquals(0, (long)reading.getDoubleValue());
+	assertEquals(0, (long) reading.getDoubleValue());
 	assertEquals(false, reading.isValid());
 	assertEquals(Type.temperature, reading.getType());
     }
@@ -146,6 +146,36 @@ public class Bmp180BarometricSensorTestCase {
 	assertEquals(0, first.getDoubleValue(), 0.001); // would only return 0 if not valid
 	assertFalse(first.isValid());
     }
+
+    @Test
+    public void testReadAllDetectsInvalidPressure() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		I2CFactory.getInstance(anyInt);
+		result = i2cBus;
+
+		i2cBus.getDevice(anyInt);
+		result = device;
+
+		device.read(anyInt);
+		result = 1;
+	    }
+	};
+	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0) {
+	    protected double readPressure() throws IOException {
+		return 750;
+	    }
+	};
+	List<Reading> result = sensor.readAll();
+	assertNotNull(result);
+	assertEquals(2, result.size());
+
+	Reading second = result.get(1);
+	assertEquals(Type.pressure, second.getType());
+	assertEquals(0, second.getDoubleValue(), 0.001); // would only return 0 if not valid
+	assertFalse(second.isValid());
+    }
+
     @Test
     public void testReadAllOK() throws IOException {
 	new NonStrictExpectations() {
@@ -160,7 +190,12 @@ public class Bmp180BarometricSensorTestCase {
 		result = 1;
 	    }
 	};
-	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0);
+	Bmp180BarometricSensor sensor = new Bmp180BarometricSensor(true, 0) {
+	    // override the validation of pressure to get the raw value calculated by the algorithm
+	    protected Reading translatePressure(double pressure) {
+		return Reading.newBuilder().type(Type.pressure).doubleValue(pressure).units("HPa").build();
+	    }
+	};
 	List<Reading> result = sensor.readAll();
 	assertNotNull(result);
 	assertEquals(2, result.size());

@@ -112,10 +112,16 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	// first create all data we want to insert
 	List<Object[]> arguments = new ArrayList<>();
 	for (Reading reading : get().getSensorReadings()) {
-	    arguments.add(new Object[] { reading.getType().toString(), date, reading.getDoubleValue() });
+	    if (reading.isValid()) {
+		arguments.add(new Object[] { reading.getType().toString(), date, reading.getDoubleValue() });
+	    }
 	}
-
-	getJdbcTemplate().batchUpdate(getInsertSql(), arguments);
+	
+	if (!arguments.isEmpty()) {
+	    getJdbcTemplate().batchUpdate(getInsertSql(), arguments);
+	} else {
+	    LOG.warn("Nothing to save, no valid readings found.");
+	}
     }
 
     private void resetState(OutdoorDetail outdoorDetail) {

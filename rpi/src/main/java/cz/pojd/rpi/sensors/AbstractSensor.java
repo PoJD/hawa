@@ -8,21 +8,21 @@ import cz.pojd.rpi.sensors.Reading.Type;
 public abstract class AbstractSensor implements Sensor {
     private static final Log LOG = LogFactory.getLog(AbstractSensor.class);
 
-    protected void waitfor(long howMuch) {
-	try {
-	    Thread.sleep(howMuch);
-	} catch (InterruptedException e) {
-	    LOG.error("Interrupted while sleeping...");
-	    Thread.currentThread().interrupt();
+    protected Reading translateTemperature(double temperature) {
+	return translateValue(temperature, MIN_TEMPERATURE, MAX_TEMPERATURE, Type.temperature, "°C");
+    }
+
+    protected Reading translatePressure(double pressure) {
+	return translateValue(pressure, MIN_PRESSURE, MAX_PRESSURE, Type.pressure, "HPa");
+    }
+
+    private Reading translateValue(double value, double min, double max, Type type, String units) {
+	if (value < min || value > max) {
+	    LOG.warn("Error value " + value + "read from the sensor '" + this + ". Valid range: (" + min + ", " + max + "). Ignoring this output.");
+	    return Reading.invalid(type);
+	} else {
+	    return Reading.newBuilder().type(type).doubleValue(value).units(units).build();
 	}
     }
 
-    protected Reading translateTemperature(double temperature) {
-	if (temperature < MIN_TEMPERATURE || temperature > MAX_TEMPERATURE) {
-	    LOG.warn("Error temperature read from the sensor '" + this + "': " + temperature + ". Ignoring this output.");
-	    return Reading.invalid(Type.temperature);
-	} else {
-	    return Reading.newBuilder().type(Type.temperature).doubleValue(temperature).units("°C").build();
-	}
-    }
 }

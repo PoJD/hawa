@@ -76,6 +76,15 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
 	readCalibrationData();
     }
 
+    private void waitfor(long howMuch) {
+	try {
+	    Thread.sleep(howMuch);
+	} catch (InterruptedException e) {
+	    LOG.error("Interrupted while sleeping...");
+	    Thread.currentThread().interrupt();
+	}
+    }
+
     /**
      * Reads the calibration data from the IC
      */
@@ -277,7 +286,7 @@ public class Bmp180BarometricSensor extends I2CSensor implements Sensor {
 	try {
 	    if (isInitiated()) {
 		result.add(translateTemperature(readTemperature()));
-		result.add(Reading.newBuilder().type(Type.pressure).doubleValue(readPressureHPaAtSeaLevel()).units("HPa").build());
+		result.add(translatePressure(readPressureHPaAtSeaLevel()));
 	    } else {
 		LOG.warn("Init failed before, not attempting to read anything from the sensor.");
 	    }

@@ -13,6 +13,9 @@ public interface Sensor {
     int MAX_TEMPERATURE = 40;
     int MIN_TEMPERATURE = -40;
     
+    int MIN_PRESSURE = 990;
+    int MAX_PRESSURE = 1100;
+    
     /**
      * Read the current values of this sensor
      * 

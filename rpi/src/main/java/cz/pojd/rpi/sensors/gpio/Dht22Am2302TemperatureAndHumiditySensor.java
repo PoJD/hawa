@@ -67,10 +67,10 @@ public class Dht22Am2302TemperatureAndHumiditySensor extends AbstractSensor impl
     @Override
     public Reading read() {
 	List<Reading> result = readAll();
-	if (result.size() == 2) {
+	if (result.size() == 1) {
 	    return result.get(0);
 	} else {
-	    return Reading.invalid(Type.temperatureD);
+	    return Reading.invalid(Type.humidity);
 	}
     }
 

@@ -18,6 +18,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cz.pojd.homeautomation.model.dao.StorageCleanup;
@@ -135,6 +136,25 @@ public class OutdoorDAOImplTestCase {
 	    }
 	};
 
+	dao.setInsertSql(INSERT_SQL_STATEMENT);
+	dao.saveState(new Date());
+    }
+    
+
+    @Test
+    public void testSaveStateInvalidReadingsSHouldNotCallJdbc() {
+	new NonStrictExpectations() {
+	    {
+		sensor.readAll();
+		result = Collections.singletonList(Reading.invalid(Type.pressure));
+		times = 1;
+
+		jdbcTemplate.batchUpdate(anyString, (BatchPreparedStatementSetter) any);
+		maxTimes = 0;
+	    }
+	};
+
+	dao.detectState();
 	dao.setInsertSql(INSERT_SQL_STATEMENT);
 	dao.saveState(new Date());
     }
