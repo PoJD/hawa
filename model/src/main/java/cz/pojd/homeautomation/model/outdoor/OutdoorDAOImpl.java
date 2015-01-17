@@ -86,13 +86,10 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 
     @Override
     protected void detectState() {
-	List<Reading> readings = new ArrayList<>();
-	for (Sensor sensor : getOutdoor().getSensors()) {
-	    readings.addAll(sensor.readAll());
-	}
-
 	OutdoorDetail detail = new OutdoorDetail(getOutdoor());
-	detail.setSensorReadings(readings);
+	for (Sensor sensor : getOutdoor().getSensors()) {
+	    detail.setSensorReadings(sensor.readAll().toArray(new Reading[] {}));
+	}
 	detail.setLastUpdate(getRefresher().getLastUpdate());
 
 	resetState(detail);
@@ -116,7 +113,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 		arguments.add(new Object[] { reading.getType().toString(), date, reading.getDoubleValue() });
 	    }
 	}
-	
+
 	if (!arguments.isEmpty()) {
 	    getJdbcTemplate().batchUpdate(getInsertSql(), arguments);
 	} else {

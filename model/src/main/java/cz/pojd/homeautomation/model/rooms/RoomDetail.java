@@ -60,7 +60,12 @@ public class RoomDetail extends RefreshedLightCapableDetail {
 	}
 
 	if (readTemperature) {
-	    setTemperature(room.getTemperatureSensor().read());
+	    Reading newReading = room.getTemperatureSensor().read();
+	    if (newReading.isValid()) {
+		setTemperature(newReading);
+	    } else {
+		setTemperature(room.getLastDetail() != null ? room.getLastDetail().getTemperature() : null);
+	    }
 	}
     }
 

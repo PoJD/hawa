@@ -35,6 +35,9 @@ angular.module('angular-gauge', []).directive('gauge', function() {
 			};
 
 			var valueChanged = function(value) {
+				if (!value) {
+					value = 0.;
+				}
 				gauge.redraw(value);
 				return gauge;
 			};

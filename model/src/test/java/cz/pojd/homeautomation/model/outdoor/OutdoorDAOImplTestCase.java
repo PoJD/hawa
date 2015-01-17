@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -139,7 +140,6 @@ public class OutdoorDAOImplTestCase {
 	dao.setInsertSql(INSERT_SQL_STATEMENT);
 	dao.saveState(new Date());
     }
-    
 
     @Test
     public void testSaveStateInvalidReadingsSHouldNotCallJdbc() {
@@ -192,9 +192,31 @@ public class OutdoorDAOImplTestCase {
 	detectState();
 
 	OutdoorDetail outdoorDetail = dao.get();
-	List<Reading> list = outdoorDetail.getSensorReadings();
+	Collection<Reading> list = outdoorDetail.getSensorReadings();
 	assertEquals(1, list.size());
-	Reading r = list.get(0);
+	Reading r = list.iterator().next();
+	assertEquals(5., r.getDoubleValue(), 0.001);
+	assertEquals("5.00Pa", r.getStringValue());
+	assertEquals(Type.pressure, r.getType());
+    }
+
+    @Test
+    public void testGetShouldReturnLastValidReadings() {
+	new NonStrictExpectations() {
+	    {
+		sensor.readAll();
+		returns(Collections.singletonList(Reading.newBuilder().doubleValue(5).type(Type.pressure).units("Pa").build()),
+			Collections.singletonList(Reading.invalid(Type.pressure)));
+		times = 2;
+	    }
+	};
+	dao.detectState();
+	dao.detectState();
+
+	OutdoorDetail outdoorDetail = dao.get();
+	Collection<Reading> list = outdoorDetail.getSensorReadings();
+	assertEquals(1, list.size());
+	Reading r = list.iterator().next();
 	assertEquals(5., r.getDoubleValue(), 0.001);
 	assertEquals("5.00Pa", r.getStringValue());
 	assertEquals(Type.pressure, r.getType());

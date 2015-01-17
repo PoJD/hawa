@@ -361,6 +361,31 @@ public class RoomsDAOImplTestCase {
     }
 
     @Test
+    public void testGetShouldReturnLastValidTemperature() {
+	createDAO(new RoomSpecification[] { RoomSpecification.HALL_DOWN },
+		new ObservableSensor[] { new MockObservableSensor() {
+		    private int run = 0;
+
+		    public Reading read() {
+			if (++run > 1) {
+			    return Reading.invalid(Type.temperature);
+			} else {
+			    return Reading.newBuilder().doubleValue(25).type(Type.temperature).build();
+			}
+		    }
+		} });
+
+	dao.detectState();
+	dao.detectState();
+
+	RoomDetail detail = dao.get(ROOM_NAME);
+	assertNotNull(detail);
+	assertNotNull(detail.getTemperature());
+	assertTrue(detail.getTemperature().isValid());
+	assertEquals(25., detail.getTemperature().getDoubleValue(), 0.001);
+    }
+
+    @Test
     public void testGetNoGraphData() {
 	detectState();
 

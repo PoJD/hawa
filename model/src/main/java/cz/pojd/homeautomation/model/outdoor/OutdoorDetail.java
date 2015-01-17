@@ -1,14 +1,16 @@
 package cz.pojd.homeautomation.model.outdoor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import cz.pojd.homeautomation.model.refresh.RefreshedLightCapableDetail;
 import cz.pojd.homeautomation.model.web.GraphData;
 import cz.pojd.rpi.sensors.Reading;
+import cz.pojd.rpi.sensors.Reading.Type;
 
 /**
  * Simple POJO holding the outdoor detail.
@@ -19,7 +21,7 @@ import cz.pojd.rpi.sensors.Reading;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OutdoorDetail extends RefreshedLightCapableDetail {
 
-    private List<Reading> sensorReadings = new ArrayList<>();
+    private Map<Type, Reading> sensorReadings = new HashMap<>();
     private GraphData[] outdoorHistory;
 
     public OutdoorDetail() {
@@ -27,20 +29,28 @@ public class OutdoorDetail extends RefreshedLightCapableDetail {
 
     public OutdoorDetail(OutdoorDetail copy) {
 	super(copy);
-	setSensorReadings(copy.getSensorReadings());
-	setOutdoorHistory(copy.getOutdoorHistory());
+	sensorReadings = copy.sensorReadings;
+	outdoorHistory = copy.outdoorHistory;
     }
 
     public OutdoorDetail(Outdoor outdoor) {
 	super(outdoor);
+	if (outdoor.getLastDetail() != null) {
+	    // take the last readings - all should be valid
+	    sensorReadings = outdoor.getLastDetail().sensorReadings;
+	}
     }
 
-    public List<Reading> getSensorReadings() {
-	return sensorReadings;
+    public void setSensorReadings(Reading... readings) {
+	for (Reading reading : readings) {
+	    if (reading.isValid()) {
+		sensorReadings.put(reading.getType(), reading);
+	    }
+	}
     }
 
-    public void setSensorReadings(List<Reading> sensorReadings) {
-	this.sensorReadings = sensorReadings;
+    public Collection<Reading> getSensorReadings() {
+	return sensorReadings.values();
     }
 
     public GraphData[] getOutdoorHistory() {
