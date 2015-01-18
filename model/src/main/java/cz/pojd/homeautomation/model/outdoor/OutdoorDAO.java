@@ -11,6 +11,10 @@ import cz.pojd.homeautomation.model.refresh.Refreshable;
  */
 public interface OutdoorDAO extends Refreshable, DAO {
 
+    String TEMPERATURE_DESC = "Temperature °C";
+    String PRESSURE_DESC = "Pressure hPa";
+    String HUMIDITY_DESC = "Humidity %";
+    
     /**
      * Get the outdoor detail
      * 

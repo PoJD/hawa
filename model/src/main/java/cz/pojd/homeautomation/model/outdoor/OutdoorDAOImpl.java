@@ -2,6 +2,7 @@ package cz.pojd.homeautomation.model.outdoor;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,8 +71,7 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
     public OutdoorDetail getWithHistory() {
 	// create a new copy here - we do not want to store all the below data to memory now...
 	OutdoorDetail detail = new OutdoorDetail(get());
-	detail.setOutdoorHistory(new GraphData[] { getGraphData("Temperature °C", Type.temperature), getGraphData("Humidity %", Type.humidity),
-		getGraphData("Pressure hPa", Type.pressure) });
+	detail.setOutdoorHistory(getGraphData());
 	return detail;
     }
 
@@ -125,19 +125,37 @@ public class OutdoorDAOImpl extends RefreshableDAO implements OutdoorDAO {
 	getOutdoor().setLastDetail(outdoorDetail);
     }
 
-    private GraphData getGraphData(String key, Type type) {
-	List<Object[]> list = new ArrayList<>();
+    private GraphData[] getGraphData() {
+	GraphData[] result = new GraphData[] { new GraphData(TEMPERATURE_DESC), new GraphData(HUMIDITY_DESC), new GraphData(PRESSURE_DESC) };
+
+	Map<String, List<Object[]>> lists = new HashMap<>();
+	lists.put(Type.temperature.toString(), new ArrayList<Object[]>());
+	lists.put(Type.humidity.toString(), new ArrayList<Object[]>());
+	lists.put(Type.pressure.toString(), new ArrayList<Object[]>());
+
 	try {
-	    for (Map<String, Object> row : getJdbcTemplate().queryForList(outdoorHistorySql, new Object[] { type.toString(), DAYS_BACK_HISTORY })) {
-		list.add(new Object[] { row.get("at"), row.get("reading") });
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("About to run SQL '" + outdoorHistorySql + "' for outdoor.");
+	    }
+	    for (Map<String, Object> row : getJdbcTemplate().queryForList(outdoorHistorySql, new Object[] { DAYS_BACK_HISTORY })) {
+		Object name = row.get("name");
+		List<Object[]> list = lists.get(name);
+		if (list != null) {
+		    list.add(new Object[] { row.get("at"), row.get("reading") });
+		} else {
+		    LOG.warn("Unknown type/name of reading found in SQL: " + name + ". Ignoring this row...");
+		}
+	    }
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("SQL ran OK");
 	    }
 	} catch (Exception e) {
-	    throw new OutdoorDAOException("Unable to detect history for sensor '" + type + "' for past " + DAYS_BACK_HISTORY + " days.", e);
+	    throw new OutdoorDAOException("Unable to detect history for outdoor for past " + DAYS_BACK_HISTORY + " days.", e);
 	}
 
-	GraphData result = new GraphData();
-	result.setKey(key);
-	result.setValues(list.toArray(new Object[][] {}));
+	result[0].setValues(lists.get(Type.temperature.toString()).toArray(new Object[][] {}));
+	result[1].setValues(lists.get(Type.humidity.toString()).toArray(new Object[][] {}));
+	result[2].setValues(lists.get(Type.pressure.toString()).toArray(new Object[][] {}));
 
 	return result;
     }

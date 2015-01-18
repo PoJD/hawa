@@ -16,6 +16,13 @@ public class GraphData {
     private String key;
     private Object[][] values;
 
+    public GraphData() {
+    }
+    
+    public GraphData(String key) {
+	setKey(key);
+    }
+    
     public String getKey() {
 	return key;
     }

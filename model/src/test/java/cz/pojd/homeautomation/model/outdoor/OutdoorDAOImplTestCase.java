@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -309,10 +310,17 @@ public class OutdoorDAOImplTestCase {
 	final Map<String, Object> row = new HashMap<String, Object>();
 	row.put("at", new Date());
 	row.put("reading", 28.);
+	row.put("name", Type.temperature.toString());
+
+	final Map<String, Object> rowInvalid = new HashMap<String, Object>();
+	rowInvalid.put("at", new Date());
+	rowInvalid.put("reading", 28.);
+	rowInvalid.put("name", "bad type");
+	
 	new NonStrictExpectations() {
 	    {
 		jdbcTemplate.queryForList(anyString, (Object[]) any);
-		returns(Collections.singletonList(row), new ArrayList<>());
+		returns(Arrays.asList(row, rowInvalid), new ArrayList<>());
 	    }
 	};
 	OutdoorDetail detail = dao.getWithHistory();
