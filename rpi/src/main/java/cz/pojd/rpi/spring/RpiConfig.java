@@ -111,7 +111,8 @@ public class RpiConfig {
     @Bean
     public Gpio gpio() {
 	try {
-	    return new GpioImpl(GpioFactory.getInstance());
+	    // bump the priority of the low level pi4j libs to give the interrupt threads higher precedence
+	    return new GpioImpl(GpioFactory.getInstance(), Thread.MAX_PRIORITY + 10);
 	} catch (UnsatisfiedLinkError e) {
 	    LOG.error("Unable to create the GPIO controller. Using a mock one instead.", e);
 	    return new MockGpio();

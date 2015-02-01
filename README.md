@@ -49,6 +49,9 @@ This project was originally based on angular-seed project https://github.com/ang
 * Make sure the 1-Wire module is loaded to have the needed number of slave devices allowed (by default only 10)
 * Install some DB (I used MySQL). Use ddl.sql and indexes.sql inside src/main/db to setup the schema. Use database.sql in the same directory to create the db in MySQL. Fine tune sql.properties inside rpi-resources if you plan to use other than MySQL DB and the syntax there is incorrect for your DB
 
+# Raspberry webapp configuration
+* Add following switches to the VM args: -XX:+UseThreadPriorities -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps
+
 # Sensors and low level peripherals
 
 * Bmp180BarometricSensor (I2C through Pi4J)

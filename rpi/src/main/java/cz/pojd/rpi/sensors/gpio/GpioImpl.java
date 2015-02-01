@@ -42,8 +42,18 @@ public class GpioImpl implements Gpio, DisposableBean {
     private GpioController gpioController;
 
     @Inject
-    public GpioImpl(GpioController gpioController) {
+    public GpioImpl(GpioController gpioController, int priority) {
 	this.gpioController = gpioController;
+
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Bumping Pi4j priority to " + priority);
+	}
+
+	int result = com.pi4j.wiringpi.Gpio.piHiPri(priority);
+
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Pi4j priority " + ((result == 0) ? "changed successfully" : "failed to get changed."));
+	}
     }
 
     public void export(PinMode mode, GpioPin... pin) {
