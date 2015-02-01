@@ -39,6 +39,13 @@ public interface OsStateService {
     PropertyValue getCpu();
 
     /**
+     * Detects current uptime of this running server
+     * 
+     * @return current uptime
+     */
+    PropertyValue getUptime();
+
+    /**
      * Gets system log in viewable form (aka tail)
      * 
      * @return string representation of the system log (last x rows)

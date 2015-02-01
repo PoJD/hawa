@@ -13,6 +13,9 @@ import cz.pojd.rpi.system.RuntimeExecutor;
 
 public class OsStateServiceImpl extends StateServiceBase implements OsStateService {
 
+    private static final String UPTIME_COMMAND = "uptime | sed 's/\\([^,]*\\).*/\\1/' | sed 's/^ *//'";
+    private static final String UPTIME_LABEL = "Uptime";
+
     private static final String CPU_COMMAND = "uptime | sed 's/.*average: \\([^,]*\\).*/\\1/'";
     private static final String CPU_LABEL = "CPU";
 
@@ -94,8 +97,27 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	}
 
 	double percentage = 100 * currentLoad.get(0) / (double) getRuntimeExecutor().getCpuCount();
-	return PropertyValue.newBuilder().type(Type.os).name(CPU_LABEL).percentage((int) percentage).criticalPercentage(80)
-		.textValue(String.format("%.2f%%", percentage)).build();
+	return PropertyValue.newBuilder()
+		.type(Type.os)
+		.name(CPU_LABEL)
+		.percentage((int) percentage)
+		.criticalPercentage(80)
+		.textValue(String.format("%.2f%%", percentage))
+		.build();
+    }
+
+    @Override
+    public PropertyValue getUptime() {
+	List<String> uptime = getRuntimeExecutor().executeString(UPTIME_COMMAND);
+	if (uptime.size() != 1) {
+	    return null;
+	}
+	return PropertyValue.newBuilder()
+		.type(Type.os)
+		.name(UPTIME_LABEL)
+		.noPercentage()
+		.textValue(uptime.get(0))
+		.build();
     }
 
     @Override
@@ -119,8 +141,13 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
 	double total = range.get(1);
 	double used = total - free;
 	int percentage = (int) (total > 0 ? (100 * used / total) : 0);
-	return PropertyValue.newBuilder().type(Type.os).name(label).percentage(percentage).criticalPercentage(90)
-		.textValue(doubles2Range(used, total)).build();
+	return PropertyValue.newBuilder()
+		.type(Type.os)
+		.name(label)
+		.percentage(percentage)
+		.criticalPercentage(90)
+		.textValue(doubles2Range(used, total))
+		.build();
     }
 
     @Override

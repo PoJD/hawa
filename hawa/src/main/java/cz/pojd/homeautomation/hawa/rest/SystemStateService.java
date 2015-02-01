@@ -74,6 +74,7 @@ public class SystemStateService {
 	SystemState result = new SystemState();
 	result.addValue(vmStateService.getHeap());
 	result.addValue(vmStateService.getProcessors());
+	result.addValue(osStateService.getUptime());
 	result.addValue(osStateService.getCpu());
 	result.addValue(osStateService.getRam());
 	result.addValue(osStateService.getSwap());

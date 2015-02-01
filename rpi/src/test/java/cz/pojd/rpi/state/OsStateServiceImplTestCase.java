@@ -215,4 +215,35 @@ public class OsStateServiceImplTestCase {
 	PropertyValue result = service.getCpu();
 	assertNull(result);
     }
+    
+
+    @Test
+    public void testGetUptimeOK() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns(null, "14:33:36 up  1:32", null);
+	    }
+	};
+
+	PropertyValue result = service.getUptime();
+	assertNotNull(result);
+	assertTrue(result.getPercentage() < result.getCriticalPercentage());
+	assertTrue(result.getName().toLowerCase().contains("uptime"));
+	assertEquals("14:33:36 up  1:32", result.getTextValue());
+	assertEquals(Type.os, result.getType());
+    }
+
+    @Test
+    public void testGetUptimeError() throws IOException {
+	new NonStrictExpectations() {
+	    {
+		bufferedReader.readLine();
+		returns("Some error ocurred", null, null);
+	    }
+	};
+
+	PropertyValue result = service.getUptime();
+	assertNull(result);
+    }
 }

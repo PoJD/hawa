@@ -30,8 +30,7 @@ public class VmStateServiceImpl extends StateServiceBase implements VmStateServi
 	return PropertyValue.newBuilder()
 		.type(Type.jvm)
 		.name(PROCESSOR)
-		.percentage(100)
-		.criticalPercentage(110) // we don't want this value to turn red anytime
+		.noPercentage() // we don't want this value to turn red anytime
 		.textValue(processorsCount + " " + PROCESSOR + (processorsCount > 1 ? "s" : ""))
 		.build();
     }

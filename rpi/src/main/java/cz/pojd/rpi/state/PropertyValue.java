@@ -48,6 +48,18 @@ public class PropertyValue {
 	    return this;
 	}
 
+	/**
+	 * Notify the builder to ignore percentage and always assume the value is in range. Done internally by setting percentage to 100 and critical
+	 * percentage to 110.
+	 * 
+	 * @return
+	 */
+	public Builder noPercentage() {
+	    this.percentage = 100;
+	    this.criticalPercentage = 110;
+	    return this;
+	}
+
 	public PropertyValue build() {
 	    PropertyValue value = new PropertyValue();
 	    value.type = type;
