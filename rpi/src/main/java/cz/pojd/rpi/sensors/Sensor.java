@@ -13,7 +13,7 @@ public interface Sensor {
     int MAX_TEMPERATURE = 40;
     int MIN_TEMPERATURE = -40;
     
-    int MIN_PRESSURE = 990;
+    int MIN_PRESSURE = 900;
     int MAX_PRESSURE = 1100;
     
     /**
