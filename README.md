@@ -43,6 +43,11 @@ This project was originally based on angular-seed project https://github.com/ang
 
 * Make sure the webapp user (e.g. tomcat) can access /dev/i2c and /sys/class/gpio (e.g. setup module loading and group permissions or consider running the webapp as root)
 * Make sure i2c, 1_wire, v4l2 and sound modules are autoloaded (w1-gpio i2c-bcm2708 i2c-dev bcm2835-v4l2 snd_bcm2835)
+** If you are using latest kernels, you may need to add following to the /boot/config.txt: 
+dtparam=i2c1=on
+dtparam=spi=on
+dtoverlay=w1-gpio,gpiopin=4
+dtoverlay=w1-gpio,gpiopin=22
 * Make sure the raspistill tool is available (to be able to take pictures from camera) and in $PATH (by default in Raspian, might be needed to be added in other distros) - currently not used by the app
 * Make sure mjpg-streamer with uvc video input and http output plugins is installed on the box (to be able to view video)
 * Make sure your web app is auto started
