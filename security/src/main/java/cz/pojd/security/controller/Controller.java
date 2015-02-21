@@ -35,6 +35,31 @@ public interface Controller {
     SecurityMode getMode();
 
     /**
+     * Returns the current security breach event. Anytime a security breach is detected, the associated security event would get processed and also be
+     * active in the security controller for some predefined amount of time or until the user dismissed such event. This method therefore returns a
+     * security breach if there is one now, otherwise returns null
+     * 
+     * @return current security breach or null if no security breach is currently being active
+     */
+    SecurityEvent getCurrentBreach();
+
+    /**
+     * Detects whether there is any security breach active at the moment. In other word checks whether the getCurrent() method returns non null
+     * security event.
+     * 
+     * @return true if so, false otherwise
+     * @see #getCurrentBreach()
+     */
+    boolean isBreach();
+
+    /**
+     * Dismiss the security breach if any active. This method has no effect if there is no security breach active at the moment. Otherwise it erases
+     * the current security breach, i.e. the calls to getCurrent after this invocation (and before a new security breach is detected) should return
+     * null.
+     */
+    void dismissBreach();
+
+    /**
      * Add observer for changes in security mode
      * 
      * @param observer

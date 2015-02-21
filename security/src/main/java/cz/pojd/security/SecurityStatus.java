@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import cz.pojd.homeautomation.model.web.CalendarEvent;
 import cz.pojd.security.controller.SecurityMode;
 import cz.pojd.security.rules.RuleDetail;
 
@@ -17,6 +18,7 @@ import cz.pojd.security.rules.RuleDetail;
 public class SecurityStatus {
 
     private SecurityMode securityMode;
+    private CalendarEvent currentBreach;
     private Collection<RuleDetail> rules;
 
     public SecurityMode getSecurityMode() {
@@ -25,6 +27,14 @@ public class SecurityStatus {
 
     public void setSecurityMode(SecurityMode securityMode) {
 	this.securityMode = securityMode;
+    }
+
+    public CalendarEvent getCurrentBreach() {
+	return currentBreach;
+    }
+
+    public void setCurrentBreach(CalendarEvent currentBreach) {
+	this.currentBreach = currentBreach;
     }
 
     public Collection<RuleDetail> getRules() {
@@ -37,6 +47,6 @@ public class SecurityStatus {
 
     @Override
     public String toString() {
-	return "SecurityStatus [securityMode=" + securityMode + ", rules=" + rules + "]";
+	return "SecurityStatus [securityMode=" + securityMode + ", currentBreach=" + currentBreach + ", rules=" + rules + "]";
     }
 }

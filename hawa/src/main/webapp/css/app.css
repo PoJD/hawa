@@ -96,6 +96,12 @@ html, body {
 	height: 30px;		
 }
 
+.alarm {
+	color: red;
+	text-align: center;
+	font-size: 2em;
+}
+
 /* little tweaks for full calendar */
 .fc-event {
     cursor: pointer;

@@ -34,6 +34,7 @@ public class DefaultSecurityController implements Controller {
     private final TimeService timeService;
 
     private SecurityMode securityMode = SecurityMode.OFF;
+    private SecurityEvent currentBreach;
     private Observable<Controller, SecurityMode> observable = new Observable<>();
 
     @Inject
@@ -71,13 +72,10 @@ public class DefaultSecurityController implements Controller {
 	}
 	for (Iterator<SecurityEvent> iterator = delayedEvents.iterator(); iterator.hasNext();) {
 	    SecurityEvent securityEvent = iterator.next();
-	    DateTime now = timeService.now();
-	    DateTime securityEventTime = securityEvent.getAt();
-	    if (now.minusMinutes(SecurityBreach.DELAY_MINUTES).isBefore(securityEventTime)) {
+	    if (!(timePassed(securityEvent, SecurityBreach.DELAY_MINUTES))) {
 		if (LOG.isDebugEnabled()) {
 		    LOG.debug("Security event " + securityEvent + " is younger than " + SecurityBreach.DELAY_MINUTES
-			    + " minutes. Skipping this and following security events for further processing. Now: " + now + ". Event time: "
-			    + securityEventTime);
+			    + " minutes. Skipping this and following security events for further processing.");
 		}
 		break;
 	    }
@@ -90,9 +88,41 @@ public class DefaultSecurityController implements Controller {
 	}
     }
 
+    /**
+     * Every 30 minutes check for current security breach
+     */
+    @Scheduled(fixedDelay = 30 * 60 * 1000)
+    public synchronized void handleSecurityBreach() {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Handle security breach called.");
+	}
+	if (getCurrentBreach() != null) {
+	    if (timePassed(getCurrentBreach(), SecurityBreach.DURATION_MINUTES)) {
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Security breach " + getCurrentBreach() + " is older than " + SecurityBreach.DURATION_MINUTES
+			    + " minutes. Dismissing this security breach.");
+		}
+		dismissBreach();
+	    }
+	}
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Handle security breach finished.");
+	}
+    }
+
     @Override
     public void handle(SecurityEvent securityEvent) {
 	handle(securityEvent, false);
+    }
+
+    private boolean timePassed(SecurityEvent securityEvent, int minutes) {
+	DateTime now = timeService.now();
+	DateTime securityEventTime = securityEvent.getAt();
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Checking whether the time already passed. Now: " + now + ". Event time: " + securityEventTime + ". Minutes to check: "
+		    + minutes);
+	}
+	return now.minusMinutes(minutes).isAfter(securityEventTime);
     }
 
     private void handle(SecurityEvent securityEvent, boolean processingDelayedEvents) {
@@ -165,6 +195,7 @@ public class DefaultSecurityController implements Controller {
 			+ securityHandler, e);
 	    }
 	}
+	this.currentBreach = securityEvent;
 	return true;
     }
 
@@ -197,5 +228,20 @@ public class DefaultSecurityController implements Controller {
     @Override
     public void addObserver(Observer<Controller, SecurityMode> observer) {
 	observable.addObserver(observer);
+    }
+
+    @Override
+    public SecurityEvent getCurrentBreach() {
+	return currentBreach;
+    }
+
+    @Override
+    public boolean isBreach() {
+	return getCurrentBreach() != null;
+    }
+
+    @Override
+    public void dismissBreach() {
+	currentBreach = null;
     }
 }

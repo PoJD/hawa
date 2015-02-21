@@ -46,6 +46,7 @@ public class SecurityService {
 	SecurityStatus result = new SecurityStatus();
 	result.setRules(rulesDAO.query());
 	result.setSecurityMode(securityController.getMode());
+	result.setCurrentBreach(translator.translate(securityController.getCurrentBreach()));
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("State detected: " + result);
 	}
@@ -90,5 +91,13 @@ public class SecurityService {
 	    rulesDAO.save(ruleDetail);
 	}
 	LOG.info("Security updated.");
+    }
+    
+    @POST
+    @Path("/control/dismiss")
+    public void dismiss() {
+	LOG.info("About to dismiss the security breach...");
+	securityController.dismissBreach();
+	LOG.info("Dismissed.");
     }
 }

@@ -16,6 +16,9 @@ public class CalendarEventTranslatorImpl implements CalendarEventTranslator {
 
     @Override
     public CalendarEvent translate(SecurityEvent securityEvent) {
+	if (securityEvent == null) {
+	    return null;
+	}
 	if (securityEvent.getAt() != null) {
 	    CalendarEvent result = new CalendarEvent();
 	    result.setWhat((securityEvent.getType() != null ? securityEvent.getType().getName() : "")

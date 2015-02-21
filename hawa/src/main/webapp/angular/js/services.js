@@ -27,5 +27,7 @@ var services = angular.module('homeAutomation.services', [ 'ngResource' ])
 } ])
 
 .factory('security', [ '$resource', function($resource) {
-	return $resource('rest/security');
+	return $resource('rest/security', null, {
+		'dismiss':  { method:'POST', url: 'rest/security/control/dismiss' }
+	});
 } ]);

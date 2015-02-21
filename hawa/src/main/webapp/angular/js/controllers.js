@@ -4,7 +4,7 @@
 
 angular.module('homeAutomation.controllers', [])
 
-.controller('BaseUpdateController', function($scope, $interval) {
+.controller('BaseController', function($scope, $interval, security, ngDialog) {
 				var updates = undefined;
 				$scope.autoUpdate = function() {
 					if (angular.isDefined(updates))
@@ -14,6 +14,7 @@ angular.module('homeAutomation.controllers', [])
 						if (angular.isDefined($scope.update)) {
 							$scope.update();
 						}
+						$scope.checkSecurity();
 					}, 1 * 60 * 1000);
 				};
 
@@ -37,11 +38,26 @@ angular.module('homeAutomation.controllers', [])
 			    	return (date) ? d3.time.format('%e.%m. %H:%M')(new Date(date)) : '';
 			    }
 				
+				$scope.checkSecurity = function() {
+				    $scope.securityStatus = security.get({}, function(securityStatus) {
+				    	if (securityStatus.currentBreach) {
+				    		$scope.calendarEvent = securityStatus.currentBreach;
+					    	ngDialog.open({ template: 'calendarEvent.html', className: 'ngdialog-theme-default', scope: $scope, data: { alarm: true } });				    		
+				    	}
+				    } );
+				};
+				
+				$scope.dismiss = function() {
+					security.dismiss();
+					ngDialog.closeAll();
+				};
+    	        				    
+				$scope.checkSecurity();
 				$scope.autoUpdate();
 			} )
 
 .controller('HomeController', function($scope, $controller, systemState, rooms, outdoor) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 
 				$scope.update = function() {
 					$scope.systemState = systemState.get();
@@ -63,7 +79,7 @@ angular.module('homeAutomation.controllers', [])
 			} )
 
 .controller('LiveViewController', function($scope, $controller, liveview) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function(isFirstUpdate) {
 					$scope.liveview = liveview.get(function(result) {
@@ -78,7 +94,7 @@ angular.module('homeAutomation.controllers', [])
 			} )
 
 .controller('OutdoorController', function($scope, $controller, outdoor) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 
 				$scope.update = function() {
 				    $scope.outdoorDetail = outdoor.get({ type: 'withHistory' }, function(outdoorDetail) {
@@ -99,7 +115,7 @@ angular.module('homeAutomation.controllers', [])
 			} )
 			
 .controller('SystemStateController', function($scope, $controller, systemState) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 
 				$scope.update = function() {
 				    $scope.systemState = systemState.get({ type: 'withDetails' }, function(systemState) {
@@ -120,7 +136,7 @@ angular.module('homeAutomation.controllers', [])
 			} )
 						
 .controller('RoomController', function($scope, $controller, $routeParams, rooms) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function() {
 				    $scope.roomDetail = rooms.get({ detail: $routeParams.roomName }, function(roomDetail) {
@@ -135,7 +151,7 @@ angular.module('homeAutomation.controllers', [])
 } )
 
 .controller('SecurityController', function($scope, $controller, security, ngDialog) {
-				$controller('BaseUpdateController', {$scope: $scope}); // inherit from BaseUpdateController
+				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function(isFirstUpdate) {
 				    $scope.securityStatus = security.get(); 

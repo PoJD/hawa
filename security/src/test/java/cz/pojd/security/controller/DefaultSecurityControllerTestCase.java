@@ -1,5 +1,8 @@
 package cz.pojd.security.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.Arrays;
 
 import mockit.Mocked;
@@ -142,6 +145,62 @@ public class DefaultSecurityControllerTestCase {
 	};
 	controller.switchMode(SecurityMode.FULL_HOUSE);
 	controller.handle(securityEvent);
+    }
+
+    @Test
+    public void testHandleRuleFiresBreachSetsCurrentBreach() {
+	new NonStrictExpectations() {
+	    {
+		rule.isSecurityBreach(securityEvent);
+		times = 1;
+		result = true;
+	    }
+	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
+	controller.handle(securityEvent);
+
+	assertEquals(securityEvent, controller.getCurrentBreach());
+    }
+
+    @Test
+    public void testHandleSecurityBreach() {
+	final DateTime now = DateTime.now();
+	new NonStrictExpectations() {
+	    {
+		rule.isSecurityBreach(securityEvent);
+		result = true;
+
+		securityEvent.getAt();
+		result = now;
+
+		timeService.now();
+		returns(now, now.plusMinutes(32));
+	    }
+	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
+	controller.handle(securityEvent);
+
+	controller.handleSecurityBreach(); // nothing dismissed yet
+	assertEquals(securityEvent, controller.getCurrentBreach());
+	controller.handleSecurityBreach(); // this time now service already returns +32 minutes, so the event should be dismissed then
+	assertNull(controller.getCurrentBreach());
+    }
+
+    @Test
+    public void testDismissBreach() {
+	new NonStrictExpectations() {
+	    {
+		rule.isSecurityBreach(securityEvent);
+		times = 1;
+		result = true;
+	    }
+	};
+	controller.switchMode(SecurityMode.FULL_HOUSE);
+	controller.handle(securityEvent);
+
+	controller.dismissBreach();
+
+	assertNull(controller.getCurrentBreach());
     }
 
     @Test
@@ -297,7 +356,7 @@ public class DefaultSecurityControllerTestCase {
 
 	controller.handleDelayedEvents(); // nothing triggered, since nothing should be inside the internal set anymore
     }
-    
+
     @Test
     public void testSecurityEventDelayedRuleDoesNotFireAgainIsDropped() {
 	final DateTime now = DateTime.now();
@@ -309,11 +368,11 @@ public class DefaultSecurityControllerTestCase {
 		securityEvent.getAt();
 		result = now;
 		times = 1;
-		
+
 		timeService.now();
 		result = now.plusMinutes(12);
 		times = 1;
-		
+
 		securityHandler.handleSecurityBreach(withInstanceLike(securityEvent));
 		maxTimes = 0;
 

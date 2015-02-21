@@ -24,6 +24,11 @@ public enum SecurityBreach {
      * How many minutes should a delayed security breach be delayed before being fired (assuming the rule is still active)
      */
     public static final int DELAY_MINUTES = 10;
+    
+    /**
+     * How many minutes should a security breach be active
+     */
+    public static final int DURATION_MINUTES = 30;
 
     /**
      * Parses the given boolean as SecurityBreach value
