@@ -55,6 +55,36 @@ This project was originally based on angular-seed project https://github.com/ang
 # Raspberry webapp configuration
 * Add following switches to the VM args: -XX:+UseThreadPriorities -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps
 
+# Upgrading Raspberry
+This is really specific to my distribution (Gentoo), so instructions for your platform may be different.
+* Prepare for upgrade
+** /etc/init.d/tomcat-7 stop
+** /etc/init.d/mysql stop
+** umount /tmp
+* Update portage
+** emerge --sync
+* Update packages
+** emerge -uD --quiet-build=y --with-bdeps=y --newuse @world
+* Update firmware
+** cd ~/firmware/
+** git pull
+** mount /boot
+** cp -R boot/* /boot/
+** cp -R modules/* /lib/modules/
+* Update mjpg-streamer
+** cd ~/mjpeg-streamer/
+** git pull
+** cd mjpg-streamer-experimental
+** make clean all
+** cp *.so /usr/local/lib/
+** cp mjpg_streamer /usr/local/bin/
+(now all part of updateAll.sh script on the raspberry)
+
+* Update pi4j (from PC) and redeploy to tomcat
+** rebuildPi4j.sh
+** mvn clean install tomcat7:redeploy -Prpi
+
+
 # Sensors and low level peripherals
 
 * Bmp180BarometricSensor (I2C through Pi4J)
