@@ -15,6 +15,7 @@ import org.junit.Test;
 import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.system.TimeService;
 import cz.pojd.security.event.SecurityEvent;
+import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
@@ -25,6 +26,8 @@ public class DefaultSecurityControllerTestCase {
     private DefaultSecurityController controller;
     @Mocked
     private RulesDAO rulesDAO;
+    @Mocked
+    private SecurityEventDAO securityEventDAO;
     @Mocked
     private Rule rule, rule2, rule3;
     @Mocked
@@ -66,7 +69,7 @@ public class DefaultSecurityControllerTestCase {
 	    }
 	};
 
-	controller = new DefaultSecurityController(timeService, rulesDAO, securityHandler);
+	controller = new DefaultSecurityController(timeService, rulesDAO, securityEventDAO, securityHandler);
 	controller.addObserver(observer);
     }
 
@@ -193,6 +196,9 @@ public class DefaultSecurityControllerTestCase {
 		rule.isSecurityBreach(securityEvent);
 		times = 1;
 		result = true;
+
+		securityEventDAO.save(securityEvent);
+		times = 1;
 	    }
 	};
 	controller.switchMode(SecurityMode.FULL_HOUSE);
@@ -202,7 +208,7 @@ public class DefaultSecurityControllerTestCase {
 
 	assertNull(controller.getCurrentBreach());
     }
-
+    
     @Test
     public void testSwitchModeOffNoRuleIsInvoked() {
 	new NonStrictExpectations() {

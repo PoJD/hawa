@@ -43,6 +43,8 @@ angular.module('homeAutomation.controllers', [])
 				    	if (securityStatus.currentBreach) {
 				    		$scope.calendarEvent = securityStatus.currentBreach;
 					    	ngDialog.open({ template: 'calendarEvent.html', className: 'ngdialog-theme-default', scope: $scope, data: { alarm: true } });				    		
+				    	} else {
+				    		ngDialog.closeAll(); // just in case some dialog is open from before and some other user dimissed the alarm in the meantime
 				    	}
 				    } );
 				};

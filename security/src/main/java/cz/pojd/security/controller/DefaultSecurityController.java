@@ -2,12 +2,13 @@ package cz.pojd.security.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,7 @@ import cz.pojd.rpi.controllers.Observer;
 import cz.pojd.rpi.sensors.observable.Observable;
 import cz.pojd.rpi.system.TimeService;
 import cz.pojd.security.event.SecurityEvent;
+import cz.pojd.security.event.SecurityEventDAO;
 import cz.pojd.security.handler.SecurityHandler;
 import cz.pojd.security.rules.Rule;
 import cz.pojd.security.rules.RulesDAO;
@@ -30,20 +32,23 @@ public class DefaultSecurityController implements Controller {
 
     private final Map<SecurityMode, List<Rule>> rulesByMode = new HashMap<SecurityMode, List<Rule>>();
     private final List<SecurityHandler> securityHandlers;
-    private final Set<SecurityEvent> delayedEvents = new TreeSet<>();
+    private final Set<SecurityEvent> delayedEvents = Collections.newSetFromMap(new ConcurrentHashMap<SecurityEvent, Boolean>());
     private final TimeService timeService;
+    private final SecurityEventDAO securityEventDAO;
 
     private SecurityMode securityMode = SecurityMode.OFF;
     private SecurityEvent currentBreach;
     private Observable<Controller, SecurityMode> observable = new Observable<>();
 
     @Inject
-    public DefaultSecurityController(TimeService timeService, RulesDAO rulesDao, SecurityHandler... securityHandlers) {
+    public DefaultSecurityController(TimeService timeService, RulesDAO rulesDao, SecurityEventDAO securityEventDAO,
+	    SecurityHandler... securityHandlers) {
 	LOG.info("Initiating DefaultSecurityController...");
 	this.timeService = timeService;
 	for (Rule rule : rulesDao.queryRules()) {
 	    registerRule(rule);
 	}
+	this.securityEventDAO = securityEventDAO;
 	this.securityHandlers = Arrays.asList(securityHandlers);
 	LOG.info("Init done.");
     }
@@ -63,10 +68,18 @@ public class DefaultSecurityController implements Controller {
     }
 
     /**
-     * Every 2 minutes check the delayed events
+     * Every 2 minutes perform some housekeeping
      */
     @Scheduled(fixedDelay = 2 * 60 * 1000)
-    public synchronized void handleDelayedEvents() {
+    public void houseKeeping() {
+	handleDelayedEvents();
+	handleSecurityBreach();
+    }
+
+    /**
+     * Check the delayed events
+     */
+    public void handleDelayedEvents() {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Handle delayed events called.");
 	}
@@ -89,15 +102,15 @@ public class DefaultSecurityController implements Controller {
     }
 
     /**
-     * Every 30 minutes check for current security breach
+     * Check for current security breach
      */
-    @Scheduled(fixedDelay = 30 * 60 * 1000)
-    public synchronized void handleSecurityBreach() {
+    public void handleSecurityBreach() {
 	if (LOG.isDebugEnabled()) {
 	    LOG.debug("Handle security breach called.");
 	}
-	if (getCurrentBreach() != null) {
-	    if (timePassed(getCurrentBreach(), SecurityBreach.DURATION_MINUTES)) {
+	SecurityEvent currentBreach = getCurrentBreach();
+	if (currentBreach != null) {
+	    if (timePassed(currentBreach, SecurityBreach.DURATION_MINUTES)) {
 		if (LOG.isDebugEnabled()) {
 		    LOG.debug("Security breach " + getCurrentBreach() + " is older than " + SecurityBreach.DURATION_MINUTES
 			    + " minutes. Dismissing this security breach.");
@@ -177,7 +190,7 @@ public class DefaultSecurityController implements Controller {
 	}
     }
 
-    private synchronized void storeEvent(SecurityEvent securityEvent) {
+    private void storeEvent(SecurityEvent securityEvent) {
 	delayedEvents.add(securityEvent);
     }
 
@@ -208,7 +221,7 @@ public class DefaultSecurityController implements Controller {
 	afterModeSwitch();
     }
 
-    private synchronized void afterModeSwitch() {
+    private void afterModeSwitch() {
 	if (SecurityMode.OFF == securityMode) {
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Dropping all delayed events...:  " + delayedEvents);
@@ -242,6 +255,16 @@ public class DefaultSecurityController implements Controller {
 
     @Override
     public void dismissBreach() {
-	currentBreach = null;
+	SecurityEvent currentBreach = this.currentBreach;
+	this.currentBreach = null;
+	if (currentBreach != null) {
+	    String detail = currentBreach.getDetail();
+	    currentBreach.setDetail((detail != null ? detail : "") + " - dismiss");
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Storing the dimiss security event: " + currentBreach);
+	    }
+	    securityEventDAO.save(currentBreach);
+	}
+
     }
 }

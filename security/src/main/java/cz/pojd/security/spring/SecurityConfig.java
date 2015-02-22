@@ -115,7 +115,7 @@ public class SecurityConfig {
 
     @Bean
     public Controller securityController() {
-	Controller result = new DefaultSecurityController(rpiConfig.timeService(), rulesDAO(), emailSender(), new SecurityEventStorer(
+	Controller result = new DefaultSecurityController(rpiConfig.timeService(), rulesDAO(), securityEventDAO(), emailSender(), new SecurityEventStorer(
 		securityEventDAO()));
 	for (Observer<Controller, SecurityMode> observer : securityObservers()) {
 	    result.addObserver(observer);
