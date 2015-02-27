@@ -30,40 +30,44 @@
 	<thead>
 		<tr>
 			<th ng-if="ngDialogData.alarm" colspan="2" class="alarm">Alarm !!!</th>
-			<th ng-if="!ngDialogData.alarm" colspan="2">Event Detail</th>
+			<th ng-if="!ngDialogData.alarm" colspan="2">{{ 'Event Detail' | translate }}</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<th>When</th>
-			<td>{{formatDateTime(calendarEvent.start)}}</td>
+			<th>{{ 'When' | translate }}</th>
+			<td>{{ parseCalendarDate(calendarEvent.start) }}</td>
 		</tr>
 		<tr>
-			<th>What</th>
-			<td>{{calendarEvent.what}}</td>
+			<th>{{ 'What' | translate }}</th>
+			<td>{{calendarEvent.what | translate }}</td>
 		</tr>
 		<tr>
-			<th>Where</th>
-			<td>{{calendarEvent.where}}</td>
+			<th>{{ 'Where' | translate }}</th>
+			<td>{{calendarEvent.where | translate }}</td>
 		</tr>
 		<tr>
-			<th>Floor</th>
-			<td>{{calendarEvent.floor}}</td>
+			<th>{{ 'Floor' | translate }}</th>
+			<td>{{calendarEvent.floor | translate }}</td>
 		</tr>
 		<tr ng-if="ngDialogData.alarm">
-			<td colspan="2" class="center"><button type="button" class="btn btn-default" ng-click="dismiss()">Dismiss</button></td>
+			<td colspan="2" class="center"><button type="button" class="btn btn-default" ng-click="dismiss()">{{ 'Dismiss' | translate }}</button></td>
 		</tr>
 	</tbody>
     </table>
 	</script>
 	<div class="wrapper container-fluid">
-		<div class="top">
+		<div class="top" ng-controller="MenuController">
 			<ul class="nav nav-tabs">
-				<li><a href="#/home">Home</a></li>
-				<li><a href="#/outdoor">Outdoor</a></li>
-				<li><a href="#/security">Security</a></li>
-				<li><a href="#/liveview">Live View</a></li>
-				<li><a href="#/systemstate">System State</a></li>
+				<li><a href="#/home">{{ 'Home' | translate }}</a></li>
+				<li><a href="#/outdoor">{{ 'Outdoor' | translate }}</a></li>
+				<li><a href="#/security">{{ 'Security' | translate }}</a></li>
+				<li><a href="#/liveview">{{ 'Live View' | translate }}</a></li>
+				<li><a href="#/systemstate">{{ 'System State' | translate }}</a></li>
+				<li class="lang">
+					<img src="img/enflag.png" title="{{ 'English' | translate }}" ng-click="changeLanguage('en')" />
+					<img src="img/czflag.png" title="{{ 'Czech' | translate }}" ng-click="changeLanguage('cs')" />
+				</li>
 			</ul>
 		</div>
 		<div class="full" ng-view></div>
@@ -72,10 +76,15 @@
 	<script src="jquery/js/jquery-ui.custom.min.js"></script>
 	<script src="jquery/js/moment.min.js"></script>
 	<script src="jquery/js/fullcalendar.min.js"></script>
+	<script src="jquery/js/fullcalendar-lang/cs.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="angular/builtin/js/angular.min.js"></script>
 	<script src="angular/builtin/js/angular-route.min.js"></script>
 	<script src="angular/builtin/js/angular-resource.min.js"></script>
+	<script src="angular/builtin/js/angular-cookies.min.js"></script>
+	<script src="angular/builtin/js/tmhDynamicLocale.js"></script>
+	<script src="angular/builtin/js/angular-translate.min.js"></script>
+	<script src="angular/builtin/js/angular-translate-storage-cookie.min.js"></script>
 	<script src="angular/builtin/js/d3.min.js"></script>	
 	<script src="angular/builtin/js/gauge.js"></script>
 	<script src="angular/builtin/js/angular-gauge.js"></script>	
@@ -89,5 +98,6 @@
 	<script src="angular/js/controllers.js"></script>
 	<script src="angular/js/filters.js"></script>
 	<script src="angular/js/directives.js"></script>
+	<script src="angular/js/locale-cs.js"></script>
 </body>
 </html>

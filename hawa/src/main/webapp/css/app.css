@@ -26,6 +26,16 @@ html, body {
 	float: right;
 }
 
+li.lang {
+	float: right;
+	padding: 10px;
+}
+
+li.lang img {
+	margin: 0 2px 0 2px;
+	cursor: pointer;
+}
+
 .table tr td.middle,
 .table tr th.middle {
 	vertical-align: middle;

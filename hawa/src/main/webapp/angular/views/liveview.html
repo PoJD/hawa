@@ -3,13 +3,12 @@
 		<div ng-show="liveview.cameraOK">
 			<img ng-src="{{source}}" width=1024px height=768px />
 		</div>
-		<div ng-show="liveview.cameraOK==false" class="label roomLabel label-danger">Some issue
-			with the camera (check RPi)</div>
+		<div ng-show="liveview.cameraOK==false" class="label roomLabel label-danger">{{'Some issue with the camera' | translate }}</div>
 		<div ng-show="liveview.cameraOK==undefined"
-			class="label roomLabel label-default">Loading camera...</div>
+			class="label roomLabel label-default">{{ 'Loading...' | translate }}</div>
 	</div>
 	<div class="col-md-2">
 		<a class="btn btn-success" href="http://rpi:7070/?action=snapshot"
-			download="snapshot.jpg">Snapshot</a>
+			download="snapshot.jpg">{{ 'Snapshot' | translate }}</a>
 	</div>
 </div>

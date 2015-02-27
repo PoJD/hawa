@@ -5,36 +5,36 @@
 	</div>
 	<div class="col-md-4">
 		<div class="panel panel-info">
-			<div class="panel-heading">Security Mode</div>
+			<div class="panel-heading">{{ 'Security Mode' | translate }}</div>
 			<div class="panel-body">
 				<div class="radio center">
 					<label> <input type="radio"
 						ng-model="securityStatus.securityMode" ng-click="changed=true"
-						value="EMPTY_HOUSE">Empty House</input>
+						value="EMPTY_HOUSE">{{ 'Empty House' | translate }}</input>
 					</label> <label> <input type="radio"
 						ng-model="securityStatus.securityMode" ng-click="changed=true"
-						value="FULL_HOUSE">Full House </input>
+						value="FULL_HOUSE">{{ 'Full House' | translate }}</input>
 					</label> <label> <input type="radio"
 						ng-model="securityStatus.securityMode" ng-click="changed=true"
-						value="OFF">Off</input>
+						value="OFF">{{ 'Security Off' | translate }}</input>
 					</label>
 				</div>
 			</div>
 		</div>
 		<div class="panel panel-info">
-			<div class="panel-heading">Security Rules</div>
+			<div class="panel-heading">{{ 'Security Rules' | translate }}</div>
 			<table class="table">
 				<tbody>
 					<tr ng-repeat="rule in securityStatus.rules">
-						<th>{{rule.description}}</th>
+						<th>{{rule.description | translate}}</th>
 						<td><toggle-switch class="switch-state" model="rule.enabled"
-								on-label="Enabled" off-label="Disabled"
+								on-label="{{ 'Enabled' | translate }}" off-label="{{ 'Disabled' | translate }}"
 								ng-click="$parent.changed=true"> </toggle-switch></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
 							<button type="button" class="btn btn-default"
-								ng-disabled="!changed" ng-click="apply()">Apply changes</button>
+								ng-disabled="!changed" ng-click="apply()">{{ 'Apply changes' | translate }}</button>
 						</td>
 					</tr>
 				</tbody>

@@ -1,20 +1,22 @@
 'use strict';
 
-
-// Declare app level module which depends on filters, and services
-angular.module('homeAutomation', [
+var app = angular.module('homeAutomation', [
   'ngRoute',
   'angular-gauge',
   'toggle-switch',
   'nvd3ChartDirectives',
   'ui.calendar',
   'ngDialog',
+  'tmh.dynamicLocale',
+  'pascalprecht.translate',
+  'ngCookies',
   'homeAutomation.filters',
   'homeAutomation.services',
   'homeAutomation.directives',
   'homeAutomation.controllers'
 ]).
-config(['$routeProvider', function($routeProvider) {
+config( 
+ function($routeProvider, $translateProvider, tmhDynamicLocaleProvider) {
   $routeProvider
   	.when('/home', {templateUrl: 'angular/views/home.html', controller: 'HomeController'})
     .when('/outdoor', {templateUrl: 'angular/views/outdoor.html', controller: 'OutdoorController'})
@@ -23,4 +25,10 @@ config(['$routeProvider', function($routeProvider) {
     .when('/systemstate', {templateUrl: 'angular/views/systemstate.html', controller: 'SystemStateController'})
     .when('/rooms/:roomName', {templateUrl: 'angular/views/room.html', controller: 'RoomController'})
     .otherwise({redirectTo: '/home'});
-}]);
+    
+  $translateProvider.preferredLanguage('en');
+  $translateProvider.useCookieStorage();
+  
+  tmhDynamicLocaleProvider.localeLocationPattern('angular/builtin/js/i18n/angular-locale_{{locale}}.js');
+ }
+);

@@ -2,10 +2,10 @@
 	<div class="col-md-9 col-xs-6">
 		<div class="col-md-2 col-xs-12">
 			<div class="panel panel-primary">
-				<div class="panel-heading">Controls</div>
+				<div class="panel-heading">{{ 'Controls' | translate }}</div>
 				<div class="panel-body">
 					<img class="switch-all cursor" src="img/lights-switchAll.png"
-						ng-click="switchOffLights()" title="Switch of all lights" />
+						ng-click="switchOffLights()" title="{{ 'Switch of all lights' | translate }}" />
 				</div>
 			</div>
 		</div>
@@ -25,19 +25,19 @@
 	<div class="col-md-3 col-xs-6">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				<a href="#/outdoor">Outdoor</a>
+				<a href="#/outdoor">{{ 'Outdoor' | translate }}</a>
 				<ha-light-control entity="outdoor" small="true"></ha-light-control>
 				<span class="glyphicon glyphicon-cloud right"></span>
 			</div>
 			<table class="table">
 				<tbody>
 					<tr ng-repeat="reading in outdoor.sensorReadings">
-						<th>{{reading.type}}</th>
+						<th>{{reading.type | translate}}</th>
 						<td>{{reading.stringValue}}</td>
 					</tr>
 					<tr>
-						<th>Last Checked</th>
-						<td>{{formatDateTime(outdoor.lastUpdate)}}</td>
+						<th>{{ 'Last Checked' | translate }}</th>
+						<td>{{outdoor.lastUpdate | date : "short"}}</td>
 					</tr>
 				</tbody>
 			</table>

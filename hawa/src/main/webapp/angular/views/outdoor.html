@@ -5,20 +5,20 @@
 				data="temperatureHistory" id="temperatureHistory" width="500"
 				height="200" margin="0" xAxisTickFormat="xAxisTickFormat()"
 				showXAxis="true" showYAxis="true"
-				noData="No data found for last week!" showLegend="true"
+				noData="N/A" showLegend="true"
 				interactive="true" tooltips="true" useInteractiveGuideLine="true">
 			</nvd3-stacked-area-chart>
 			<nvd3-stacked-area-chart ng-show="humidityHistory"
 				data="humidityHistory" id="humidityHistory" width="500" height="200"
 				margin="0" xAxisTickFormat="xAxisTickFormat()" showXAxis="true"
-				showYAxis="true" noData="No data found for last week!"
+				showYAxis="true" noData="N/A"
 				showLegend="true" interactive="true" tooltips="true"
 				useInteractiveGuideLine="true"> </nvd3-stacked-area-chart>
 			<nvd3-line-chart ng-show="pressureHistory" data="pressureHistory"
 				id="pressureHistory" width="500" height="200" margin="0"
 				xAxisTickFormat="xAxisTickFormat()" showXAxis="true"
 				showYAxis="true" forceY="[1000,1030]"
-				noData="No data found for last week!" showLegend="true"
+				noData="N/A" showLegend="true"
 				interactive="true" tooltips="true" useInteractiveGuideLine="true">
 			</nvd3-line-chart>
 		</div>
@@ -28,17 +28,17 @@
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">
-			<div class="panel-heading">Outdoor summary</div>
+			<div class="panel-heading">{{ 'Outdoor' | translate }}</div>
 
 			<table class="table">
 				<tbody>
 					<tr ng-repeat="reading in outdoorDetail.sensorReadings">
-						<th>{{reading.type}}</th>
+						<th>{{reading.type | translate }}</th>
 						<td>{{reading.stringValue}}</td>
 					</tr>
 					<tr>
-						<th>Last Checked</th>
-						<td>{{formatDateTime(outdoorDetail.lastUpdate)}}</td>
+						<th>{{ 'Last Checked' | translate }}</th>
+						<td>{{outdoorDetail.lastUpdate | date : "short"}}</td>
 					</tr>
 				</tbody>
 			</table>

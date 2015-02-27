@@ -1,25 +1,25 @@
 <div class="panel panel-info">
-	<div class="panel-heading">Lights</div>
+	<div class="panel-heading">{{ 'Lights' | translate }}</div>
 	<table class="table">
 		<tbody>
 			<tr>
-				<th>Motion Sensor</th>
+				<th>{{ 'Motion Sensor' | translate }}</th>
 				<td><ha-state entity="entity" state="entity.motionSensor" /></td>
 			</tr>
 			<tr>
-				<th>Light Switch</th>
+				<th>{{ 'Light Switch' | translate }}</th>
 				<td><ha-state entity="entity" state="entity.lightSwitch" /></td>
 			</tr>
 			<tr>
-				<th>Light Control</th>
+				<th>{{ 'Light Control' | translate }}</th>
 				<td><ha-state entity="entity" state="entity.lightControl"
 						should-switch-off-when-disabled="true" /></td>
 			</tr>
 			<tr>
-				<th>Light Level</th>
+				<th>{{ 'Light Level' | translate }}</th>
 				<td>
 					<div ng-show="entity.lightLevel==undefined"
-						class="label label-default">Unknown</div>
+						class="label label-default">{{ 'Unknown' | translate }}</div>
 					<div ng-show="entity.lightLevel!=undefined">{{entity.lightLevel.stringValue}}</div>
 				</td>
 			</tr>

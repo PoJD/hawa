@@ -1,6 +1,6 @@
 <div class="page-header">
-	<h1 ng-show="temperatureHistory==undefined">Loading...</h1>
-	<h1>{{roomDetail.name}}</h1>
+	<h1 ng-show="temperatureHistory==undefined">{{ 'Loading...'  | translate }}</h1>
+	<h1>{{roomDetail.name | translate}}</h1>
 </div>
 
 <div class="row full">
@@ -10,7 +10,7 @@
 				data="temperatureHistory" id="temperatureHistory" width="600"
 				height="400" margin="0" xAxisTickFormat="xAxisTickFormat()"
 				showXAxis="true" showYAxis="true" forceY="[0,40]"
-				noData="No data found for last week!" showLegend="true"
+				noData="N/A" showLegend="true"
 				interactive="true" tooltips="true" useInteractiveGuideLine="true">
 			</nvd3-stacked-area-chart>
 		</div>
@@ -20,37 +20,36 @@
 	</div>
 	<div class="col-md-3 right">
 		<div class="panel panel-info">
-			<div class="panel-heading">Details</div>
+			<div class="panel-heading">{{ 'Detail' | translate }}</div>
 			<table class="table">
 				<tbody>
 					<tr>
-						<th>Name</th>
-						<td>{{roomDetail.name}}</td>
+						<th>{{ 'Name' | translate }}</th>
+						<td>{{roomDetail.name | translate}}</td>
 					</tr>
 					<tr>
-						<th>Floor</th>
-						<td>{{roomDetail.floor}}</td>
+						<th>{{ 'Floor' | translate }}</th>
+						<td>{{roomDetail.floor | translate}}</td>
 					</tr>
 					<tr>
-						<th>Current Temperature</th>
+						<th>{{ 'Current Temperature' | translate }}</th>
 						<td>{{roomDetail.temperature.stringValue}}</td>
 					</tr>
 					<tr>
-						<th>Last Checked</th>
-						<td>{{formatDateTime(roomDetail.lastUpdate)}}</td>
+						<th>{{ 'Last Checked' | translate }}</th>
+						<td>{{roomDetail.lastUpdate | date : "short"}}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div class="panel panel-info">
-			<div class="panel-heading">Windows / doors</div>
+			<div class="panel-heading">{{ 'Windows / doors' | translate }}</div>
 			<table class="table">
 				<tbody>
 					<tr ng-repeat="entry in roomDetail.entries">
-						<th>{{entry.name}}</th>
-						<td>{{entry.reedSwitch.initiated && entry.reedSwitch.enabled
-							? (entry.reedSwitch.switchedOn ? 'Closed' : 'Open') : 'Sensor not
-							working'}}</td>
+						<th>{{entry.name | translate}}</th>
+						<td>{{(entry.reedSwitch.initiated && entry.reedSwitch.enabled
+							? (entry.reedSwitch.switchedOn ? 'Closed' : 'Open') : 'Error') | translate}}</td>
 					</tr>
 				</tbody>
 			</table>

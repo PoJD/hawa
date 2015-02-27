@@ -1,10 +1,18 @@
 'use strict';
 
 /* Controllers */
-
 angular.module('homeAutomation.controllers', [])
 
-.controller('BaseController', function($scope, $interval, security, ngDialog) {
+.controller('MenuController', function($scope, $translate, tmhDynamicLocale) {
+	$scope.changeLanguage = function (key) {
+		$translate.use(key);
+		tmhDynamicLocale.set(key);
+	};
+	// make sure the default loaded in translate (from cookies) is used in the dynamic locale too
+	$scope.changeLanguage($translate.use());	
+})
+
+.controller('BaseController', function($scope, $interval, $translate, $filter, $timeout, security, ngDialog) {	
 				var updates = undefined;
 				$scope.autoUpdate = function() {
 					if (angular.isDefined(updates))
@@ -30,13 +38,14 @@ angular.module('homeAutomation.controllers', [])
 				
 			    $scope.xAxisTickFormat = function() {
 			    	return function(date){
-			    		return $scope.formatDateTime(date);
+			    		return $filter('date')(date, 'short');
 			    	};
 			    };
 			    
-			    $scope.formatDateTime = function(date) {
-			    	return (date) ? d3.time.format('%e.%m. %H:%M')(new Date(date)) : '';
-			    }
+			    $scope.parseCalendarDate = function (date) {
+			    	// we have date in ISO-8601 format, so use the constructor to recreate the date object and then let the filter parse it
+			    	return $filter('date')(new Date(date), 'short');
+			    };
 				
 				$scope.checkSecurity = function() {
 				    $scope.securityStatus = security.get({}, function(securityStatus) {
@@ -53,7 +62,26 @@ angular.module('homeAutomation.controllers', [])
 					security.dismiss();
 					ngDialog.closeAll();
 				};
-    	        				    
+
+				// register for changes in locale - register with a 1sec delay to be sure (scripts may not always be ready yet)
+			    $scope.$watch(
+			    		function($scope) { return $translate.use(); }, 
+			    		function(value) { if ($scope.localeChanged) $timeout(function() { $scope.localeChanged(value); }, 200); }
+			    		);
+			    
+	    		$scope.updateGraphs = function() {
+		            for (var i = 0; i < nv.graphs.length; i++) {
+		            	nv.graphs[i].update();
+		            }
+	    		}
+	    		
+		        $scope.translateGraph = function(graphData) {
+		        	if (!graphData.origKey) { // store the original key
+		        		graphData.origKey = graphData.key;
+		        	}
+		        	graphData.key = $translate.instant(graphData.origKey);
+		        }
+			    
 				$scope.checkSecurity();
 				$scope.autoUpdate();
 			} )
@@ -95,8 +123,21 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update(true);				
 			} )
 
-.controller('OutdoorController', function($scope, $controller, outdoor) {
+.controller('OutdoorController', function($scope, $controller, $translate, outdoor) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
+
+				$scope.translateGraphs = function() {
+					$scope.translateGraph($scope.temperatureHistory[0]);
+					$scope.translateGraph($scope.humidityHistory[0]);
+					$scope.translateGraph($scope.pressureHistory[0]);
+				}
+
+				$scope.localeChanged = function() {
+					if ($scope.temperatureHistory) {
+						$scope.translateGraphs();
+						$scope.updateGraphs();
+					}
+				}
 
 				$scope.update = function() {
 				    $scope.outdoorDetail = outdoor.get({ type: 'withHistory' }, function(outdoorDetail) {
@@ -109,10 +150,12 @@ angular.module('homeAutomation.controllers', [])
 				        $scope.humidityHistory[0].color = '#4B81E6';
 				        $scope.pressureHistory[0].color = '#4BE68C';
 				        
+				        $scope.translateGraphs();
+				        
 				        outdoorDetail.outdoorHistory = undefined;
 				    });
 				};
-
+				
 				$scope.update();
 			} )
 			
@@ -137,7 +180,7 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update();
 			} )
 						
-.controller('RoomController', function($scope, $controller, $routeParams, rooms) {
+.controller('RoomController', function($scope, $controller, $routeParams, $translate, rooms) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function() {
@@ -145,16 +188,24 @@ angular.module('homeAutomation.controllers', [])
 				    	// after load, avoid having the history in the roomDetail object directly - otherwise save would always send it back to the server, which is unnecessary
 				        $scope.temperatureHistory = roomDetail.temperatureHistory;
 				        $scope.temperatureHistory[0].color = '#E64B53';
+				        $scope.translateGraph($scope.temperatureHistory[0]);
 				        roomDetail.temperatureHistory = undefined;
 				    });
 				};
 
+				$scope.localeChanged = function() {
+					if ($scope.temperatureHistory) {
+						$scope.translateGraph($scope.temperatureHistory[0]);
+						$scope.updateGraphs();
+					}
+				}
+				
 				$scope.update();
 } )
 
-.controller('SecurityController', function($scope, $controller, security, ngDialog) {
+.controller('SecurityController', function($scope, $controller, $translate, security, ngDialog) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
-				
+								
 				$scope.update = function(isFirstUpdate) {
 				    $scope.securityStatus = security.get(); 
 					if(!isFirstUpdate) { // first update is redundant since the calendar itself already fetched the data
@@ -183,13 +234,16 @@ angular.module('homeAutomation.controllers', [])
 		    	        },
 		    	        timezone : 'local',
 		    	        firstDay: 1,
-		    	        columnFormat: { week: 'ddd D.M.' },
-		    	        timeFormat: { agenda: 'H:mm', '': 'H(:mm)' },
+		    	        lang: $translate.use(),
 		    	        defaultView : 'agendaWeek',
 		    	        eventClick: $scope.showEventDetail
 			    	},
 				    events: [ { url: 'rest/security/events' } ]
 		    	};
+			    
+	    		$scope.localeChanged = function(locale) {
+	    			$scope.calendar.config.lang = locale;	
+	    		}
 
 			    $scope.changed = false;
 				$scope.update(true);

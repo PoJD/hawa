@@ -24,6 +24,8 @@ This project was originally based on angular-seed project https://github.com/ang
 * Angular calendar using open source JQuery full calendar: https://github.com/angular-ui/ui-calendar/tree/master/demo
 * ngDialog https://github.com/likeastore/ngDialog
 * Twitter Bootstrap
+* Angular dynamic locale: https://github.com/lgalfaso/angular-dynamic-locale
+* Angular translate: https://github.com/angular-translate/angular-translate
 
 ## Getting started in Eclipse
 

@@ -17,7 +17,7 @@ public class OsStateServiceImpl extends StateServiceBase implements OsStateServi
     private static final String UPTIME_LABEL = "Uptime";
 
     private static final String CPU_COMMAND = "uptime | sed 's/.*average: \\([^,]*\\).*/\\1/'";
-    private static final String CPU_LABEL = "CPU";
+    private static final String CPU_LABEL = "Processor";
 
     private static final String RAM_COMMAND = "free -b | grep buffers\\/cache | sed 's/.* \\([^ ]*\\)/\\1/' && free -b | grep Mem: | sed 's/Mem: *\\([^ ]*\\).*/\\1/'";
     private static final String RAM_LABEL = "RAM";

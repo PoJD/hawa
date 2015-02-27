@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import cz.pojd.rpi.state.PropertyValue.Type;
 
 public class VmStateServiceImpl extends StateServiceBase implements VmStateService {
-    private static final String PROCESSOR = "processor";
+    private static final String PROCESSOR = "processors";
     private static final String HEAP = "heap";
 
     @Inject
@@ -31,7 +31,7 @@ public class VmStateServiceImpl extends StateServiceBase implements VmStateServi
 		.type(Type.jvm)
 		.name(PROCESSOR)
 		.noPercentage() // we don't want this value to turn red anytime
-		.textValue(processorsCount + " " + PROCESSOR + (processorsCount > 1 ? "s" : ""))
+		.textValue(processorsCount + "")
 		.build();
     }
 }
