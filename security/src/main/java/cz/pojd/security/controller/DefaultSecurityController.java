@@ -259,7 +259,7 @@ public class DefaultSecurityController implements Controller {
 	this.currentBreach = null;
 	if (currentBreach != null) {
 	    String detail = currentBreach.getDetail();
-	    currentBreach.setDetail((detail != null ? detail : "") + " - dismiss");
+	    currentBreach.setDetail((detail != null ? detail : "") + " - alarm dismissed");
 	    if (LOG.isDebugEnabled()) {
 		LOG.debug("Storing the dimiss security event: " + currentBreach);
 	    }

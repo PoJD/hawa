@@ -58,6 +58,20 @@ angular.module('homeAutomation.controllers', [])
 				    } );
 				};
 				
+				$scope.translateCalendarWhat = function(calendarEvent) {
+					// what = type: detail
+					// where detail is in a form of: "string - appendix". We need to translate type and appendix
+					var what = $translate.instant(calendarEvent.type) + ": ";
+					var detail = calendarEvent.detail;
+					var dashIndex = detail.indexOf(" - ");
+					if (dashIndex > 0) {
+						what += (detail.substr(0, dashIndex) + " - " + $translate.instant(detail.substr(dashIndex+3)) ); 
+					} else {
+						what += detail;
+					}
+					return what;
+				};
+				
 				$scope.dismiss = function() {
 					security.dismiss();
 					ngDialog.closeAll();
@@ -238,11 +252,29 @@ angular.module('homeAutomation.controllers', [])
 		    	        defaultView : 'agendaWeek',
 		    	        eventClick: $scope.showEventDetail
 			    	},
-				    events: [ { url: 'rest/security/events' } ]
+				    events: [ 
+				        { 
+				        	 url: 'rest/security/events',
+				        	 complete: function() { // need to register a callback to translate all titles
+				        		 $scope.localeChanged($translate.use());
+				        	 }
+				        } 
+				    ]
 		    	};
 			    
 	    		$scope.localeChanged = function(locale) {
-	    			$scope.calendar.config.lang = locale;	
+	    			$scope.calendar.config.lang = locale;
+	    			
+	    			// and now translate all event's titles...
+	    			var events = $scope.eventsCalendar.fullCalendar('clientEvents');
+	    			for (var i=0; i<events.length; i++) {
+	    				var event = events[i];
+				        if (!event.originalTitle) {
+				        	event.originalTitle = event.title;
+				        }
+				        event.title = $translate.instant(event.originalTitle);
+				        $scope.eventsCalendar.fullCalendar('updateEvent', event);
+	    			}
 	    		}
 
 			    $scope.changed = false;

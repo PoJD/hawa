@@ -50,6 +50,16 @@ app.config(function ($translateProvider) {
 		'Where': 'Kde',
 		'Dismiss': 'Zrušit',
 		
+		'alarm dismissed': 'alarm zrušen',
+		
+		// security types
+		'Detected motion (sensor)': 'Detekován pohyb (senzor)',
+		'Detected motion (camera)': 'Detekován pohyb (kamera)',
+		'Door opened': 'Dveře otevřeny',
+		'Garage opened': 'Garáž otevřena',
+		'Window opened': 'Okno otevřeno',
+		'High temperature': 'Vysoká teplota',
+		
 		'System Log': 'Log systému',
 		'Application Log': 'Log aplikace',
 		'System Actions': 'Akce',

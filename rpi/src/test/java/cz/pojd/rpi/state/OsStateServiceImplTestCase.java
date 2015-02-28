@@ -198,7 +198,7 @@ public class OsStateServiceImplTestCase {
 	PropertyValue result = service.getCpu();
 	assertNotNull(result);
 	assertEquals(15, result.getPercentage());
-	assertTrue(result.getName().contains("CPU"));
+	assertTrue(result.getName().contains("Processor"));
 	assertEquals("15.00%", result.getTextValue());
 	assertEquals(Type.os, result.getType());
     }

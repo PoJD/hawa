@@ -13,7 +13,8 @@ import cz.pojd.homeautomation.model.Floor;
 public class CalendarEvent {
 
     private String title;
-    private String what;
+    private String type;
+    private String detail;
     private String where;
     private Floor floor;
     private Date start;
@@ -27,12 +28,20 @@ public class CalendarEvent {
 	this.title = title;
     }
 
-    public String getWhat() {
-	return what;
+    public String getType() {
+	return type;
     }
 
-    public void setWhat(String what) {
-	this.what = what;
+    public void setType(String type) {
+	this.type = type;
+    }
+
+    public String getDetail() {
+	return detail;
+    }
+
+    public void setDetail(String detail) {
+	this.detail = detail;
     }
 
     public String getWhere() {
@@ -69,6 +78,7 @@ public class CalendarEvent {
 
     @Override
     public String toString() {
-	return "CalendarEvent [what=" + what + ", where=" + where + ", floor=" + floor + ", start=" + start + ", end=" + end + "]";
+	return "CalendarEvent [type=" + type + ", detail=" + detail + ", where=" + where + ", floor=" + floor + ", start=" + start + ", end=" + end
+		+ "]";
     }
 }
