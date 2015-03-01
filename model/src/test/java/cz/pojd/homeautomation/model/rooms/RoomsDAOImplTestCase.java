@@ -256,7 +256,7 @@ public class RoomsDAOImplTestCase {
 
     @Test
     public void testSaveStateShouldNotSaveInvalidTemperature() {
-	createDAO(new RoomSpecification[] { RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP, RoomSpecification.WC_BEDROOM },
+	createDAO(new RoomSpecification[] { RoomSpecification.HALL_DOWN, RoomSpecification.HALL_UP, RoomSpecification.EAST_BATHROOM },
 		new ObservableSensor[] { mockedTemperatureSensor, mockedTemperatureSensor, new MockObservableSensor() {
 		    public Reading read() {
 			return Reading.invalid(Type.temperature);

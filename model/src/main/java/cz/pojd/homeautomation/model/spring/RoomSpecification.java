@@ -16,23 +16,25 @@ import cz.pojd.homeautomation.model.Floor;
  * @since Sep 10, 2014 9:58:42 PM
  */
 public enum RoomSpecification {
-    HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, null, MCP23017Pin.GPIO_A2, 50, EntrySpecification.MAIN_DOOR),
-    KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A3, EntrySpecification.KITCHEN_WEST),
-    LIVING_ROOM("Living room", "28-0000060a84d1", MCP23017Pin.GPIO_A4),
-    BATHROOM_DOWN("Bathroom down", "28-0000060a84d1", MCP23017Pin.GPIO_A5),
-    WC_DOWN("WC down", "28-0000060a84d1", MCP23017Pin.GPIO_A6),
-    DOWN_ROOM("Down room", "28-0000060a84d1", MCP23017Pin.GPIO_A7),
-    HALL_UP("Hall up", "28-0000060a84d1", MCP23017Pin.GPIO_A0, MCP23017Pin.GPIO_A1, Floor.First, MCP23017Pin.GPIO_A2, 50),
-    BEDROOM("Bedroom", "28-0000060a84d1", MCP23017Pin.GPIO_A3, Floor.First),
-    CHILD_ROOM_1("Child room 1", "28-0000060a84d1", MCP23017Pin.GPIO_A4, Floor.First),
-    CHILD_ROOM_2("Child room 2", "28-0000060a84d1", MCP23017Pin.GPIO_A5, Floor.First),
-    CHILD_ROOM_3("Child room 3", "28-0000060a84d1", MCP23017Pin.GPIO_A6, Floor.First),
-    CHILD_ROOM_4("Child room 4", "28-0000060a84d1", MCP23017Pin.GPIO_A7, Floor.First),
-    BATHROOM_BEDROOM("Bathroom bed", "28-0000060a84d1", MCP23017Pin.GPIO_B0, Floor.First),
-    WC_BEDROOM("WC bed", "28-0000060a84d1", MCP23017Pin.GPIO_B1, Floor.First),
-    BATHROOM_UP("Bathroom up", "28-0000060a84d1", MCP23017Pin.GPIO_B2, Floor.First),
-    WC_UP("WC up", "28-0000060a84d1", MCP23017Pin.GPIO_B3, Floor.First),
-    LAUNDRY_ROOM("Laundry room", "28-0000060a84d1", MCP23017Pin.GPIO_B4, Floor.First);
+    WORK_ROOM("Work room", "28-0000060a84d1", MCP23017Pin.GPIO_A0),
+    GARAGE("Garage", "28-0000060a84d1", MCP23017Pin.GPIO_A1),
+    TECHNICAL_ROOM("Tech room", "28-0000060a84d1", MCP23017Pin.GPIO_A2),
+    BATHROOM_DOWN("Bathroom down", "28-0000060a84d1", MCP23017Pin.GPIO_A3),
+    PANTRY("Pantry", "28-0000060a84d1", MCP23017Pin.GPIO_A4),
+    KITCHEN("Kitchen", "28-0000060a84d1", MCP23017Pin.GPIO_A5, EntrySpecification.KITCHEN_WEST),
+    LIVING_ROOM("Living room", "28-0000060a84d1", MCP23017Pin.GPIO_A6),
+    LOBBY("Lobby", "28-0000060a84d1", MCP23017Pin.GPIO_A7),
+    HALL_DOWN("Hall down", "28-0000060a84d1", MCP23017Pin.GPIO_B0, MCP23017Pin.GPIO_B1, null, MCP23017Pin.GPIO_B2, 50, EntrySpecification.MAIN_DOOR),
+    GUEST_ROOM("Guest room", "28-0000060a84d1", MCP23017Pin.GPIO_B3),
+    CLEANING_ROOM("Cleaning room", "28-0000060a84d1", MCP23017Pin.GPIO_B4),
+    
+    NORTH_ROOM("North room", "28-0000060a84d1", MCP23017Pin.GPIO_A0, Floor.First),
+    CHILD_BATHROOM("Child bathroom", "28-0000060a84d1", MCP23017Pin.GPIO_A1, Floor.First),
+    SOUTH_ROOM("South room", "28-0000060a84d1", MCP23017Pin.GPIO_A2, Floor.First),
+    HALL_UP("Hall up", "28-0000060a84d1", MCP23017Pin.GPIO_A3, MCP23017Pin.GPIO_A4, Floor.First, MCP23017Pin.GPIO_A5, 50),
+    BEDROOM("Bedroom", "28-0000060a84d1", MCP23017Pin.GPIO_A6, Floor.First),
+    EAST_BATHROOM("East bathroom", "28-0000060a84d1", MCP23017Pin.GPIO_A7, Floor.First),
+    CLOAK_ROOM("Cloak room", "28-0000060a84d1", MCP23017Pin.GPIO_B0, Floor.First);
 
     private final String name;
     private final String temperatureID;
