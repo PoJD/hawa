@@ -99,7 +99,7 @@ app.config(function ($translateProvider) {
 		'Kitchen': 'Kuchyně',
 		'Living room': 'Obývací pokoj',
 		'Lobby': 'Předsíň',
-		'Hall down': 'Hala přízemí',
+		'Hall down': 'Chodba přízemí',
 		'Guest room': 'Pokoj pro hosty',
 		'Cleaning room': 'Úklid. místnost',
 		
@@ -107,7 +107,7 @@ app.config(function ($translateProvider) {
 		'North room': 'Pokoj sever',
 		'Child bathroom': 'Dětská koupelna',
 		'South room': 'Pokoj jih',
-		'Hall up': 'Hala patro',
+		'Hall up': 'Chodba patro',
 		'Bedroom': 'Ložnice',
 		'East bathroom': 'Koupelna východ',
 		'Cloak room': 'Šatna',
