@@ -12,7 +12,7 @@ angular.module('homeAutomation.controllers', [])
 	$scope.changeLanguage($translate.use());	
 })
 
-.controller('BaseController', function($scope, $interval, $translate, $filter, $timeout, security, ngDialog) {	
+.controller('BaseController', function($scope, $interval, $translate, $filter, tmhDynamicLocale, security, ngDialog) {	
 				var updates = undefined;
 				$scope.autoUpdate = function() {
 					if (angular.isDefined(updates))
@@ -38,7 +38,7 @@ angular.module('homeAutomation.controllers', [])
 				
 			    $scope.xAxisTickFormat = function() {
 			    	return function(date){
-			    		return $filter('date')(date, 'short');
+			    		return $scope.parseCalendarDate(date);
 			    	};
 			    };
 			    
@@ -76,12 +76,11 @@ angular.module('homeAutomation.controllers', [])
 					security.dismiss();
 					ngDialog.closeAll();
 				};
-
-				// register for changes in locale - register with a 1sec delay to be sure (scripts may not always be ready yet)
-			    $scope.$watch(
-			    		function($scope) { return $translate.use(); }, 
-			    		function(value) { if ($scope.localeChanged) $timeout(function() { $scope.localeChanged(value); }, 200); }
-			    		);
+				
+				// register for changes in locale - register for a specific event since this is broadcasted till when locale fully loaded (in the dynamic locale)
+				$scope.$on("$localeChangeSuccess", function() {
+					if ($scope.localeChanged) $scope.localeChanged(tmhDynamicLocale.get());
+				});
 			    
 	    		$scope.updateGraphs = function() {
 		            for (var i = 0; i < nv.graphs.length; i++) {
@@ -137,7 +136,7 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update(true);				
 			} )
 
-.controller('OutdoorController', function($scope, $controller, $translate, outdoor) {
+.controller('OutdoorController', function($scope, $controller, outdoor) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 
 				$scope.translateGraphs = function() {
@@ -194,7 +193,7 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update();
 			} )
 						
-.controller('RoomController', function($scope, $controller, $routeParams, $translate, rooms) {
+.controller('RoomController', function($scope, $controller, $routeParams, rooms) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function() {

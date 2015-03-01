@@ -32,3 +32,19 @@ config(
   tmhDynamicLocaleProvider.localeLocationPattern('angular/builtin/js/i18n/angular-locale_{{locale}}.js');
  }
 );
+
+// workaround for NVD3 perf issues (also resulted in leaking graphs and errors in js console)
+// see https://github.com/angularjs-nvd3-directives/angularjs-nvd3-directives/issues/193
+app.run(function($rootScope, $templateCache) {
+  //try to clear unused objects to avoid huge memory usage
+  $rootScope.$on('$routeChangeStart', function(event, next, current) {
+    if (typeof(current) !== 'undefined') {
+      //destroy all d3 svg graph
+      angular.element(document.body.querySelectorAll('.nvd3')).remove();
+      d3.selectAll('svg').remove();
+      nv.charts = {};
+      nv.graphs = [];
+      nv.logs = {};
+    }
+  });
+});
