@@ -121,14 +121,18 @@ angular.module('homeAutomation.controllers', [])
 				$scope.update();
 			} )
 
-.controller('LiveViewController', function($scope, $controller, liveview) {
+.controller('LiveViewController', function($scope, $controller, $timeout, liveview) {
 				$controller('BaseController', {$scope: $scope}); // inherit from BaseController
 				
 				$scope.update = function(isFirstUpdate) {
 					$scope.liveview = liveview.get(function(result) {
 						// dynamically change the img element source to start fetching data only if camera is OK and not done before
+						// to be sure timeout this - since the server invocation just finished, but could take some time for mjpeg streamer
+						// to warm up...
 						if (result.cameraOK && isFirstUpdate) {
-							$scope.source = "http://rpi:7070/?action=stream";
+							$timeout(function () {
+								$scope.source = "http://rpi:7070/?action=stream";
+							}, 500);
 						}
 					});
 				};
